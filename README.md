@@ -1,6 +1,6 @@
 # colombian-shooter-extension
 
-A bare browser-extension scaffold built with [Extension.js](https://extension.js.org) + TypeScript. Nothing is wired up yet — no background, popup, or content script is registered in the manifest. Add them in `src/manifest.json` when you start building.
+A small cross-browser browser extension built with [Extension.js](https://extension.js.org) + TypeScript. It redirects YouTube visits to an extension-owned interstitial; the visitor must click the continue button to open the requested YouTube URL.
 
 ## Setup
 
@@ -28,7 +28,11 @@ bun build:edge      # → dist/edge-mv3-prod
 ```
 src/
   manifest.json      # cross-browser manifest (MV3 Chrome/Edge, MV2 Firefox)
-  index.ts           # placeholder — register this as a background/content script to activate
+  index.ts           # document-start YouTube blocker
+  blocked.html       # extension-owned interstitial page
+  blocked.js         # interstitial behavior
+  blocked.css        # interstitial styling
+  blocker/youtube.ts # shared URL matching and continuation logic
   images/icon.png
 extension.config.js  # per-browser profile config
 extension-env.d.ts   # Extension.js + webextension-polyfill types (gitignored)
