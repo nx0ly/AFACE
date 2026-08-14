@@ -39,6 +39,13 @@
     },
     "default_title": "Page Pause"
   },
+  "chromium:background": {
+    "service_worker": "background.ts",
+    "type": "module"
+  },
+  "firefox:background": {
+    "scripts": ["background.ts"]
+  },
   "chromium:permissions": ["storage"],
   "firefox:permissions": ["storage"],
   "host_permissions": [],

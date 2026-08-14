@@ -17,7 +17,8 @@ bun dev
 
 The token balance starts at zero and persists across tabs and browser restarts.
 The placeholder game currently awards one token per click. Spending one token
-whitelists the current hostname for 30 minutes.
+whitelists the current hostname for 30 minutes. A small toolbar badge shows the
+balance when it is above zero.
 
 ## Build
 
@@ -31,6 +32,7 @@ bun build:edge      # → dist/edge-mv3-prod
 
 ```
 src/
+  background.ts      # updates the toolbar token badge
   manifest.json      # cross-browser manifest (MV3 Chrome/Edge, MV2 Firefox)
   index.ts           # document-start all-page blocker
   blocked.html       # extension-owned interstitial page
