@@ -33,6 +33,7 @@ body {
   grid-template-columns: 1fr 1fr;
   min-height: 75vh;
   overflow: hidden;
+  position: relative;
   width: 75vw;
 }
 
@@ -123,6 +124,101 @@ button:disabled {
 .earn-token:hover,
 .earn-token:focus-visible {
   background: #765a46;
+}
+
+.shop-footer {
+  border-top: 2px solid rgb(104 77 58 / 18%);
+  grid-column: 1 / -1;
+  padding: 18px clamp(24px, 6vw, 80px);
+}
+
+.shop-button {
+  background: transparent;
+  border: 2px dashed rgb(104 77 58 / 38%);
+  color: rgb(104 77 58 / 65%);
+  padding: 12px 18px;
+}
+
+.wheel-overlay[hidden] {
+  display: none;
+}
+
+.wheel-overlay {
+  align-items: center;
+  background: var(--macondo-cream);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 32px;
+  position: absolute;
+  text-align: center;
+  z-index: 10;
+}
+
+.wheel-content {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 440px);
+}
+
+.wheel-status {
+  color: rgb(104 77 58 / 72%);
+  margin: 10px 0 24px;
+  min-height: 24px;
+}
+
+.wheel-stage {
+  max-width: 330px;
+  position: relative;
+  width: min(62vw, 330px);
+}
+
+.wheel-pointer {
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-top: 25px solid var(--macondo-brown);
+  left: 50%;
+  position: absolute;
+  top: -8px;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.chance-wheel {
+  aspect-ratio: 1;
+  background: conic-gradient(
+    from -90deg,
+    var(--macondo-sun) 0 50%,
+    var(--macondo-brown) 50% 100%
+  );
+  border: 8px solid var(--macondo-cream);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 3px var(--macondo-brown),
+    8px 10px 0 rgb(104 77 58 / 18%);
+  position: relative;
+  width: 100%;
+}
+
+.wheel-option {
+  font-size: clamp(13px, 2vw, 17px);
+  font-weight: 900;
+  left: 50%;
+  position: absolute;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+}
+
+.safe-option {
+  color: var(--macondo-brown);
+  top: 22%;
+}
+
+.punishment-option {
+  bottom: 22%;
+  color: var(--macondo-cream);
+  transform: translateX(-50%) rotate(180deg);
 }
 
 @media (max-width: 700px) {

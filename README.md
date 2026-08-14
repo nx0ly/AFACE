@@ -17,8 +17,9 @@ bun dev
 
 The token balance starts at zero and persists across tabs and browser restarts.
 The placeholder game currently awards one token per click. Spending one token
-whitelists the current hostname for 30 minutes. A small toolbar badge shows the
-balance when it is above zero.
+spins a 50/50 Safe or Punishment wheel, then whitelists the current
+hostname for 30 minutes. Punishment effects are not implemented yet. A small
+toolbar badge shows the balance when it is above zero.
 
 ## Build
 

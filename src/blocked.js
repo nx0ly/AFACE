@@ -1,6 +1,7 @@
 const TOKEN_BALANCE_KEY = 'page-pause:tokens';
 const WHITELIST_PREFIX = 'page-pause:whitelist:';
 const WHITELIST_DURATION = 30 * 60 * 1000;
+const EXAMPLE_COM_WHITELIST_DURATION = 60 * 1000;
 
 function getStorage() {
   return globalThis.browser?.storage?.local ?? globalThis.chrome?.storage?.local;
@@ -27,8 +28,17 @@ function getOriginalUrl(search) {
 const continueButton = document.querySelector('#continue');
 const earnTokenButton = document.querySelector('#earn-token');
 const tokenCount = document.querySelector('#token-count');
+const whitelistDescription = document.querySelector('#whitelist-description');
+const wheelOverlay = document.querySelector('#wheel-overlay');
+const chanceWheel = document.querySelector('#chance-wheel');
+const wheelStatus = document.querySelector('#wheel-status');
 const originalUrl = getOriginalUrl(window.location.search);
+const whitelistDuration = originalUrl.hostname === 'example.com'
+  ? EXAMPLE_COM_WHITELIST_DURATION
+  : WHITELIST_DURATION;
+const whitelistMinutes = whitelistDuration / 60_000;
 let balance = 0;
+let wheelIsRunning = false;
 
 function normalizeBalance(value) {
   return typeof value === 'number' && Number.isFinite(value)
@@ -37,6 +47,10 @@ function normalizeBalance(value) {
 }
 
 function renderBalance() {
+  if (whitelistDescription) {
+    whitelistDescription.textContent = `Continue to this site for ${whitelistMinutes} ${whitelistMinutes === 1 ? 'minute' : 'minutes'}.`;
+  }
+
   if (tokenCount) {
     tokenCount.textContent = String(balance);
   }
@@ -45,7 +59,7 @@ function renderBalance() {
     continueButton.disabled = balance < 1;
     continueButton.textContent = balance < 1
       ? 'Earn 1 token to continue'
-      : 'Use 1 token · Continue for 30 minutes';
+      : `Use 1 token · Continue for ${whitelistMinutes} ${whitelistMinutes === 1 ? 'minute' : 'minutes'}`;
   }
 }
 
@@ -77,6 +91,53 @@ earnTokenButton?.addEventListener('click', async () => {
   renderBalance();
 });
 
+function chooseSafeOutcome() {
+  const randomValue = new Uint32Array(1);
+  crypto.getRandomValues(randomValue);
+  return randomValue[0] % 2 === 0;
+}
+
+async function spinChanceWheel(storage, whitelistKey) {
+  if (!wheelOverlay || !chanceWheel || !wheelStatus || wheelIsRunning) {
+    return;
+  }
+
+  wheelIsRunning = true;
+  const isSafe = chooseSafeOutcome();
+  const rotation = (5 * 360) + (isSafe ? 0 : 180);
+  const prefersReducedMotion = window.matchMedia(
+    '(prefers-reduced-motion: reduce)',
+  ).matches;
+  const spinDuration = prefersReducedMotion ? 100 : 2800;
+
+  wheelStatus.textContent = 'Spinning…';
+  wheelOverlay.hidden = false;
+  const animation = chanceWheel.animate(
+    [
+      { transform: 'rotate(0deg)' },
+      { transform: `rotate(${rotation}deg)` },
+    ],
+    {
+      duration: spinDuration,
+      easing: 'cubic-bezier(0.15, 0.7, 0.1, 1)',
+      fill: 'forwards',
+    },
+  );
+
+  await animation.finished;
+  wheelStatus.textContent = isSafe
+    ? `Safe — enjoy your ${whitelistMinutes} ${whitelistMinutes === 1 ? 'minute' : 'minutes'}.`
+    : 'Punishment — the second wheel is coming next.';
+
+  await storage.set({
+    [whitelistKey]: Date.now() + whitelistDuration,
+  });
+
+  window.setTimeout(() => {
+    window.location.assign(originalUrl.toString());
+  }, prefersReducedMotion ? 250 : 1100);
+}
+
 continueButton?.addEventListener('click', async () => {
   const storage = getStorage();
 
@@ -104,11 +165,9 @@ continueButton?.addEventListener('click', async () => {
 
   continueButton.disabled = true;
   balance = latestBalance - 1;
-  await storage.set({
-    [TOKEN_BALANCE_KEY]: balance,
-    [whitelistKey]: Date.now() + WHITELIST_DURATION,
-  });
-  window.location.assign(originalUrl.toString());
+  await storage.set({ [TOKEN_BALANCE_KEY]: balance });
+  renderBalance();
+  await spinChanceWheel(storage, whitelistKey);
 });
 
 void loadBalance();

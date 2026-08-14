@@ -14,7 +14,7 @@
           <p class="balance">
             <strong id="token-count">0</strong> tokens available
           </p>
-          <p class="description">
+          <p id="whitelist-description" class="description">
             Continue to this site for 30 minutes.
           </p>
           <button id="continue" type="button" disabled>
@@ -32,6 +32,40 @@
           <button id="earn-token" class="earn-token" type="button">
             Get 1 token
           </button>
+        </div>
+      </section>
+
+      <footer class="shop-footer">
+        <button class="shop-button" type="button" disabled>
+          Shop · Coming soon
+        </button>
+      </footer>
+
+      <section
+        id="wheel-overlay"
+        class="wheel-overlay"
+        role="dialog"
+        aria-labelledby="wheel-title"
+        aria-modal="true"
+        hidden
+      >
+        <div class="wheel-content">
+          <h2 id="wheel-title">Chance wheel</h2>
+          <p id="wheel-status" class="wheel-status" aria-live="polite">
+            Spinning…
+          </p>
+          <div class="wheel-stage">
+            <div class="wheel-pointer" aria-hidden="true"></div>
+            <div
+              id="chance-wheel"
+              class="chance-wheel"
+              role="img"
+              aria-label="A wheel split evenly between Safe and Punishment"
+            >
+              <span class="wheel-option safe-option">Safe</span>
+              <span class="wheel-option punishment-option">Punishment</span>
+            </div>
+          </div>
         </div>
       </section>
     </main>
