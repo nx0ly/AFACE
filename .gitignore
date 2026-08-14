@@ -27,6 +27,11 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 .cache
 *.tsbuildinfo
 
+# extension.js
+dist
+extension-env.d.ts
+.extension-js
+
 # IntelliJ based IDEs
 .idea
 

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json.schemastore.org/chrome-manifest.json",
+  "chromium:manifest_version": 3,
+  "firefox:manifest_version": 2,
+  "version": "1.0.0",
+  "firefox:browser_specific_settings": {
+    "gecko": {
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  },
+  "name": "Colombian Shooter Extension",
+  "description": "A minimal, browser-extension scaffold ready to build on.",
+  "icons": {
+    "16": "images/icon.png",
+    "32": "images/icon.png",
+    "48": "images/icon.png",
+    "64": "images/icon.png",
+    "128": "images/icon.png"
+  },
+  "chromium:action": {
+    "default_icon": {
+      "16": "images/icon.png",
+      "32": "images/icon.png",
+      "48": "images/icon.png",
+      "64": "images/icon.png",
+      "128": "images/icon.png"
+    },
+    "default_title": "Colombian Shooter Extension"
+  },
+  "firefox:browser_action": {
+    "default_icon": {
+      "16": "images/icon.png",
+      "32": "images/icon.png",
+      "48": "images/icon.png",
+      "64": "images/icon.png",
+      "128": "images/icon.png"
+    },
+    "default_title": "Colombian Shooter Extension"
+  },
+  "chromium:permissions": [],
+  "firefox:permissions": [],
+  "host_permissions": []
+}

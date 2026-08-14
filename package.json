@@ -1,12 +1,27 @@
 {
   "name": "colombian-shooter-extension",
-  "module": "index.ts",
-  "type": "module",
   "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "A minimal browser-extension scaffold built with Extension.js and TypeScript.",
+  "license": "MIT",
+  "packageManager": "bun@1.3.14",
+  "dependencies": {},
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "extension": "^4.0.32",
+    "typescript": "^5"
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "scripts": {
+    "dev": "extension dev",
+    "start": "extension start",
+    "build": "extension build",
+    "preview": "extension preview",
+    "build:chrome": "extension build --browser chrome",
+    "build:firefox": "extension build --browser firefox",
+    "build:edge": "extension build --browser edge"
   }
 }
