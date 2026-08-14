@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Tejo</title>
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                background: #222;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }
+
+            canvas {
+                background: #c9a66b;
+                border: 2px solid #111;
+            }
+        </style>
+    </head>
+
+    <body>
+        <canvas id="canvas" width="800" height="600"></canvas>
+
+        <script>
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
+
+            class Bomb {
+                constructor(x, y) {
+                    this.x = x;
+                    this.y = y;
+                    this.exploded = false;
+                }
+
+                explode() {
+                    this.exploded = true;
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, 8, 0, Math.PI * 2);
+
+                    ctx.fillStyle = this.exploded ? "red" : "black";
+                    ctx.fill();
+
+                    if (this.exploded) {
+                        ctx.strokeStyle = "orange";
+                        ctx.lineWidth = 3;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            class Sandbag {
+                constructor(x, y) {
+                    this.x = x;
+                    this.y = y;
+
+                    this.vx = 0;
+                    this.vy = 0;
+                }
+
+                draw() {
+                    ctx.fillStyle = "#b8864a";
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, 30, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.strokeStyle = "#76552e";
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+                }
+            }
+
+            const bombs = [];
+
+            const centerX = canvas.width / 2;
+            const targetY = canvas.height / 4;
+            const radius = 80;
+
+            for (let i = 0; i < 6; i++) {
+                const angle = i * ((Math.PI * 2) / 6);
+
+                bombs.push(
+                    new Bomb(
+                        centerX + Math.cos(angle) * radius,
+                        targetY + Math.sin(angle) * radius,
+                    ),
+                );
+            }
+
+            const sandbag = new Sandbag(
+                canvas.width * Math.random(),
+                canvas.height - 100,
+            );
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // ctx.beginPath();
+                // ctx.arc(centerX, targetY, 120, 0, Math.PI * 2);
+                // ctx.fillStyle = "#d8c08a";
+                // ctx.fill();
+
+                // ctx.beginPath();
+                // ctx.arc(centerX, targetY, 30, 0, Math.PI * 2);
+                // ctx.fillStyle = "#555";
+                // ctx.fill();
+
+                for (const bomb of bombs) {
+                    bomb.draw();
+                }
+
+                sandbag.draw();
+            }
+
+            draw();
+        </script>
+    </body>
+</html>
