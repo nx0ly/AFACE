@@ -11,7 +11,7 @@
     }
   },
   "name": "Colombian Shooter Extension",
-  "description": "A focused interstitial that pauses YouTube until you choose to continue.",
+  "description": "A focused interstitial that pauses any webpage until you continue.",
   "icons": {
     "16": "images/icon.png",
     "32": "images/icon.png",
@@ -39,15 +39,13 @@
     },
     "default_title": "Colombian Shooter Extension"
   },
-  "chromium:permissions": [],
-  "firefox:permissions": [],
+  "chromium:permissions": ["storage"],
+  "firefox:permissions": ["storage"],
   "host_permissions": [],
   "content_scripts": [
     {
       "matches": [
-        "*://youtube.com/*",
-        "*://*.youtube.com/*",
-        "*://youtu.be/*"
+        "<all_urls>"
       ],
       "js": ["index.ts"],
       "run_at": "document_start"
@@ -55,13 +53,14 @@
   ],
   "chromium:web_accessible_resources": [
     {
-      "resources": ["blocked.html", "blocked.css", "blocked.js"],
+      "resources": ["blocked.html", "blocked.css", "blocked.js", "trigger.js"],
       "matches": ["<all_urls>"]
     }
   ],
   "firefox:web_accessible_resources": [
     "blocked.html",
     "blocked.css",
-    "blocked.js"
+    "blocked.js",
+    "trigger.js"
   ]
 }

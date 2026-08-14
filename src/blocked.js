@@ -1,21 +1,12 @@
-const CONTINUE_PARAM = 'macondo_continue';
-const YOUTUBE_HOSTS = new Set([
-  'youtube.com',
-  'www.youtube.com',
-  'm.youtube.com',
-  'music.youtube.com',
-  'youtu.be',
-]);
+const WHITELIST_PREFIX = 'colombian-shooter:whitelist:';
+const WHITELIST_DURATION = 30 * 60 * 1000;
 
-function isYouTubeUrl(url) {
-  return (
-    YOUTUBE_HOSTS.has(url.hostname) ||
-    url.hostname.endsWith('.youtube.com')
-  );
+function getStorage() {
+  return globalThis.browser?.storage?.local ?? globalThis.chrome?.storage?.local;
 }
 
 function getOriginalUrl(search) {
-  const fallback = new URL('https://www.youtube.com/');
+  const fallback = new URL('about:blank');
   const encodedUrl = new URLSearchParams(search).get('url');
 
   if (!encodedUrl) {
@@ -24,21 +15,28 @@ function getOriginalUrl(search) {
 
   try {
     const originalUrl = new URL(encodedUrl);
-    return isYouTubeUrl(originalUrl) ? originalUrl : fallback;
+    return originalUrl.protocol === 'http:' || originalUrl.protocol === 'https:'
+      ? originalUrl
+      : fallback;
   } catch {
     return fallback;
   }
 }
 
-function addContinueMarker(url) {
-  const continuedUrl = new URL(url.toString());
-  continuedUrl.searchParams.set(CONTINUE_PARAM, '1');
-  return continuedUrl;
-}
-
 const continueButton = document.querySelector('#continue');
 const originalUrl = getOriginalUrl(window.location.search);
 
-continueButton?.addEventListener('click', () => {
-  window.location.assign(addContinueMarker(originalUrl).toString());
+continueButton?.addEventListener('click', async () => {
+  const storage = getStorage();
+
+  if (!storage || originalUrl.protocol === 'about:') {
+    return;
+  }
+
+  continueButton.disabled = true;
+  await storage.set({
+    [`${WHITELIST_PREFIX}${originalUrl.hostname}`]:
+      Date.now() + WHITELIST_DURATION,
+  });
+  window.location.assign(originalUrl.toString());
 });
