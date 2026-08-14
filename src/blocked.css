@@ -30,48 +30,62 @@ body {
   border-radius: 20px;
   box-shadow: 12px 12px 0 rgb(104 77 58 / 20%);
   display: grid;
-  gap: 24px;
-  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 1fr 1fr;
   min-height: 75vh;
-  padding: 32px;
+  overflow: hidden;
   width: 75vw;
 }
 
-header {
-  text-align: center;
+.panel {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: clamp(32px, 6vw, 80px);
 }
 
-.eyebrow {
-  color: var(--macondo-sun);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  margin: 0 0 8px;
-  text-transform: uppercase;
+.earn-panel {
+  position: relative;
 }
 
-h1 {
-  font-size: clamp(30px, 5vw, 52px);
+.earn-panel::before {
+  background: rgb(104 77 58 / 28%);
+  border-radius: 999px;
+  content: "";
+  height: 75%;
+  left: 0;
+  position: absolute;
+  top: 12.5%;
+  width: 2px;
+}
+
+.panel-content {
+  max-width: 360px;
+  width: 100%;
+}
+
+h1,
+h2 {
+  font-size: clamp(30px, 4vw, 48px);
   letter-spacing: -0.04em;
+  line-height: 1.05;
   margin: 0;
 }
 
-.placeholder {
-  align-items: center;
-  background: var(--macondo-parchment);
-  border: 2px dashed rgb(104 77 58 / 45%);
-  border-radius: 14px;
-  color: rgb(104 77 58 / 72%);
-  display: flex;
-  justify-content: center;
-  min-height: 240px;
+.balance {
+  color: rgb(104 77 58 / 75%);
+  font-size: 15px;
+  margin: 16px 0 0;
 }
 
-.placeholder span {
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+.balance strong {
+  color: var(--macondo-brown);
+  font-size: 18px;
+}
+
+.description {
+  color: rgb(104 77 58 / 72%);
+  line-height: 1.5;
+  margin: 14px 0 26px;
 }
 
 button {
@@ -83,6 +97,7 @@ button {
   font: inherit;
   font-weight: 800;
   padding: 15px 24px;
+  width: 100%;
 }
 
 button:hover,
@@ -96,8 +111,18 @@ button:focus-visible {
 }
 
 button:disabled {
-  cursor: wait;
+  cursor: not-allowed;
   opacity: 0.65;
+}
+
+.earn-token {
+  background: var(--macondo-brown);
+  color: var(--macondo-cream);
+}
+
+.earn-token:hover,
+.earn-token:focus-visible {
+  background: #765a46;
 }
 
 @media (max-width: 700px) {
@@ -106,8 +131,24 @@ button:disabled {
   }
 
   .card {
+    grid-template-columns: 1fr;
     min-height: 75vh;
-    padding: 22px;
     width: 100%;
+  }
+
+  .panel {
+    min-height: 36vh;
+    padding: 32px 24px;
+  }
+
+  .earn-panel {
+    border-left: 0;
+  }
+
+  .earn-panel::before {
+    height: 2px;
+    left: 12.5%;
+    top: 0;
+    width: 75%;
   }
 }

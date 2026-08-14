@@ -8,16 +8,32 @@
   </head>
   <body>
     <main class="card">
-      <header>
-        <p class="eyebrow">Colombian Shooter</p>
-        <h1>Page paused</h1>
-      </header>
+      <section class="panel spend-panel" aria-labelledby="spend-title">
+        <div class="panel-content">
+          <h1 id="spend-title">Spend 1 token</h1>
+          <p class="balance">
+            <strong id="token-count">0</strong> tokens available
+          </p>
+          <p class="description">
+            Continue to this site for 30 minutes.
+          </p>
+          <button id="continue" type="button" disabled>
+            Earn 1 token to continue
+          </button>
+        </div>
+      </section>
 
-      <div class="placeholder" aria-label="Content placeholder">
-        <span>Placeholder</span>
-      </div>
-
-      <button id="continue" type="button">Continue for 30 minutes</button>
+      <section class="panel earn-panel" aria-labelledby="game-title">
+        <div class="panel-content">
+          <h2 id="game-title">Get tokens</h2>
+          <p class="description">
+            More games are coming soon. For now, press the button.
+          </p>
+          <button id="earn-token" class="earn-token" type="button">
+            Get 1 token
+          </button>
+        </div>
+      </section>
     </main>
     <script src="blocked.js"></script>
   </body>

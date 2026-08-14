@@ -1,6 +1,6 @@
-# colombian-shooter-extension
+# Page Pause
 
-A small cross-browser browser extension built with [Extension.js](https://extension.js.org) + TypeScript. It redirects webpages to an extension-owned interstitial, then allows the current hostname for 30 minutes when you continue.
+A small cross-browser browser extension built with [Extension.js](https://extension.js.org) + TypeScript. It blocks webpages until you spend one token, then allows the current hostname for 30 minutes.
 
 ## Setup
 
@@ -15,18 +15,9 @@ bun dev
 # opens the extension in a fresh browser profile with hot reload
 ```
 
-The content script blocks every normal webpage unless its hostname is currently
-whitelisted. Clicking Continue whitelists that hostname for 30 minutes across
-tabs and browser restarts.
-
-You can also whitelist the current hostname from that page's console with:
-
-```js
-runColombianShooter()
-```
-
-That function whitelists the current hostname for 30 minutes, just like
-clicking Continue.
+The token balance starts at zero and persists across tabs and browser restarts.
+The placeholder game currently awards one token per click. Spending one token
+whitelists the current hostname for 30 minutes.
 
 ## Build
 
@@ -41,11 +32,10 @@ bun build:edge      # → dist/edge-mv3-prod
 ```
 src/
   manifest.json      # cross-browser manifest (MV3 Chrome/Edge, MV2 Firefox)
-  index.ts           # document-start all-page blocker and JS trigger bridge
+  index.ts           # document-start all-page blocker
   blocked.html       # extension-owned interstitial page
   blocked.js         # interstitial behavior
   blocked.css        # interstitial styling
-  trigger.js         # exposes runColombianShooter() to page JavaScript
   images/icon.png
 extension.config.js  # per-browser profile config
 extension-env.d.ts   # Extension.js + webextension-polyfill types (gitignored)

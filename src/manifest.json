@@ -10,7 +10,7 @@
       }
     }
   },
-  "name": "Colombian Shooter Extension",
+  "name": "Page Pause",
   "description": "A focused interstitial that pauses any webpage until you continue.",
   "icons": {
     "16": "images/icon.png",
@@ -27,7 +27,7 @@
       "64": "images/icon.png",
       "128": "images/icon.png"
     },
-    "default_title": "Colombian Shooter Extension"
+    "default_title": "Page Pause"
   },
   "firefox:browser_action": {
     "default_icon": {
@@ -37,7 +37,7 @@
       "64": "images/icon.png",
       "128": "images/icon.png"
     },
-    "default_title": "Colombian Shooter Extension"
+    "default_title": "Page Pause"
   },
   "chromium:permissions": ["storage"],
   "firefox:permissions": ["storage"],
@@ -53,14 +53,13 @@
   ],
   "chromium:web_accessible_resources": [
     {
-      "resources": ["blocked.html", "blocked.css", "blocked.js", "trigger.js"],
+      "resources": ["blocked.html", "blocked.css", "blocked.js"],
       "matches": ["<all_urls>"]
     }
   ],
   "firefox:web_accessible_resources": [
     "blocked.html",
     "blocked.css",
-    "blocked.js",
-    "trigger.js"
+    "blocked.js"
   ]
 }
