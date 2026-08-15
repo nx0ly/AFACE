@@ -41,19 +41,20 @@
         </button>
       </footer>
 
-      <section
-        id="wheel-overlay"
-        class="wheel-overlay"
-        role="dialog"
-        aria-labelledby="wheel-title"
-        aria-modal="true"
-        hidden
-      >
-        <div class="wheel-content">
-          <h2 id="wheel-title">Chance wheel</h2>
-          <p id="wheel-status" class="wheel-status" aria-live="polite">
-            Spinning…
-          </p>
+    </main>
+
+    <div
+      id="wheel-overlay"
+      class="wheel-overlay"
+      role="dialog"
+      aria-label="Wheel of Doom"
+      aria-modal="true"
+      hidden
+    >
+      <div class="modal-frame">
+        <div class="modal-frame-fill" aria-hidden="true"></div>
+        <div class="wheel-content" tabindex="-1">
+          <p id="wheel-status" class="wheel-status" aria-live="polite"></p>
           <div class="wheel-stage">
             <div class="wheel-pointer" aria-hidden="true"></div>
             <div
@@ -67,9 +68,37 @@
             </div>
           </div>
         </div>
-      </section>
+        <div class="frame-edge frame-edge-left" aria-hidden="true"></div>
+        <div class="frame-edge frame-edge-right" aria-hidden="true"></div>
+        <div class="frame-edge frame-edge-top" aria-hidden="true"></div>
+        <div class="frame-edge frame-edge-bottom" aria-hidden="true"></div>
+        <img
+          class="frame-corner frame-corner-tl"
+          src="images/borders/top_left_2.webp"
+          alt=""
+          draggable="false"
+        />
+        <img
+          class="frame-corner frame-corner-tr"
+          src="images/borders/top_right.webp"
+          alt=""
+          draggable="false"
+        />
+        <img
+          class="frame-corner frame-corner-bl"
+          src="images/borders/bottom_left.webp"
+          alt=""
+          draggable="false"
+        />
+        <img
+          class="frame-corner frame-corner-br"
+          src="images/borders/bottom_right_2.webp"
+          alt=""
+          draggable="false"
+        />
+      </div>
+    </div>
 
-    </main>
     <script src="blocked.js"></script>
   </body>
 </html>

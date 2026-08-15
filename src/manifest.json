@@ -68,6 +68,7 @@
         "blocked.css",
         "blocked.js",
         "images/arepa.png",
+        "images/borders/*.webp",
         "games.html",
         "games.css",
         "minigames/tejo.html",

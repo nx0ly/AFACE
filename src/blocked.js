@@ -120,8 +120,10 @@ async function spinChanceWheel(storage, whitelistKey) {
   ).matches;
   const spinDuration = prefersReducedMotion ? 100 : 2800;
 
-  wheelStatus.textContent = 'Spinning…';
+  wheelStatus.textContent = 'Deciding your fate…';
   wheelOverlay.hidden = false;
+  document.body.classList.add('wheel-open');
+  wheelOverlay.querySelector('.wheel-content')?.focus();
   const animation = chanceWheel.animate(
     [
       { transform: 'rotate(0deg)' },
@@ -136,8 +138,8 @@ async function spinChanceWheel(storage, whitelistKey) {
 
   await animation.finished;
   wheelStatus.textContent = isSafe
-    ? `Safe — enjoy your ${whitelistMinutes} ${whitelistMinutes === 1 ? 'minute' : 'minutes'}.`
-    : 'Punishment — loading the arepa attack on your page…';
+    ? `Safe — ${whitelistMinutes} ${whitelistMinutes === 1 ? 'minute' : 'minutes'} is yours.`
+    : 'Punishment — the arepas are coming for your page…';
 
   if (!isSafe) {
     window.setTimeout(
