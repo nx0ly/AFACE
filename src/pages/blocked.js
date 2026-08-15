@@ -1,3 +1,5 @@
+import { PUNISHMENTS } from '../punishments/registry.js';
+
 const TOKEN_BALANCE_KEY = 'page-pause:tokens';
 const WHITELIST_PREFIX = 'page-pause:whitelist:';
 const PUNISHMENT_PREFIX = 'page-pause:punishment:';
@@ -33,6 +35,10 @@ const tokenCount = document.querySelector('#token-count');
 const whitelistDescription = document.querySelector('#whitelist-description');
 const wheelOverlay = document.querySelector('#wheel-overlay');
 const chanceWheel = document.querySelector('#chance-wheel');
+const chanceWheelStage = document.querySelector('#chance-wheel-stage');
+const punishmentWheel = document.querySelector('#punishment-wheel');
+const punishmentWheelStage = document.querySelector('#punishment-wheel-stage');
+const wheelCaption = document.querySelector('#wheel-caption');
 const wheelStatus = document.querySelector('#wheel-status');
 const originalUrl = getOriginalUrl(window.location.search);
 const whitelistDuration = originalUrl.hostname === 'example.com'
@@ -87,19 +93,117 @@ openShopButton?.addEventListener('click', () => {
   window.location.assign('minigames/shop.html');
 });
 
-function chooseSafeOutcome() {
-  const randomValue = new Uint32Array(1);
-  crypto.getRandomValues(randomValue);
-  return randomValue[0] % 2 === 0;
+function prefersReducedMotion() {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-async function openArepaPunishment(storage) {
-  const punishmentKey = `${PUNISHMENT_PREFIX}${originalUrl.hostname}`;
+function randomIndex(length) {
+  const randomValue = new Uint32Array(1);
+  crypto.getRandomValues(randomValue);
+  return randomValue[0] % length;
+}
+
+function chooseSafeOutcome() {
+  return randomIndex(2) === 0;
+}
+
+function setStatus(caption, message) {
+  if (wheelCaption) wheelCaption.textContent = caption;
+  if (wheelStatus) wheelStatus.textContent = message;
+}
+
+/**
+ * Spins a wheel so that `targetDegrees` — measured clockwise from the top —
+ * ends up under the pointer, after five full turns for show.
+ */
+function spinWheel(wheel, targetDegrees) {
+  const rotation = (5 * 360) - targetDegrees;
+
+  return wheel.animate(
+    [
+      { transform: 'rotate(0deg)' },
+      { transform: `rotate(${rotation}deg)` },
+    ],
+    {
+      duration: prefersReducedMotion() ? 100 : 2800,
+      easing: 'cubic-bezier(0.15, 0.7, 0.1, 1)',
+      fill: 'forwards',
+    },
+  ).finished;
+}
+
+function pause(milliseconds) {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, prefersReducedMotion() ? 250 : milliseconds);
+  });
+}
+
+/**
+ * Paints one wedge per registered punishment, so adding a punishment widens the
+ * wheel on its own. Colors come from the registry, so these are inline styles
+ * rather than utility classes.
+ */
+function buildPunishmentWheel() {
+  if (!punishmentWheel) {
+    return;
+  }
+
+  const wedgeAngle = 360 / PUNISHMENTS.length;
+  const stops = PUNISHMENTS.map((punishment, index) => {
+    const start = index * wedgeAngle;
+    return `${punishment.color} ${start}deg ${start + wedgeAngle}deg`;
+  });
+
+  punishmentWheel.style.background = `conic-gradient(${stops.join(', ')})`;
+  punishmentWheel.setAttribute(
+    'aria-label',
+    `A wheel of ${PUNISHMENTS.length} punishments: ${PUNISHMENTS.map((item) => item.label).join(', ')}`,
+  );
+
+  for (const [index, punishment] of PUNISHMENTS.entries()) {
+    const spoke = document.createElement('span');
+    const label = document.createElement('span');
+
+    // The spoke rotates to the wedge's middle; the label rides at its outer end.
+    spoke.className = 'absolute inset-0 flex items-start justify-center pt-[6%]';
+    spoke.style.transform = `rotate(${index * wedgeAngle + wedgeAngle / 2}deg)`;
+    label.className =
+      'max-w-[42%] text-center text-[clamp(10px,1.6vw,13px)] leading-tight font-black uppercase';
+    label.style.color = punishment.textColor;
+    label.textContent = punishment.label;
+    spoke.append(label);
+    punishmentWheel.append(spoke);
+  }
+}
+
+/**
+ * Second wheel: which punishment. The chosen id is stored with the pending
+ * punishment, and the content script mounts the matching one on the target page.
+ */
+async function spinPunishmentWheel(storage) {
+  const wedgeAngle = 360 / PUNISHMENTS.length;
+  const index = randomIndex(PUNISHMENTS.length);
+  const punishment = PUNISHMENTS[index];
+  // Land anywhere inside the wedge, just not right on a seam.
+  const jitter = (Math.random() - 0.5) * (wedgeAngle * 0.7);
+
+  chanceWheelStage?.setAttribute('hidden', '');
+  punishmentWheelStage?.removeAttribute('hidden');
+  setStatus('Which punishment?', 'Spinning the punishment wheel…');
+  await pause(450);
+
+  if (punishmentWheel) {
+    await spinWheel(punishmentWheel, index * wedgeAngle + wedgeAngle / 2 + jitter);
+  }
+
+  setStatus(punishment.label, punishment.taunt);
+  await pause(1400);
 
   await storage.set({
-    [punishmentKey]: {
+    [`${PUNISHMENT_PREFIX}${originalUrl.hostname}`]: {
       url: originalUrl.toString(),
       duration: whitelistDuration,
+      punishment: punishment.id,
     },
   });
 
@@ -112,50 +216,35 @@ async function spinChanceWheel(storage, whitelistKey) {
   }
 
   wheelIsRunning = true;
-  // Keep this forced on while the arepa punishment is being tested.
+  // Keep this forced on while the punishments are being tested.
   const isSafe = FORCE_PUNISHMENT_FOR_TESTING ? false : chooseSafeOutcome();
-  const rotation = (5 * 360) + (isSafe ? 0 : 180);
-  const prefersReducedMotion = window.matchMedia(
-    '(prefers-reduced-motion: reduce)',
-  ).matches;
-  const spinDuration = prefersReducedMotion ? 100 : 2800;
 
-  wheelStatus.textContent = 'Deciding your fate…';
+  setStatus('Wheel of Doom', 'Deciding your fate…');
   wheelOverlay.hidden = false;
   document.body.classList.add('wheel-open');
   wheelOverlay.querySelector('.wheel-content')?.focus();
-  const animation = chanceWheel.animate(
-    [
-      { transform: 'rotate(0deg)' },
-      { transform: `rotate(${rotation}deg)` },
-    ],
-    {
-      duration: spinDuration,
-      easing: 'cubic-bezier(0.15, 0.7, 0.1, 1)',
-      fill: 'forwards',
-    },
-  );
-
-  await animation.finished;
-  wheelStatus.textContent = isSafe
-    ? `Safe — ${whitelistMinutes} ${whitelistMinutes === 1 ? 'minute' : 'minutes'} is yours.`
-    : 'Punishment — the arepas are coming for your page…';
+  // The wheel is painted from -90deg, so Safe covers the top half: 0deg lands on
+  // Safe and 180deg lands on Punishment.
+  await spinWheel(chanceWheel, isSafe ? 0 : 180);
 
   if (!isSafe) {
-    window.setTimeout(
-      () => void openArepaPunishment(storage),
-      prefersReducedMotion ? 250 : 1100,
-    );
+    setStatus('Doom', 'Punishment — now to decide which one.');
+    await pause(900);
+    await spinPunishmentWheel(storage);
     return;
   }
+
+  setStatus(
+    'Safe',
+    `Safe — ${whitelistMinutes} ${whitelistMinutes === 1 ? 'minute' : 'minutes'} is yours.`,
+  );
 
   await storage.set({
     [whitelistKey]: Date.now() + whitelistDuration,
   });
 
-  window.setTimeout(() => {
-    window.location.assign(originalUrl.toString());
-  }, prefersReducedMotion ? 250 : 1100);
+  await pause(1100);
+  window.location.assign(originalUrl.toString());
 }
 
 continueButton?.addEventListener('click', async () => {
@@ -190,4 +279,5 @@ continueButton?.addEventListener('click', async () => {
   await spinChanceWheel(storage, whitelistKey);
 });
 
+buildPunishmentWheel();
 void loadBalance();
