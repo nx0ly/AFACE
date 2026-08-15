@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en" class="scheme-light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adivina</title>
+    <link rel="stylesheet" href="../../theme.css" />
+  </head>
+
+  <body
+    class="flex min-h-screen items-center justify-center bg-parchment p-[clamp(20px,5vw,60px)] font-sans text-brown"
+  >
+    <main
+      class="w-full max-w-[520px] rounded-[20px] border-[3px] border-brown bg-cream p-8 text-center shadow-hard"
+    >
+      <p class="mb-2 text-[13px] font-black tracking-[0.14em] uppercase">
+        Page Pause
+      </p>
+      <h1 class="text-[clamp(38px,7vw,56px)] leading-[0.95] tracking-[-0.06em]">
+        Adivina el número
+      </h1>
+      <p class="mt-4 text-[17px] text-brown/72">
+        I am thinking of a whole number between
+        <strong>1</strong> and <strong>1</strong>. Guess it and the token is
+        yours.
+      </p>
+
+      <input
+        id="guess"
+        type="number"
+        value="1"
+        min="1"
+        max="1"
+        aria-label="Your guess"
+        class="mt-6 w-full rounded-xl border-2 border-brown/40 bg-white p-3 text-center text-2xl font-black text-brown"
+      />
+
+      <button
+        id="submit"
+        type="button"
+        class="mt-4 w-full rounded-xl border-0 bg-brown p-4 text-[15px] font-black text-cream"
+      >
+        Guess
+      </button>
+
+      <p id="status" class="mt-4 min-h-[24px] text-[15px] font-black"></p>
+
+      <p class="mt-6 text-sm text-brown/72">
+        Tokens: <strong id="balance">0</strong>
+      </p>
+
+      <p class="mt-6 text-sm">
+        <a class="font-black text-inherit underline" href="../games.html"
+          >← Back to games</a
+        >
+      </p>
+    </main>
+
+    <script src="adivina.js"></script>
+  </body>
+</html>

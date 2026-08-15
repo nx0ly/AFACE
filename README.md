@@ -41,8 +41,7 @@ array, so adding one is two steps:
 punishments need goes in `src/punishment.css` (namespaced `page-pause-*`, since
 it is injected into arbitrary host pages).
 
-Shipping today: arepa rain, fruit-basket rain, la fila del banco, and la
-penitencia.
+Shipping today: arepa rain, la fila del banco, and la penitencia.
 
 ## Build
 

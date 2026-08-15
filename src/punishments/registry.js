@@ -16,7 +16,6 @@
 
 import { arepaRain } from './arepa-rain.js';
 import { bankQueue } from './bank-queue.js';
-import { fruitBasketRain } from './fruit-basket-rain.js';
 import { penanceTyping } from './penance-typing.js';
 
 /**
@@ -47,7 +46,7 @@ import { penanceTyping } from './penance-typing.js';
  */
 
 /** @type {Punishment[]} */
-export const PUNISHMENTS = [arepaRain, fruitBasketRain, bankQueue, penanceTyping];
+export const PUNISHMENTS = [arepaRain, bankQueue, penanceTyping];
 
 /**
  * @param {unknown} id

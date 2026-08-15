@@ -132,9 +132,9 @@
   background-color: transparent !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
-  background-size: var(--punish-bg-size, 260%) auto !important;
+  background-size: 260% auto !important;
   border: 0 !important;
-  border-radius: var(--punish-radius, 50%) !important;
+  border-radius: 50% !important;
   box-shadow: none !important;
   cursor: pointer !important;
   height: var(--arepa-size) !important;
