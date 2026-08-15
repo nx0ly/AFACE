@@ -16,11 +16,14 @@ bun dev
 ```
 
 The token balance starts at zero and persists across tabs and browser restarts.
-The Games page includes Tejo and roulette. Scoring in Tejo or
-landing on green in roulette awards one token. Spending one token
+The Games page includes Tejo, roulette, and Mango Clicker. Scoring in Tejo or
+landing on green in roulette awards one token. Mango Clicker pays one token per
+5,000 mangos harvested, and its progress persists in extension storage.
+Spending one token
 spins a 50/50 Safe or Punishment wheel. Safe results whitelist the current
 hostname for 30 minutes; punishment results return to the target page with a
-falling arepa overlay before granting that pass. A small
+falling overlay — either arepas or fruit baskets, picked at random — before
+granting that pass. A small
 toolbar badge shows the balance when it is above zero.
 
 ## Build

@@ -17,10 +17,44 @@ const RAIN_DURATION = 4_200;
 
 type ExtensionApi = typeof browser;
 
+type PunishmentVariant = 'arepa' | 'basket';
+
 type PendingPunishment = {
   url: string;
   duration: number;
+  variant: PunishmentVariant;
 };
+
+type PunishmentStyle = {
+  image: string;
+  /** Singular noun used in the live-region status text. */
+  noun: string;
+  particleColors: string[];
+  /** Background zoom and corner rounding, since a basket isn't a disc like an arepa. */
+  backgroundSize: string;
+  borderRadius: string;
+};
+
+const PUNISHMENT_STYLES: Record<PunishmentVariant, PunishmentStyle> = {
+  arepa: {
+    image: 'images/arepa.png',
+    noun: 'arepa',
+    particleColors: ['#f6d37a', '#d8943e', '#a9652b', '#fff0b5'],
+    backgroundSize: '260%',
+    borderRadius: '50%',
+  },
+  basket: {
+    image: 'images/fruit_basket.png',
+    noun: 'basket',
+    particleColors: ['#e8734a', '#f2c14e', '#c9527a', '#7fa650'],
+    backgroundSize: '100%',
+    borderRadius: '14%',
+  },
+};
+
+function isPunishmentVariant(value: unknown): value is PunishmentVariant {
+  return value === 'arepa' || value === 'basket';
+}
 
 function getExtensionApi(): ExtensionApi | undefined {
   const extensionGlobal = globalThis as typeof globalThis & {
@@ -82,7 +116,7 @@ async function getPendingPunishment(hostname: string): Promise<PendingPunishment
       return undefined;
     }
 
-    const pending = candidate as { url?: unknown; duration?: unknown };
+    const pending = candidate as { url?: unknown; duration?: unknown; variant?: unknown };
     const targetUrl = typeof pending.url === 'string' ? new URL(pending.url) : undefined;
 
     if (
@@ -99,6 +133,8 @@ async function getPendingPunishment(hostname: string): Promise<PendingPunishment
     return {
       url: targetUrl.toString(),
       duration: pending.duration,
+      // Payloads written before the basket existed have no variant.
+      variant: isPunishmentVariant(pending.variant) ? pending.variant : 'arepa',
     };
   } catch {
     return undefined;
@@ -149,9 +185,12 @@ function getArepaSizes(): number[] {
   return sizes.sort((first, second) => second - first);
 }
 
-function explodeArepa(stage: HTMLElement, x: number, y: number): void {
-  const colors = ['#f6d37a', '#d8943e', '#a9652b', '#fff0b5'];
-
+function explodeArepa(
+  stage: HTMLElement,
+  x: number,
+  y: number,
+  colors: string[],
+): void {
   for (let index = 0; index < 10; index += 1) {
     const particle = document.createElement('span');
     const angle = (index / 10) * Math.PI * 2;
@@ -191,7 +230,8 @@ async function mountArepaPunishment(
   let accumulator = 0;
   let running = true;
   const arepas: ArepaState[] = [];
-  const arepaImageUrl = extensionApi.runtime.getURL('images/arepa.png');
+  const style = PUNISHMENT_STYLES[pending.variant];
+  const arepaImageUrl = extensionApi.runtime.getURL(style.image);
   const startedAt = performance.now();
   // Spread the rain evenly with a little jitter so it pours instead of arriving in clumps.
   const spawnOffsets = Array.from({ length: count }, (_unused, index) => {
@@ -204,7 +244,7 @@ async function mountArepaPunishment(
   stage.className = 'page-pause-arepa-stage';
   status.className = 'page-pause-arepa-status';
   status.setAttribute('aria-live', 'polite');
-  status.textContent = `${remaining} arepas left · click to explode`;
+  status.textContent = `${remaining} ${style.noun}s left · click to explode`;
   overlay.append(stage, status);
   document.body.append(overlay);
 
@@ -233,11 +273,11 @@ async function mountArepaPunishment(
     const centerX = arepa.x + arepa.size / 2;
     const centerY = arepa.y + arepa.size / 2;
     arepa.element.remove();
-    explodeArepa(stage, centerX, centerY);
+    explodeArepa(stage, centerX, centerY, style.particleColors);
     remaining -= 1;
     status.textContent = remaining === 0
       ? 'All exploded · returning to your page…'
-      : `${remaining} arepa${remaining === 1 ? '' : 's'} left · click to explode`;
+      : `${remaining} ${style.noun}${remaining === 1 ? '' : 's'} left · click to explode`;
 
     if (remaining === 0) {
       void finish();
@@ -264,12 +304,14 @@ async function mountArepaPunishment(
 
     arepa.className = 'page-pause-arepa';
     arepa.type = 'button';
-    arepa.setAttribute('aria-label', `Explode arepa ${index + 1}`);
+    arepa.setAttribute('aria-label', `Explode ${style.noun} ${index + 1}`);
     arepa.style.setProperty('left', '0px', 'important');
     arepa.style.setProperty('top', '0px', 'important');
     arepa.style.setProperty('visibility', 'hidden', 'important');
     arepa.style.setProperty('background-image', `url("${arepaImageUrl}")`, 'important');
     arepa.style.setProperty('--arepa-size', `${size}px`);
+    arepa.style.setProperty('--punish-bg-size', style.backgroundSize);
+    arepa.style.setProperty('--punish-radius', style.borderRadius);
     arepa.style.setProperty('--arepa-rotation', `${state.rotation}deg`);
     arepa.addEventListener('click', () => handleClick(state));
     stage.append(arepa);

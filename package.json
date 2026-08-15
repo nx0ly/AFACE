@@ -17,6 +17,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
+    "assets:figma": "bun scripts/figma-export.mjs",
     "dev": "extension dev",
     "start": "extension start",
     "build": "extension build",

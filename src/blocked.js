@@ -93,13 +93,25 @@ function chooseSafeOutcome() {
   return randomValue[0] % 2 === 0;
 }
 
-async function openArepaPunishment(storage) {
+const PUNISHMENT_VARIANTS = [
+  { id: 'arepa', label: 'arepa attack' },
+  { id: 'basket', label: 'fruit basket avalanche' },
+];
+
+function choosePunishmentVariant() {
+  const randomValue = new Uint32Array(1);
+  crypto.getRandomValues(randomValue);
+  return PUNISHMENT_VARIANTS[randomValue[0] % PUNISHMENT_VARIANTS.length];
+}
+
+async function openArepaPunishment(storage, variant) {
   const punishmentKey = `${PUNISHMENT_PREFIX}${originalUrl.hostname}`;
 
   await storage.set({
     [punishmentKey]: {
       url: originalUrl.toString(),
       duration: whitelistDuration,
+      variant: variant.id,
     },
   });
 
@@ -134,14 +146,16 @@ async function spinChanceWheel(storage, whitelistKey) {
     },
   );
 
+  const variant = choosePunishmentVariant();
+
   await animation.finished;
   wheelStatus.textContent = isSafe
     ? `Safe — enjoy your ${whitelistMinutes} ${whitelistMinutes === 1 ? 'minute' : 'minutes'}.`
-    : 'Punishment — loading the arepa attack on your page…';
+    : `Punishment — loading the ${variant.label} on your page…`;
 
   if (!isSafe) {
     window.setTimeout(
-      () => void openArepaPunishment(storage),
+      () => void openArepaPunishment(storage, variant),
       prefersReducedMotion ? 250 : 1100,
     );
     return;
