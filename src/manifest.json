@@ -53,10 +53,12 @@
     ]
   },
   "chromium:permissions": [
-    "storage"
+    "storage",
+    "activeTab"
   ],
   "firefox:permissions": [
-    "storage"
+    "storage",
+    "activeTab"
   ],
   "host_permissions": [],
   "content_scripts": [
