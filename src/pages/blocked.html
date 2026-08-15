@@ -83,7 +83,7 @@
         >
           <p id="wheel-status" class="sr-only" aria-live="polite"></p>
 
-          <div class="relative w-full max-w-[300px]">
+          <div id="chance-wheel-stage" class="relative w-full max-w-[300px] is-hidden:hidden">
             <div
               class="absolute top-[-8px] left-1/2 z-2 -translate-x-1/2 border-x-[15px] border-t-[25px] border-x-transparent border-t-brown"
               aria-hidden="true"
@@ -104,6 +104,32 @@
               >
             </div>
           </div>
+
+          <!-- Second wheel: the wedges are built by blocked.js from the
+               punishment registry, so this stays empty in the markup. -->
+          <div
+            id="punishment-wheel-stage"
+            class="relative w-full max-w-[300px] is-hidden:hidden"
+            hidden
+          >
+            <div
+              class="absolute top-[-8px] left-1/2 z-2 -translate-x-1/2 border-x-[15px] border-t-[25px] border-x-transparent border-t-brown"
+              aria-hidden="true"
+            ></div>
+            <div
+              id="punishment-wheel"
+              class="relative aspect-square w-full rounded-full border-8 border-cream shadow-[0_0_0_3px_var(--color-brown),8px_10px_0_rgb(104_77_58/0.18)]"
+              role="img"
+              aria-label="The punishment wheel"
+            ></div>
+          </div>
+
+          <p
+            id="wheel-caption"
+            class="mt-5 text-center text-[clamp(15px,2.2vw,19px)] font-black tracking-[-0.02em] text-brown uppercase"
+          >
+            Wheel of Doom
+          </p>
         </div>
 
         <div
@@ -150,6 +176,7 @@
       </div>
     </div>
 
-    <script src="blocked.js"></script>
+    <!-- Module: blocked.js imports the punishment registry. -->
+    <script type="module" src="blocked.js"></script>
   </body>
 </html>
