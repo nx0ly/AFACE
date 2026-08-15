@@ -193,3 +193,104 @@
     animation-duration: 100ms;
   }
 }
+
+/* --- Mango harvest ------------------------------------------------------ */
+
+.page-pause-mango-orchard {
+  align-items: center !important;
+  display: flex !important;
+  justify-content: center !important;
+  margin: 18px 0 0 !important;
+  min-height: 190px !important;
+  position: relative !important;
+}
+
+.page-pause-mango {
+  appearance: none !important;
+  background-color: transparent !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+  height: 180px !important;
+  outline: 0 !important;
+  padding: 0 !important;
+  transition: transform 90ms ease !important;
+  width: 180px !important;
+}
+
+.page-pause-mango.is-squished {
+  transform: scale(0.9) rotate(2deg) !important;
+}
+
+.page-pause-mango-pop {
+  animation: page-pause-mango-float 800ms ease-out forwards !important;
+  color: #684d3a !important;
+  font-size: 22px !important;
+  font-weight: 900 !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  z-index: 3 !important;
+}
+
+@keyframes page-pause-mango-float {
+  from {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate(-50%, -70px);
+  }
+}
+
+.page-pause-mango-meter {
+  background: #eacfb3 !important;
+  border: 2px solid #684d3a !important;
+  border-radius: 999px !important;
+  height: 14px !important;
+  margin: 14px 0 0 !important;
+  overflow: hidden !important;
+}
+
+.page-pause-mango-fill {
+  background: #f2bf40 !important;
+  height: 100% !important;
+  transition: width 200ms ease !important;
+  width: 0% !important;
+}
+
+.page-pause-mango-shop {
+  display: grid !important;
+  gap: 8px !important;
+  margin: 16px 0 0 !important;
+}
+
+.page-pause-mango-buy {
+  background: #eacfb3 !important;
+  border: 2px solid #684d3a !important;
+  border-radius: 12px !important;
+  color: #684d3a !important;
+  cursor: pointer !important;
+  font-family: inherit !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  padding: 10px 12px !important;
+  text-align: left !important;
+}
+
+.page-pause-mango-buy:disabled {
+  cursor: not-allowed !important;
+  opacity: 0.45 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-pause-mango,
+  .page-pause-mango-pop {
+    animation: none !important;
+    transition: none !important;
+  }
+}
