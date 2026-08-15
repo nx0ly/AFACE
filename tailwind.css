@@ -1,0 +1,277 @@
+/*
+ * Page Pause design system.
+ *
+ * SOURCE file. Compiled by `bun run css` into src/theme.css, which is what the
+ * pages actually link. src/theme.css is generated — do not edit it by hand.
+ *
+ * NOTE: punishment.css is deliberately NOT part of this file. It is injected
+ * into arbitrary host pages by the content script, so it must stay free of
+ * Preflight and of any selector that isn't namespaced `page-pause-*`.
+ */
+
+@import "tailwindcss";
+
+/* Deterministic scanning: every page lives under src/, and dist/ is gitignored
+   so it is skipped automatically. */
+@source "./src/**/*.{html,js,ts}";
+
+@theme {
+  /* One font for everything. Previously four competing stacks. */
+  --font-sans:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+
+  /* --- Macondo: the extension's primary identity ------------------------- */
+  --color-brown: #684d3a;
+  --color-brown-soft: #765a46;
+  --color-cream: #f6e5c7;
+  --color-parchment: #eacfb3;
+  --color-sun: #f2bf40;
+
+  /* --- Shop: dark ember surfaces ----------------------------------------- */
+  --color-soot-950: #080503;
+  --color-soot-900: #0d0704;
+  --color-soot-800: #120a06;
+  --color-soot-700: #170a05;
+  --color-soot-600: #241209;
+  --color-soot-500: #351708;
+  --color-ash: #fff4ea;
+  --color-ash-muted: #9d8372;
+
+  /* --- Roulette: casino felt and gilt ------------------------------------ */
+  --color-felt-950: #0c0c0c;
+  --color-felt-900: #111111;
+  --color-felt-800: #222222;
+  --color-felt-700: #252525;
+  --color-gilt-light: #f5d879;
+  --color-gilt: #d2a541;
+  --color-gilt-dark: #79541b;
+  --color-chip-red: #c62828;
+  --color-chip-green: #16a05a;
+
+  /* --- Tejo --------------------------------------------------------------- */
+  --color-clay: #c9a66b;
+
+  /* --- Signature hard offset shadow --------------------------------------- */
+  --shadow-hard: 8px 8px 0 rgb(104 77 58 / 0.18);
+  --shadow-hard-lg: 12px 12px 0 rgb(104 77 58 / 0.2);
+  --shadow-hard-xl: 12px 12px 0 rgb(104 77 58 / 0.22);
+
+  /* --- Animations --------------------------------------------------------- */
+  --animate-line-move: line-move 8s linear infinite;
+  --animate-glow-move: glow-move 7s ease-in-out infinite alternate;
+  --animate-logo-pulse: logo-pulse 2s ease-in-out infinite;
+  --animate-hero-float: hero-float 3s ease-in-out infinite;
+  --animate-card-enter: card-enter 0.8s backwards;
+  --animate-ring: ring 4s linear infinite;
+  --animate-item-float: item-float 3s ease-in-out infinite;
+  --animate-float-up: float-up 0.7s ease-out forwards;
+  --animate-wheel-backdrop-in: wheel-backdrop-in 180ms ease-out;
+  --animate-wheel-popup-in: wheel-popup-in 220ms
+    cubic-bezier(0.2, 0.9, 0.3, 1.2);
+
+  @keyframes line-move {
+    from {
+      transform: translateX(-70%) rotate(-8deg);
+    }
+    to {
+      transform: translateX(20%) rotate(-8deg);
+    }
+  }
+
+  @keyframes glow-move {
+    from {
+      transform: translate(0, 0) scale(1);
+    }
+    to {
+      transform: translate(100px, 50px) scale(1.3);
+    }
+  }
+
+  @keyframes logo-pulse {
+    50% {
+      box-shadow: 0 0 45px rgb(255 92 12 / 0.55);
+    }
+  }
+
+  @keyframes hero-float {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-4deg);
+    }
+    50% {
+      transform: translateY(-18px) rotate(4deg);
+    }
+  }
+
+  @keyframes card-enter {
+    from {
+      opacity: 0;
+      transform: translateY(35px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes ring {
+    to {
+      transform: rotate(360deg) scale(1.15);
+    }
+  }
+
+  @keyframes item-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-7px);
+    }
+  }
+
+  @keyframes float-up {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-80px);
+    }
+  }
+
+  @keyframes wheel-backdrop-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes wheel-popup-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.94);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+}
+
+/*
+ * State classes toggled from JavaScript. Declaring them as variants keeps the
+ * styling in the markup instead of splitting it across a stylesheet.
+ *   blocked.js      -> wheelOverlay.hidden = true|false
+ *                      document.body.classList.add("wheel-open")
+ *   shop.js         -> toast.classList.toggle("show")
+ *   tejo.js         -> canvas.classList.toggle("dragging")
+ *   trivia (inline) -> button.classList.add("correct" | "wrong")
+ */
+@custom-variant is-hidden (&[hidden]);
+@custom-variant is-shown (&.show);
+@custom-variant is-wheel-open (&.wheel-open);
+@custom-variant is-dragging (&.dragging);
+@custom-variant is-correct (&.correct);
+@custom-variant is-wrong (&.wrong);
+
+@layer components {
+  /* The primary Macondo button, shared by the popup and the blocked page.
+     Preflight already gives buttons `font: inherit`, so only weight is set. */
+  .btn {
+    @apply w-full cursor-pointer rounded-xl border-0 bg-brown px-6 py-[15px]
+      font-extrabold text-cream transition-colors;
+  }
+
+  .btn:hover,
+  .btn:focus-visible {
+    @apply bg-brown-soft;
+  }
+
+  .btn:focus-visible {
+    @apply outline-3 outline-offset-[3px] outline-sun;
+  }
+
+  .btn:disabled {
+    @apply cursor-not-allowed opacity-65;
+  }
+
+  /* Ghost variant used for the shop entry point. */
+  .btn-ghost {
+    @apply w-full cursor-pointer rounded-xl border-2 border-dashed
+      border-brown/40 bg-transparent px-[18px] py-3 font-extrabold
+      text-brown/65 transition-colors;
+  }
+
+  .btn-ghost:hover,
+  .btn-ghost:focus-visible {
+    @apply border-brown/60 text-brown;
+  }
+
+  /* --- Shop -------------------------------------------------------------
+     The shop repeats one card seven times in plain HTML with no templating,
+     so the pattern is extracted rather than pasted. Everything else in the
+     shop is inline utilities. */
+
+  .shop-card {
+    @apply relative h-[330px] w-[230px] shrink-0 animate-card-enter rounded-[18px]
+      border border-white/7 bg-[linear-gradient(150deg,var(--color-soot-600),#100704)]
+      p-3 transition-[transform,border-color,box-shadow] duration-350
+      ease-[cubic-bezier(0.16,1,0.3,1)];
+  }
+
+  .shop-card:hover {
+    @apply -translate-y-3 border-[rgb(255_120_25/0.6)]
+      shadow-[0_25px_50px_rgb(0_0_0/0.45),0_0_30px_rgb(255_95_10/0.08)];
+  }
+
+  .shop-card-image {
+    @apply relative grid h-[170px] place-items-center overflow-hidden
+      rounded-[13px]
+      bg-[radial-gradient(circle,rgb(255_105_20/0.25),transparent_60%),linear-gradient(145deg,var(--color-soot-500),var(--color-soot-700))];
+  }
+
+  .shop-card-image::after {
+    @apply absolute h-[130px] w-[130px] animate-ring rounded-full
+      border border-[rgb(255_140_50/0.15)] content-[''];
+  }
+
+  .shop-item {
+    @apply relative z-2 animate-item-float text-7xl
+      drop-shadow-[0_15px_15px_rgb(0_0_0/0.5)];
+  }
+
+  .shop-badge {
+    @apply absolute top-[9px] left-[9px] z-4 rounded-md bg-orange-500 px-2 py-[5px]
+      text-[9px] font-black text-white;
+  }
+
+  .shop-buy-row {
+    @apply absolute right-[15px] bottom-[14px] left-[15px] flex items-center
+      justify-between;
+  }
+
+  .shop-buy {
+    @apply cursor-pointer rounded-lg border-0
+      bg-[linear-gradient(135deg,#ff8d2c,#e95508)] px-[13px] py-2 text-[10px]
+      font-black text-white transition duration-200;
+  }
+
+  .shop-buy:hover {
+    @apply scale-108 brightness-115;
+  }
+
+  .shop-nav-button {
+    @apply h-[45px] w-[45px] cursor-pointer rounded-[11px]
+      border border-[rgb(255_125_35/0.25)] bg-[rgb(20_10_5/0.9)] text-lg
+      text-white transition duration-200;
+  }
+
+  .shop-nav-button:hover {
+    @apply border-orange-500 bg-orange-500;
+  }
+}

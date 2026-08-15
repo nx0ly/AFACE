@@ -1,163 +1,59 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scheme-light">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <title>Colombia Trivia</title>
-        <style>
-            :root {
-                --o: #f97316;
-                --o2: #ea580c;
-                --bg: #fff7ed;
-                --ink: #431407;
-            }
-            * {
-                box-sizing: border-box;
-            }
-            body {
-                margin: 0;
-                min-height: 100vh;
-                background: linear-gradient(135deg, #fff7ed, #fed7aa);
-                font-family:
-                    system-ui,
-                    -apple-system,
-                    Segoe UI,
-                    sans-serif;
-                color: var(--ink);
-                display: grid;
-                place-items: center;
-                padding: 20px;
-            }
-            .game {
-                width: min(760px, 100%);
-            }
-            .header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 18px;
-            }
-            .logo {
-                font-size: 28px;
-                font-weight: 950;
-            }
-            .logo span {
-                color: var(--o);
-            }
-            .tokens {
-                background: white;
-                border: 2px solid #fdba74;
-                border-radius: 999px;
-                padding: 9px 16px;
-                font-weight: 900;
-                box-shadow: 0 6px 20px #9a341220;
-            }
-            .card {
-                background: #fff;
-                border: 2px solid #fdba74;
-                border-radius: 26px;
-                padding: clamp(24px, 5vw, 44px);
-                box-shadow: 0 25px 70px #9a341225;
-            }
-            .number {
-                color: var(--o2);
-                font-size: 13px;
-                font-weight: 900;
-                text-transform: uppercase;
-                letter-spacing: 2px;
-                margin-bottom: 12px;
-            }
-            h1 {
-                font-size: clamp(25px, 5vw, 39px);
-                line-height: 1.12;
-                margin: 0 0 25px;
-            }
-            .answers {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 14px;
-            }
-            .answer {
-                min-height: 76px;
-                border: 2px solid #fed7aa;
-                background: var(--bg);
-                border-radius: 17px;
-                padding: 16px;
-                text-align: left;
-                font: inherit;
-                font-size: 16px;
-                font-weight: 800;
-                color: var(--ink);
-                cursor: pointer;
-                transition: 0.15s;
-            }
-            .answer:hover {
-                border-color: var(--o);
-                transform: translateY(-2px);
-            }
-            .answer.correct {
-                background: #dcfce7;
-                border-color: #16a34a;
-                color: #14532d;
-            }
-            .answer.wrong {
-                background: #fee2e2;
-                border-color: #dc2626;
-                color: #7f1d1d;
-            }
-            .answer:disabled {
-                cursor: default;
-            }
-            .end {
-                display: none;
-                text-align: center;
-            }
-            .end h2 {
-                font-size: 38px;
-                margin: 0 0 8px;
-            }
-            .end p {
-                font-weight: 700;
-                color: #9a3412;
-            }
-            .restart {
-                border: 0;
-                background: var(--o2);
-                color: white;
-                padding: 13px 20px;
-                border-radius: 14px;
-                font: inherit;
-                font-weight: 900;
-                cursor: pointer;
-            }
-            @media (max-width: 600px) {
-                .answers {
-                    grid-template-columns: 1fr;
-                }
-                .header {
-                    margin-bottom: 12px;
-                }
-            }
-        </style>
+        <link rel="stylesheet" href="../../theme.css" />
     </head>
-    <body>
-        <main class="game">
-            <header class="header">
-                <div class="logo">Colombia <span>Trivia</span></div>
-                <div class="tokens">🪙 <span id="tokens">0</span></div>
+    <body
+        class="grid min-h-screen place-items-center bg-[linear-gradient(135deg,var(--color-orange-50),var(--color-orange-200))] p-5 font-sans text-orange-950"
+    >
+        <main class="w-[min(760px,100%)]">
+            <header
+                class="mb-3 flex items-center justify-between sm:mb-[18px]"
+            >
+                <div class="text-[28px] font-black">
+                    Colombia <span class="text-orange-500">Trivia</span>
+                </div>
+                <div
+                    class="rounded-full border-2 border-orange-300 bg-white px-4 py-[9px] font-black shadow-[0_6px_20px_rgb(154_52_18/0.13)]"
+                >
+                    🪙 <span id="tokens">0</span>
+                </div>
             </header>
 
-            <section class="card" id="quiz">
-                <div class="number" id="number"></div>
-                <h1 id="question"></h1>
-                <div class="answers" id="answers"></div>
+            <section
+                class="rounded-[26px] border-2 border-orange-300 bg-white p-[clamp(24px,5vw,44px)] shadow-[0_25px_70px_rgb(154_52_18/0.15)]"
+                id="quiz"
+            >
+                <div
+                    class="mb-3 text-[13px] font-black tracking-[2px] text-orange-600 uppercase"
+                    id="number"
+                ></div>
+                <h1
+                    class="mb-[25px] text-[clamp(25px,5vw,39px)] leading-[1.12]"
+                    id="question"
+                ></h1>
+                <div
+                    class="grid grid-cols-1 gap-[14px] sm:grid-cols-2"
+                    id="answers"
+                ></div>
             </section>
 
-            <section class="card end" id="end">
-                <h2>Game Over</h2>
-                <p>You missed a question.</p>
-                <p>Tokens earned: <strong id="finalTokens"></strong></p>
-                <button class="restart" onclick="location.reload()">
+            <section
+                class="hidden rounded-[26px] border-2 border-orange-300 bg-white p-[clamp(24px,5vw,44px)] text-center shadow-[0_25px_70px_rgb(154_52_18/0.15)]"
+                id="end"
+            >
+                <h2 class="mb-2 text-[38px]">Game Over</h2>
+                <p class="font-bold text-orange-800">You missed a question.</p>
+                <p class="font-bold text-orange-800">
+                    Tokens earned: <strong id="finalTokens"></strong>
+                </p>
+                <button
+                    class="cursor-pointer rounded-[14px] border-0 bg-orange-600 px-5 py-[13px] font-black text-white"
+                    onclick="location.reload()"
+                >
                     Play again
                 </button>
             </section>
@@ -1236,7 +1132,10 @@
                 box.innerHTML = "";
                 q.options.forEach((text, i) => {
                     const b = document.createElement("button");
-                    b.className = "answer";
+                    // `answer` is the hook querySelectorAll(".answer") relies on;
+                    // `correct`/`wrong` are added later and drive the is-* variants.
+                    b.className =
+                        "answer min-h-[76px] cursor-pointer rounded-[17px] border-2 border-orange-200 bg-orange-50 p-4 text-left text-base font-extrabold text-orange-950 transition duration-150 hover:-translate-y-0.5 hover:border-orange-500 disabled:cursor-default is-correct:border-green-600 is-correct:bg-green-100 is-correct:text-green-900 is-wrong:border-red-600 is-wrong:bg-red-100 is-wrong:text-red-900";
                     b.textContent = `${String.fromCharCode(65 + i)}. ${text}`;
                     b.onclick = () => answer(i);
                     box.appendChild(b);

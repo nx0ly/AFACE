@@ -17,14 +17,32 @@ bun dev
 
 The token balance starts at zero and persists across tabs and browser restarts.
 The Games page includes Tejo, roulette, and Mango Clicker. Scoring in Tejo or
-landing on green in roulette awards one token. Mango Clicker pays one token per
-5,000 mangos harvested, and its progress persists in extension storage.
-Spending one token
-spins a 50/50 Safe or Punishment wheel. Safe results whitelist the current
-hostname for 30 minutes; punishment results return to the target page with a
-falling overlay — either arepas or fruit baskets, picked at random — before
-granting that pass. A small
-toolbar badge shows the balance when it is above zero.
+landing on green in roulette awards one token; Mango Clicker pays one token per
+5,000 mangos harvested and keeps its progress in extension storage. Spending one
+token spins a 50/50 Safe or Doom wheel. Safe whitelists the current hostname for
+30 minutes; Doom spins a *second* wheel — one wedge per registered punishment —
+and sends you back to the target page to serve whichever one it lands on. The
+pass is granted once the punishment is over. A small toolbar badge shows the
+balance when it is above zero.
+
+## Punishments
+
+Every punishment lives in `src/punishments/` and is listed in
+`src/punishments/registry.js`. The Wheel of Doom builds its wedges from that
+array, so adding one is two steps:
+
+1. Copy a punishment file (`bank-queue.js` is the smallest) and edit it. It
+   exports `{ id, label, color, textColor, taunt, mount }`; `mount(context)`
+   runs on the blocked page and calls `context.grantPass()` when the user has
+   served their sentence.
+2. Import it in `registry.js` and add it to `PUNISHMENTS`.
+
+`punishments/overlay.js` provides the shared panel chrome, and any CSS the
+punishments need goes in `src/punishment.css` (namespaced `page-pause-*`, since
+it is injected into arbitrary host pages).
+
+Shipping today: arepa rain, fruit-basket rain, la fila del banco, and la
+penitencia.
 
 ## Build
 
@@ -40,7 +58,9 @@ bun build:edge      # → dist/edge-mv3-prod
 src/
   background.ts      # updates the toolbar token badge
   manifest.json      # cross-browser manifest (MV3 Chrome/Edge, MV2 Firefox)
-  index.ts           # document-start all-page blocker
+  index.ts           # document-start all-page blocker + punishment dispatch
+  punishments/       # one file per punishment, listed in registry.js
+  punishment.css     # styles injected into host pages by the content script
   blocked.html       # extension-owned interstitial page
   blocked.js         # interstitial behavior
   blocked.css        # interstitial styling

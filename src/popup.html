@@ -1,15 +1,23 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scheme-light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Page Pause</title>
-    <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="theme.css" />
   </head>
-  <body>
-    <main>
-      <p id="status">Clear every temporary site whitelist.</p>
-      <button id="clear-whitelist" type="button">Clear whitelist</button>
+  <body class="w-[260px] bg-cream font-sans text-brown">
+    <main class="p-[18px]">
+      <p id="status" class="mb-[14px] leading-[1.4]">
+        Clear every temporary site whitelist.
+      </p>
+      <button
+        id="clear-whitelist"
+        type="button"
+        class="btn rounded-[10px] px-[14px] py-[11px]"
+      >
+        Clear whitelist
+      </button>
     </main>
     <script src="popup.js"></script>
   </body>

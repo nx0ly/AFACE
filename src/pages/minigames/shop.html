@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en" class="scheme-dark">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Orange Shop</title>
+        <link rel="stylesheet" href="../../theme.css" />
+    </head>
+
+    <body
+        class="h-screen w-screen overflow-hidden bg-[radial-gradient(circle_at_75%_50%,rgb(255_94_12/0.14),transparent_35%),linear-gradient(120deg,#080402,#180b05,#090403)] font-sans text-ash"
+    >
+        <div class="pointer-events-none fixed inset-0 overflow-hidden">
+            <div
+                class="absolute top-[15%] h-px w-[180vw] animate-line-move bg-[linear-gradient(90deg,transparent,rgb(255_112_24/0.35),transparent)] [animation-delay:-2s]"
+            ></div>
+            <div
+                class="absolute top-[45%] h-px w-[180vw] animate-line-move bg-[linear-gradient(90deg,transparent,rgb(255_112_24/0.35),transparent)] [animation-delay:-5s]"
+            ></div>
+            <div
+                class="absolute top-[75%] h-px w-[180vw] animate-line-move bg-[linear-gradient(90deg,transparent,rgb(255_112_24/0.35),transparent)] [animation-delay:-1s]"
+            ></div>
+
+            <div
+                class="absolute top-[-100px] left-[10%] h-[400px] w-[400px] animate-glow-move rounded-full bg-[rgb(255_83_10/0.12)] blur-[80px]"
+            ></div>
+            <div
+                class="absolute right-[5%] bottom-[-150px] h-[400px] w-[400px] animate-glow-move rounded-full bg-[rgb(255_83_10/0.12)] blur-[80px] [animation-delay:-3s]"
+            ></div>
+        </div>
+
+        <div
+            class="relative mx-0 my-0 h-screen min-h-[600px] w-full overflow-hidden rounded-none border border-[rgb(255_120_35/0.25)] bg-[rgb(12_7_4/0.92)] shadow-[0_30px_100px_rgb(0_0_0/0.7),inset_0_1px_rgb(255_255_255/0.04)] min-[801px]:mx-auto min-[801px]:my-[5vh] min-[801px]:h-[90vh] min-[801px]:w-[94vw] min-[801px]:rounded-[24px]"
+        >
+            <header
+                class="flex h-[82px] items-center justify-between border-b border-[rgb(255_120_35/0.14)] px-[18px] min-[801px]:px-8"
+            >
+                <div class="flex items-center gap-3 font-black tracking-[2px]">
+                    <div
+                        class="grid h-11 w-11 animate-logo-pulse place-items-center rounded-[13px] bg-[linear-gradient(135deg,#ffae4f,#e84c06)] shadow-[0_0_25px_rgb(255_92_12/0.3)]"
+                    >
+                        🔥
+                    </div>
+                    ORANGE<span class="text-orange-500">SHOP</span>
+                </div>
+
+                <div class="flex gap-[10px]">
+                    <div
+                        class="flex h-[42px] items-center gap-[9px] rounded-[11px] border border-white/7 bg-white/4 px-[15px] font-black"
+                    >
+                        <div
+                            class="grid h-[22px] w-[22px] place-items-center rounded-full bg-orange-500 text-[11px] text-[#421300]"
+                        >
+                            ◈
+                        </div>
+                        <span id="coins">2,450</span>
+                    </div>
+
+                    <div
+                        class="flex h-[42px] items-center gap-[9px] rounded-[11px] border border-white/7 bg-white/4 px-[15px] font-black"
+                    >
+                        <div
+                            class="grid h-[22px] w-[22px] place-items-center rounded-full bg-orange-500 text-[11px] text-[#421300]"
+                        >
+                            ◆
+                        </div>
+                        <span id="gems">380</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- `viewport` is the hook shop.js uses for wheel/drag handling. -->
+            <main class="viewport relative h-[calc(100%-82px)] overflow-hidden">
+                <div
+                    class="pointer-events-none absolute top-0 bottom-0 left-0 z-10 w-[90px] bg-[linear-gradient(90deg,var(--color-soot-900),transparent)]"
+                ></div>
+                <div
+                    class="pointer-events-none absolute top-0 right-0 bottom-0 z-10 w-[90px] bg-[linear-gradient(270deg,var(--color-soot-900),transparent)]"
+                ></div>
+
+                <div
+                    class="absolute top-0 left-0 flex h-full w-max items-center gap-7 pr-[90px] pl-10 transition-transform duration-800 ease-[cubic-bezier(0.16,1,0.3,1)] min-[801px]:pl-[90px]"
+                    id="world"
+                >
+                    <section
+                        class="relative h-[390px] w-[500px] shrink-0 overflow-hidden rounded-[24px] border border-[rgb(255_137_37/0.45)] bg-[radial-gradient(circle_at_80%_30%,rgb(255_174_72/0.18),transparent_30%),linear-gradient(125deg,#8e2e08,#391305_65%,#160804)] shadow-[0_25px_60px_rgb(0_0_0/0.45)] before:absolute before:top-[55px] before:right-[50px] before:animate-hero-float before:text-[170px] before:opacity-90 before:drop-shadow-[0_0_35px_rgb(255_100_10/0.65)] before:content-['\1f525'] min-[801px]:w-[600px]"
+                    >
+                        <div class="absolute bottom-[38px] left-[38px] z-2">
+                            <div
+                                class="mb-3 text-[11px] font-black tracking-[3px] text-[#ffc88e] uppercase"
+                            >
+                                Limited Time
+                            </div>
+
+                            <h1 class="mb-[13px] text-[43px] leading-[0.95]">
+                                ORANGE<br />
+                                FURY
+                            </h1>
+
+                            <p class="w-[300px] text-[13px] leading-[1.5] text-[#eac6ad]">
+                                Unlock an exclusive cosmetic collection, premium
+                                currency and a legendary bonus item.
+                            </p>
+
+                            <button
+                                class="mt-[22px] cursor-pointer rounded-[10px] border-0 bg-[#ffb35f] px-[22px] py-[13px] font-black text-[#4b1b00] transition duration-250 hover:-translate-y-[3px] hover:scale-103 hover:shadow-[0_10px_30px_rgb(255_140_40/0.25)]"
+                                data-item="Orange Fury Pack"
+                                data-price="500"
+                            >
+                                GET PACK - 500 ◈
+                            </button>
+                        </div>
+                    </section>
+
+                    <section class="w-[180px] shrink-0">
+                        <div class="text-xs font-black tracking-[2px] text-orange-500">
+                            01 / FEATURED
+                        </div>
+
+                        <h2 class="mt-2 text-[32px] leading-none">
+                            DAILY<br />
+                            DROPS
+                        </h2>
+
+                        <p class="mt-[14px] text-xs leading-[1.5] text-ash-muted">
+                            Fresh items are rotating through the shop. Swipe or
+                            use the arrows to explore.
+                        </p>
+                    </section>
+
+                    <article class="shop-card">
+                        <div class="shop-card-image">
+                            <span class="shop-badge">NEW</span>
+                            <div class="shop-item">🦊</div>
+                        </div>
+
+                        <div class="px-[3px] py-[13px]">
+                            <h3 class="mb-[7px] text-[15px]">EMBER FOX</h3>
+                            <p class="text-[11px] leading-[1.4] text-ash-muted">
+                                A blazing cosmetic skin for your character.
+                            </p>
+                        </div>
+
+                        <div class="shop-buy-row">
+                            <span class="text-sm font-black">900 ◈</span>
+                            <button
+                                class="shop-buy"
+                                data-item="Ember Fox"
+                                data-price="900"
+                            >
+                                BUY
+                            </button>
+                        </div>
+                    </article>
+
+                    <article class="shop-card" style="animation-delay: 0.1s">
+                        <div class="shop-card-image">
+                            <span class="shop-badge">HOT</span>
+                            <div class="shop-item">⚡</div>
+                        </div>
+
+                        <div class="px-[3px] py-[13px]">
+                            <h3 class="mb-[7px] text-[15px]">XP OVERDRIVE</h3>
+                            <p class="text-[11px] leading-[1.4] text-ash-muted">
+                                Double your XP gains for 60 minutes.
+                            </p>
+                        </div>
+
+                        <div class="shop-buy-row">
+                            <span class="text-sm font-black">250 ◈</span>
+                            <button
+                                class="shop-buy"
+                                data-item="XP Overdrive"
+                                data-price="250"
+                            >
+                                BUY
+                            </button>
+                        </div>
+                    </article>
+
+                    <article class="shop-card" style="animation-delay: 0.2s">
+                        <div class="shop-card-image">
+                            <div class="shop-item">🛡️</div>
+                        </div>
+
+                        <div class="px-[3px] py-[13px]">
+                            <h3 class="mb-[7px] text-[15px]">INFERNO ARMOR</h3>
+                            <p class="text-[11px] leading-[1.4] text-ash-muted">
+                                Legendary armor with animated fire effects.
+                            </p>
+                        </div>
+
+                        <div class="shop-buy-row">
+                            <span class="text-sm font-black">1,200 ◈</span>
+                            <button
+                                class="shop-buy"
+                                data-item="Inferno Armor"
+                                data-price="1200"
+                            >
+                                BUY
+                            </button>
+                        </div>
+                    </article>
+
+                    <article class="shop-card" style="animation-delay: 0.3s">
+                        <div class="shop-card-image">
+                            <span class="shop-badge">VALUE</span>
+                            <div class="shop-item">🪙</div>
+                        </div>
+
+                        <div class="px-[3px] py-[13px]">
+                            <h3 class="mb-[7px] text-[15px]">COIN CRATE</h3>
+                            <p class="text-[11px] leading-[1.4] text-ash-muted">
+                                A large bundle of premium shop currency.
+                            </p>
+                        </div>
+
+                        <div class="shop-buy-row">
+                            <span class="text-sm font-black">$4.99</span>
+                            <button
+                                class="shop-buy"
+                                data-item="Coin Crate"
+                                data-price="0"
+                            >
+                                BUY
+                            </button>
+                        </div>
+                    </article>
+
+                    <article class="shop-card" style="animation-delay: 0.4s">
+                        <div class="shop-card-image">
+                            <div class="shop-item">💎</div>
+                        </div>
+
+                        <div class="px-[3px] py-[13px]">
+                            <h3 class="mb-[7px] text-[15px]">GEM CHEST</h3>
+                            <p class="text-[11px] leading-[1.4] text-ash-muted">
+                                500 premium gems for your account.
+                            </p>
+                        </div>
+
+                        <div class="shop-buy-row">
+                            <span class="text-sm font-black">$9.99</span>
+                            <button
+                                class="shop-buy"
+                                data-item="Gem Chest"
+                                data-price="0"
+                            >
+                                BUY
+                            </button>
+                        </div>
+                    </article>
+
+                    <section class="w-[180px] shrink-0">
+                        <div class="text-xs font-black tracking-[2px] text-orange-500">
+                            02 / COSMETICS
+                        </div>
+
+                        <h2 class="mt-2 text-[32px] leading-none">
+                            LOOK<br />
+                            SHARP
+                        </h2>
+
+                        <p class="mt-[14px] text-xs leading-[1.5] text-ash-muted">
+                            Stand out from the crowd with exclusive cosmetics.
+                        </p>
+                    </section>
+
+                    <article class="shop-card">
+                        <div class="shop-card-image">
+                            <span class="shop-badge">EPIC</span>
+                            <div class="shop-item">🕶️</div>
+                        </div>
+
+                        <div class="px-[3px] py-[13px]">
+                            <h3 class="mb-[7px] text-[15px]">NEON VISOR</h3>
+                            <p class="text-[11px] leading-[1.4] text-ash-muted">
+                                A futuristic orange character accessory.
+                            </p>
+                        </div>
+
+                        <div class="shop-buy-row">
+                            <span class="text-sm font-black">700 ◈</span>
+                            <button
+                                class="shop-buy"
+                                data-item="Neon Visor"
+                                data-price="700"
+                            >
+                                BUY
+                            </button>
+                        </div>
+                    </article>
+
+                    <article class="shop-card">
+                        <div class="shop-card-image">
+                            <span class="shop-badge">RARE</span>
+                            <div class="shop-item">👟</div>
+                        </div>
+
+                        <div class="px-[3px] py-[13px]">
+                            <h3 class="mb-[7px] text-[15px]">FLAME RUNNERS</h3>
+                            <p class="text-[11px] leading-[1.4] text-ash-muted">
+                                Leave a trail of fire behind every step.
+                            </p>
+                        </div>
+
+                        <div class="shop-buy-row">
+                            <span class="text-sm font-black">850 ◈</span>
+                            <button
+                                class="shop-buy"
+                                data-item="Flame Runners"
+                                data-price="850"
+                            >
+                                BUY
+                            </button>
+                        </div>
+                    </article>
+                </div>
+
+                <div
+                    class="absolute right-[25px] bottom-[25px] z-20 flex items-center gap-2"
+                >
+                    <button id="move-left" type="button" class="shop-nav-button">
+                        ‹
+                    </button>
+
+                    <div
+                        class="h-1 w-[100px] overflow-hidden rounded-[5px] bg-white/10"
+                    >
+                        <div
+                            class="h-full w-1/4 rounded-[inherit] bg-orange-500 transition-[width] duration-500"
+                            id="progress"
+                        ></div>
+                    </div>
+
+                    <button id="move-right" type="button" class="shop-nav-button">
+                        ›
+                    </button>
+                </div>
+            </main>
+        </div>
+
+        <div
+            class="toast fixed bottom-[30px] left-1/2 z-100 translate-x-[-50%] translate-y-20 rounded-xl border border-[rgb(255_130_40/0.4)] bg-[#241006] px-[22px] py-[13px] text-xs font-black text-[#ffd9b4] opacity-0 shadow-[0_15px_50px_rgb(0_0_0/0.5)] transition duration-300 is-shown:translate-y-0 is-shown:opacity-100"
+            id="toast"
+        ></div>
+
+        <script src="shop.js"></script>
+    </body>
+</html>

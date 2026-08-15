@@ -1,3 +1,108 @@
+/* --- Panel punishments -------------------------------------------------
+   Shared chrome for punishments that are a dialog rather than a physics toy
+   (punishments/overlay.js). Every property is spelled out and !important:
+   this lands on arbitrary host pages with their own aggressive stylesheets. */
+
+.page-pause-panel-overlay {
+  align-items: center !important;
+  background: rgb(104 77 58 / 0.72) !important;
+  display: flex !important;
+  inset: 0 !important;
+  justify-content: center !important;
+  padding: 24px !important;
+  position: fixed !important;
+  z-index: 2147483647 !important;
+}
+
+.page-pause-panel {
+  background: #f6e5c7 !important;
+  border: 3px solid #684d3a !important;
+  border-radius: 20px !important;
+  box-shadow: 12px 12px 0 rgb(104 77 58 / 0.2) !important;
+  box-sizing: border-box !important;
+  color: #684d3a !important;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+  max-width: 420px !important;
+  padding: 28px !important;
+  text-align: center !important;
+  width: 100% !important;
+}
+
+.page-pause-panel-title {
+  color: #684d3a !important;
+  font-size: 30px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.04em !important;
+  line-height: 1.05 !important;
+  margin: 0 !important;
+}
+
+.page-pause-panel-subtitle {
+  color: rgb(104 77 58 / 0.75) !important;
+  font-size: 15px !important;
+  line-height: 1.5 !important;
+  margin: 12px 0 0 !important;
+}
+
+.page-pause-panel-status {
+  color: #684d3a !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  margin: 18px 0 0 !important;
+  min-height: 20px !important;
+}
+
+.page-pause-panel-phrase {
+  background: #eacfb3 !important;
+  border-radius: 12px !important;
+  color: #684d3a !important;
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  margin: 18px 0 0 !important;
+  padding: 12px !important;
+  user-select: none !important;
+}
+
+.page-pause-panel-input {
+  background: #fff !important;
+  border: 2px solid rgb(104 77 58 / 0.4) !important;
+  border-radius: 12px !important;
+  box-sizing: border-box !important;
+  color: #684d3a !important;
+  font-family: inherit !important;
+  font-size: 16px !important;
+  margin-top: 12px !important;
+  padding: 12px 14px !important;
+  width: 100% !important;
+}
+
+.page-pause-panel-button {
+  background: #684d3a !important;
+  border: 0 !important;
+  border-radius: 12px !important;
+  color: #f6e5c7 !important;
+  cursor: pointer !important;
+  font-family: inherit !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  margin-top: 16px !important;
+  padding: 15px 24px !important;
+  width: 100% !important;
+}
+
+.page-pause-panel-button:disabled {
+  cursor: not-allowed !important;
+  opacity: 0.65 !important;
+}
+
+.page-pause-panel-button:focus-visible,
+.page-pause-panel-input:focus-visible {
+  outline: 3px solid #f2bf40 !important;
+  outline-offset: 3px !important;
+}
+
+/* --- Arepa rain --------------------------------------------------------- */
+
 .page-pause-arepa-overlay {
   background: transparent;
   inset: 0;

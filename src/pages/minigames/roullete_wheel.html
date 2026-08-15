@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en" class="scheme-dark">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Color Roulette</title>
+        <link rel="stylesheet" href="../../theme.css" />
+    </head>
+
+    <body
+        class="m-0 flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_center,var(--color-felt-700)_0%,var(--color-felt-950)_70%)] font-sans text-white"
+    >
+        <div class="text-center">
+            <h1
+                class="mb-[25px] text-[20px] font-extrabold tracking-[5px] text-neutral-200 min-[520px]:mb-[35px] min-[520px]:text-[26px]"
+            >
+                COLOR ROULETTE
+            </h1>
+
+            <div
+                class="relative mx-auto h-[320px] w-[320px] min-[520px]:h-[430px] min-[520px]:w-[430px]"
+            >
+                <!-- pointer -->
+                <div
+                    class="absolute top-[-12px] left-1/2 z-20 h-0 w-0 -translate-x-1/2 border-x-[17px] border-t-[38px] border-x-transparent border-t-neutral-100 drop-shadow-[0_3px_3px_rgb(0_0_0/0.8)]"
+                ></div>
+
+                <!-- rim -->
+                <div
+                    class="absolute inset-0 rounded-full bg-[linear-gradient(135deg,var(--color-gilt-light),#8c6420_25%,#e5bd50_50%,var(--color-gilt-dark)_75%,#edcb68)] p-[11px] shadow-[0_20px_50px_rgb(0_0_0/0.65),inset_0_0_8px_rgb(255_255_255/0.7)]"
+                >
+                    <!-- background is replaced with a conic-gradient by roullete_wheel.js -->
+                    <div
+                        id="wheel"
+                        class="relative h-full w-full overflow-hidden rounded-full bg-felt-900 shadow-[inset_0_0_0_4px_var(--color-felt-800),inset_0_0_30px_rgb(0_0_0/0.8)] transition-transform duration-[5500ms] ease-[cubic-bezier(0.12,0.72,0.13,1)]"
+                    >
+                        <div
+                            class="pointer-events-none absolute inset-0 z-3 rounded-full bg-[repeating-conic-gradient(from_0deg,transparent_0deg_2.7deg,rgb(255_255_255/0.2)_2.7deg_2.8125deg)]"
+                        ></div>
+
+                        <div
+                            class="pointer-events-none absolute inset-[17%] z-4 rounded-full border-4 border-gilt/90 shadow-[inset_0_0_0_4px_#171717,0_0_10px_rgb(0_0_0/0.5)]"
+                        ></div>
+
+                        <div
+                            class="absolute top-1/2 left-1/2 z-10 h-[80px] w-[80px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[7px] border-[#a77a26] bg-[radial-gradient(circle,#444_0%,var(--color-felt-800)_45%,#090909_100%)] shadow-[0_5px_15px_rgb(0_0_0/0.7),inset_0_0_15px_rgb(255_255_255/0.08)] after:absolute after:top-1/2 after:left-1/2 after:h-[18px] after:w-[18px] after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:bg-[#d7d7d7] after:shadow-[0_0_8px_rgb(255_255_255/0.5)] after:content-[''] min-[520px]:h-[105px] min-[520px]:w-[105px]"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-[25px] h-[65px] min-[520px]:mt-[35px]">
+                <div class="text-[11px] tracking-[4px] text-neutral-500">
+                    RESULT
+                </div>
+
+                <!-- colour is set inline by roullete_wheel.js -->
+                <div
+                    id="result"
+                    class="mt-[7px] text-[28px] font-extrabold tracking-[3px]"
+                >
+                    -
+                </div>
+            </div>
+
+            <button
+                id="spin"
+                class="mt-[15px] cursor-pointer rounded-[50px] border-none bg-[linear-gradient(180deg,#f5f5f5,#cfcfcf)] px-[60px] py-[15px] text-[15px] font-extrabold tracking-[3px] text-felt-900 shadow-[0_7px_20px_rgb(0_0_0/0.4)] transition-[transform,box-shadow] duration-150 hover:-translate-y-0.5 hover:shadow-[0_10px_25px_rgb(0_0_0/0.5)] active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50"
+            >
+                SPIN
+            </button>
+
+            <div
+                class="mt-[25px] flex justify-center gap-[22px] text-xs text-neutral-400"
+            >
+                <div class="flex items-center gap-[7px]">
+                    <span
+                        class="h-[9px] w-[9px] rounded-full bg-chip-red"
+                    ></span>
+                    RED
+                </div>
+
+                <div class="flex items-center gap-[7px]">
+                    <span
+                        class="h-[9px] w-[9px] rounded-full border border-neutral-600 bg-felt-900"
+                    ></span>
+                    BLACK
+                </div>
+
+                <div class="flex items-center gap-[7px]">
+                    <span
+                        class="h-[9px] w-[9px] rounded-full bg-chip-green"
+                    ></span>
+                    GREEN
+                </div>
+            </div>
+        </div>
+
+        <script src="roullete_wheel.js"></script>
+    </body>
+</html>

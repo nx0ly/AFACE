@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en" class="scheme-light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page paused</title>
+    <link rel="stylesheet" href="../theme.css" />
+  </head>
+  <body
+    class="flex min-h-screen items-center justify-center bg-parchment p-4 font-sans text-brown is-wheel-open:overflow-hidden md:p-6"
+  >
+    <main
+      class="relative grid min-h-[75vh] w-full grid-cols-1 overflow-hidden rounded-[20px] border-[3px] border-brown bg-cream shadow-hard-lg md:w-[75vw] md:grid-cols-2"
+    >
+      <section
+        class="flex min-h-[36vh] items-center justify-center p-[clamp(32px,6vw,80px)] md:min-h-0"
+        aria-labelledby="spend-title"
+      >
+        <div class="w-full max-w-[360px]">
+          <h1
+            id="spend-title"
+            class="text-[clamp(30px,4vw,48px)] leading-[1.05] tracking-[-0.04em]"
+          >
+            Spend 1 token
+          </h1>
+          <p class="mt-4 text-[15px] text-brown/75">
+            <strong id="token-count" class="text-[18px] text-brown">0</strong>
+            tokens available
+          </p>
+          <p id="whitelist-description" class="mt-[14px] mb-[26px] leading-[1.5] text-brown/72">
+            Continue to this site for 30 minutes.
+          </p>
+          <button id="continue" type="button" class="btn" disabled>
+            Earn 1 token to continue
+          </button>
+        </div>
+      </section>
+
+      <section
+        class="relative flex min-h-[36vh] items-center justify-center p-[clamp(32px,6vw,80px)] before:absolute before:top-0 before:left-[12.5%] before:h-0.5 before:w-3/4 before:rounded-full before:bg-brown/28 before:content-[''] md:min-h-0 md:before:top-[12.5%] md:before:left-0 md:before:h-3/4 md:before:w-0.5"
+        aria-labelledby="game-title"
+      >
+        <div class="w-full max-w-[360px]">
+          <h2
+            id="game-title"
+            class="text-[clamp(30px,4vw,48px)] leading-[1.05] tracking-[-0.04em]"
+          >
+            Get tokens
+          </h2>
+          <p class="mt-[14px] mb-[26px] leading-[1.5] text-brown/72">
+            More games are coming soon. For now, press the button.
+          </p>
+          <button id="open-games" type="button" class="btn">Play games</button>
+        </div>
+      </section>
+
+      <footer
+        class="col-span-full border-t-2 border-brown/18 px-[clamp(24px,6vw,80px)] py-[18px]"
+      >
+        <button id="open-shop" type="button" class="btn-ghost">Open shop</button>
+      </footer>
+    </main>
+
+    <div
+      id="wheel-overlay"
+      class="fixed inset-0 z-100 flex animate-wheel-backdrop-in items-center justify-center bg-brown/55 p-6 text-center backdrop-blur-[3px] is-hidden:hidden motion-reduce:animate-none"
+      role="dialog"
+      aria-label="Wheel of Doom"
+      aria-modal="true"
+      hidden
+    >
+      <!-- Macondo modal frame: parchment panel inside a wooden beam border,
+           built from 96px corner tiles with tiled/stretched edges between. -->
+      <div
+        class="relative flex max-h-[90vh] w-[min(100%,420px)] animate-wheel-popup-in flex-col px-6 py-5 motion-reduce:animate-none"
+      >
+        <div class="absolute inset-x-3 inset-y-2 bg-cream" aria-hidden="true"></div>
+
+        <!-- `wheel-content` is the hook blocked.js focuses when the wheel opens. -->
+        <div
+          class="wheel-content relative z-1 flex min-h-0 w-full flex-1 flex-col items-center justify-center overflow-y-auto p-7 focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-sun"
+          tabindex="-1"
+        >
+          <p id="wheel-status" class="sr-only" aria-live="polite"></p>
+
+          <div id="chance-wheel-stage" class="relative w-full max-w-[300px] is-hidden:hidden">
+            <div
+              class="absolute top-[-8px] left-1/2 z-2 -translate-x-1/2 border-x-[15px] border-t-[25px] border-x-transparent border-t-brown"
+              aria-hidden="true"
+            ></div>
+            <div
+              id="chance-wheel"
+              class="relative aspect-square w-full rounded-full border-8 border-cream bg-[conic-gradient(from_-90deg,var(--color-sun)_0_50%,var(--color-brown)_50%_100%)] shadow-[0_0_0_3px_var(--color-brown),8px_10px_0_rgb(104_77_58/0.18)]"
+              role="img"
+              aria-label="A wheel split evenly between Safe and Punishment"
+            >
+              <span
+                class="absolute top-[22%] left-1/2 -translate-x-1/2 text-[clamp(13px,2vw,17px)] font-black text-brown uppercase"
+                >Safe</span
+              >
+              <span
+                class="absolute bottom-[22%] left-1/2 [transform:translateX(-50%)_rotate(180deg)] text-[clamp(13px,2vw,17px)] font-black text-cream uppercase"
+                >Punishment</span
+              >
+            </div>
+          </div>
+
+          <!-- Second wheel: the wedges are built by blocked.js from the
+               punishment registry, so this stays empty in the markup. -->
+          <div
+            id="punishment-wheel-stage"
+            class="relative w-full max-w-[300px] is-hidden:hidden"
+            hidden
+          >
+            <div
+              class="absolute top-[-8px] left-1/2 z-2 -translate-x-1/2 border-x-[15px] border-t-[25px] border-x-transparent border-t-brown"
+              aria-hidden="true"
+            ></div>
+            <div
+              id="punishment-wheel"
+              class="relative aspect-square w-full rounded-full border-8 border-cream shadow-[0_0_0_3px_var(--color-brown),8px_10px_0_rgb(104_77_58/0.18)]"
+              role="img"
+              aria-label="The punishment wheel"
+            ></div>
+          </div>
+
+          <p
+            id="wheel-caption"
+            class="mt-5 text-center text-[clamp(15px,2.2vw,19px)] font-black tracking-[-0.02em] text-brown uppercase"
+          >
+            Wheel of Doom
+          </p>
+        </div>
+
+        <div
+          class="pointer-events-none absolute top-24 bottom-24 left-2 z-1 w-24 bg-[url('/images/borders/left.webp')] bg-[length:96px_96px] bg-repeat-round"
+          aria-hidden="true"
+        ></div>
+        <div
+          class="pointer-events-none absolute top-24 right-2 bottom-24 z-1 w-24 bg-[url('/images/borders/right.webp')] bg-[length:96px_96px] bg-repeat-round"
+          aria-hidden="true"
+        ></div>
+        <div
+          class="pointer-events-none absolute top-0 right-24 left-24 z-1 h-24 bg-[url('/images/borders/top.webp')] bg-[length:100%_100%]"
+          aria-hidden="true"
+        ></div>
+        <div
+          class="pointer-events-none absolute right-24 bottom-0 left-24 z-1 h-24 bg-[url('/images/borders/bottom.webp')] bg-[length:100%_100%]"
+          aria-hidden="true"
+        ></div>
+
+        <img
+          class="pointer-events-none absolute top-0 left-0 z-2 h-24 w-24"
+          src="/images/borders/top_left_2.webp"
+          alt=""
+          draggable="false"
+        />
+        <img
+          class="pointer-events-none absolute top-0 right-0 z-2 h-24 w-24"
+          src="/images/borders/top_right.webp"
+          alt=""
+          draggable="false"
+        />
+        <img
+          class="pointer-events-none absolute bottom-0 left-0 z-2 h-24 w-24"
+          src="/images/borders/bottom_left.webp"
+          alt=""
+          draggable="false"
+        />
+        <img
+          class="pointer-events-none absolute right-0 bottom-0 z-2 h-24 w-24"
+          src="/images/borders/bottom_right_2.webp"
+          alt=""
+          draggable="false"
+        />
+      </div>
+    </div>
+
+    <!-- Module: blocked.js imports the punishment registry. -->
+    <script type="module" src="blocked.js"></script>
+  </body>
+</html>

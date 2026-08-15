@@ -324,7 +324,7 @@ function useFigmaArt() {
         mangoButton.replaceChildren(art);
     });
 
-    art.src = "../images/mango.png";
+    art.src = "../../images/mango.png";
 }
 
 mangoButton.addEventListener("pointerdown", pick);
