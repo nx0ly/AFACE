@@ -1,0 +1,1272 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Colombia Trivia</title>
+        <style>
+            :root {
+                --o: #f97316;
+                --o2: #ea580c;
+                --bg: #fff7ed;
+                --ink: #431407;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                margin: 0;
+                min-height: 100vh;
+                background: linear-gradient(135deg, #fff7ed, #fed7aa);
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    Segoe UI,
+                    sans-serif;
+                color: var(--ink);
+                display: grid;
+                place-items: center;
+                padding: 20px;
+            }
+            .game {
+                width: min(760px, 100%);
+            }
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 18px;
+            }
+            .logo {
+                font-size: 28px;
+                font-weight: 950;
+            }
+            .logo span {
+                color: var(--o);
+            }
+            .tokens {
+                background: white;
+                border: 2px solid #fdba74;
+                border-radius: 999px;
+                padding: 9px 16px;
+                font-weight: 900;
+                box-shadow: 0 6px 20px #9a341220;
+            }
+            .card {
+                background: #fff;
+                border: 2px solid #fdba74;
+                border-radius: 26px;
+                padding: clamp(24px, 5vw, 44px);
+                box-shadow: 0 25px 70px #9a341225;
+            }
+            .number {
+                color: var(--o2);
+                font-size: 13px;
+                font-weight: 900;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                margin-bottom: 12px;
+            }
+            h1 {
+                font-size: clamp(25px, 5vw, 39px);
+                line-height: 1.12;
+                margin: 0 0 25px;
+            }
+            .answers {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 14px;
+            }
+            .answer {
+                min-height: 76px;
+                border: 2px solid #fed7aa;
+                background: var(--bg);
+                border-radius: 17px;
+                padding: 16px;
+                text-align: left;
+                font: inherit;
+                font-size: 16px;
+                font-weight: 800;
+                color: var(--ink);
+                cursor: pointer;
+                transition: 0.15s;
+            }
+            .answer:hover {
+                border-color: var(--o);
+                transform: translateY(-2px);
+            }
+            .answer.correct {
+                background: #dcfce7;
+                border-color: #16a34a;
+                color: #14532d;
+            }
+            .answer.wrong {
+                background: #fee2e2;
+                border-color: #dc2626;
+                color: #7f1d1d;
+            }
+            .answer:disabled {
+                cursor: default;
+            }
+            .end {
+                display: none;
+                text-align: center;
+            }
+            .end h2 {
+                font-size: 38px;
+                margin: 0 0 8px;
+            }
+            .end p {
+                font-weight: 700;
+                color: #9a3412;
+            }
+            .restart {
+                border: 0;
+                background: var(--o2);
+                color: white;
+                padding: 13px 20px;
+                border-radius: 14px;
+                font: inherit;
+                font-weight: 900;
+                cursor: pointer;
+            }
+            @media (max-width: 600px) {
+                .answers {
+                    grid-template-columns: 1fr;
+                }
+                .header {
+                    margin-bottom: 12px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <main class="game">
+            <header class="header">
+                <div class="logo">Colombia <span>Trivia</span></div>
+                <div class="tokens">🪙 <span id="tokens">0</span></div>
+            </header>
+
+            <section class="card" id="quiz">
+                <div class="number" id="number"></div>
+                <h1 id="question"></h1>
+                <div class="answers" id="answers"></div>
+            </section>
+
+            <section class="card end" id="end">
+                <h2>Game Over</h2>
+                <p>You missed a question.</p>
+                <p>Tokens earned: <strong id="finalTokens"></strong></p>
+                <button class="restart" onclick="location.reload()">
+                    Play again
+                </button>
+            </section>
+        </main>
+
+        <script>
+            const QUESTIONS = [
+                {
+                    question: "What is the capital city of Colombia?",
+                    options: ["Bogotá", "Medellín", "Cali", "Cartagena"],
+                    answer: 0,
+                },
+                {
+                    question: "What is Colombia's currency?",
+                    options: ["Peso colombiano", "Real", "Sol", "Bolívar"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "What is Colombia's country code on the internet?",
+                    options: [".co", ".cl", ".cr", ".cb"],
+                    answer: 0,
+                },
+                {
+                    question: "What is Colombia's international calling code?",
+                    options: ["+57", "+52", "+54", "+55"],
+                    answer: 0,
+                },
+                {
+                    question: "Which country does NOT border Colombia?",
+                    options: ["Panama", "Venezuela", "Mexico", "Ecuador"],
+                    answer: 2,
+                },
+                {
+                    question: "Which ocean borders Colombia to the west?",
+                    options: [
+                        "Pacific Ocean",
+                        "Atlantic Ocean",
+                        "Indian Ocean",
+                        "Arctic Ocean",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "Which sea borders Colombia's Caribbean coast?",
+                    options: [
+                        "Caribbean Sea",
+                        "Mediterranean Sea",
+                        "Red Sea",
+                        "Black Sea",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "What is Colombia's national flower?",
+                    options: [
+                        "Cattleya trianae orchid",
+                        "Rose",
+                        "Sunflower",
+                        "Dahlia",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "What is Colombia's national tree?",
+                    options: ["Wax palm", "Cedar", "Oak", "Mahogany"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian city is called the 'City of Eternal Spring'?",
+                    options: ["Medellín", "Cali", "Bogotá", "Pereira"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which city is famous for its historic walled center?",
+                    options: ["Cartagena", "Manizales", "Tunja", "Armenia"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian city is known as the salsa capital?",
+                    options: ["Cali", "Bogotá", "Barranquilla", "Santa Marta"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which city is famous for its annual Flower Festival?",
+                    options: ["Medellín", "Cúcuta", "Pasto", "Ibagué"],
+                    answer: 0,
+                },
+                {
+                    question: "Which city is Colombia's largest by population?",
+                    options: ["Bogotá", "Cali", "Cartagena", "Pereira"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which city is located on Colombia's Caribbean coast?",
+                    options: ["Barranquilla", "Manizales", "Pereira", "Ibagué"],
+                    answer: 0,
+                },
+                {
+                    question: "Which city is a major coffee-region center?",
+                    options: [
+                        "Manizales",
+                        "Cartagena",
+                        "Riohacha",
+                        "Sincelejo",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which city is known for its white colonial architecture and nickname 'White City'?",
+                    options: ["Popayán", "Cali", "Neiva", "Montería"],
+                    answer: 0,
+                },
+                {
+                    question: "Which city is located in the Coffee Triangle?",
+                    options: [
+                        "Armenia",
+                        "Cartagena",
+                        "Valledupar",
+                        "Santa Marta",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian city is home to the Gold Museum?",
+                    options: ["Bogotá", "Medellín", "Cali", "Pasto"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which mountain range runs through much of Colombia?",
+                    options: ["Andes", "Alps", "Himalayas", "Rockies"],
+                    answer: 0,
+                },
+                {
+                    question: "Which is Colombia's highest mountain?",
+                    options: [
+                        "Pico Cristóbal Colón",
+                        "Nevado del Ruiz",
+                        "Pico Bolívar",
+                        "Cerro de Monserrate",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "Cerro de Monserrate overlooks which city?",
+                    options: ["Bogotá", "Cali", "Medellín", "Cartagena"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which famous valley is known for its tall wax palms?",
+                    options: [
+                        "Cocora Valley",
+                        "Aburrá Valley",
+                        "Cauca Valley",
+                        "Sinu Valley",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which river is one of Colombia's most important waterways?",
+                    options: [
+                        "Magdalena River",
+                        "Amazon River",
+                        "Nile River",
+                        "Orinoco River",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian region is especially famous for coffee production?",
+                    options: [
+                        "Coffee Region",
+                        "La Guajira",
+                        "Amazonía",
+                        "Orinoquía",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian national park is known for beaches and tropical rainforest?",
+                    options: [
+                        "Tayrona National Natural Park",
+                        "Los Nevados",
+                        "Chingaza",
+                        "Puracé",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Tayrona National Natural Park is near which city?",
+                    options: ["Santa Marta", "Bogotá", "Cali", "Pereira"],
+                    answer: 0,
+                },
+                {
+                    question: "Which desert is found in La Guajira?",
+                    options: [
+                        "Tatacoa Desert",
+                        "La Guajira Desert",
+                        "Atacama Desert",
+                        "Sechura Desert",
+                    ],
+                    answer: 1,
+                },
+                {
+                    question:
+                        "The Tatacoa Desert is near which Colombian city?",
+                    options: ["Neiva", "Cartagena", "Cali", "Pasto"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian island group lies in the Caribbean?",
+                    options: [
+                        "San Andrés and Providencia",
+                        "Galápagos",
+                        "Malvinas",
+                        "ABC Islands",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "What is Colombia's national sport?",
+                    options: ["Tejo", "Football", "Cycling", "Baseball"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "What is the nickname of Colombia's men's national football team?",
+                    options: [
+                        "Los Cafeteros",
+                        "Los Ticos",
+                        "La Roja",
+                        "La Verde",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "What color is most associated with Colombia's national football shirt?",
+                    options: ["Yellow", "Green", "White", "Black"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian player won the 2014 FIFA World Cup Golden Boot?",
+                    options: [
+                        "James Rodríguez",
+                        "Radamel Falcao",
+                        "Juan Cuadrado",
+                        "David Ospina",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian striker is the men's national team's all-time leading scorer?",
+                    options: [
+                        "Radamel Falcao",
+                        "James Rodríguez",
+                        "Carlos Bacca",
+                        "Luis Díaz",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian goalkeeper has been a long-time national-team starter?",
+                    options: [
+                        "David Ospina",
+                        "René Higuita",
+                        "Óscar Córdoba",
+                        "Miguel Calero",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian player is famous for the scorpion kick against England?",
+                    options: [
+                        "René Higuita",
+                        "Carlos Valderrama",
+                        "James Rodríguez",
+                        "Faustino Asprilla",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian footballer is nicknamed 'El Pibe'?",
+                    options: [
+                        "Carlos Valderrama",
+                        "James Rodríguez",
+                        "Falcao",
+                        "Juan Cuadrado",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "Which club plays in Medellín?",
+                    options: [
+                        "Atlético Nacional",
+                        "Millonarios",
+                        "América de Cali",
+                        "Junior",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "Which club is based in Bogotá?",
+                    options: [
+                        "Millonarios",
+                        "Atlético Nacional",
+                        "Deportivo Cali",
+                        "Junior",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "Which club is based in Cali?",
+                    options: [
+                        "América de Cali",
+                        "Millonarios",
+                        "Junior",
+                        "Atlético Nacional",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "Which club is based in Barranquilla?",
+                    options: [
+                        "Junior",
+                        "Santa Fe",
+                        "Once Caldas",
+                        "Deportes Tolima",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian club won the Copa Libertadores in 2016?",
+                    options: [
+                        "Atlético Nacional",
+                        "Millonarios",
+                        "América de Cali",
+                        "Junior",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian footballer is nicknamed 'El Tigre'?",
+                    options: [
+                        "Radamel Falcao",
+                        "James Rodríguez",
+                        "Luis Díaz",
+                        "Juan Cuadrado",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian player has played for Liverpool and the national team?",
+                    options: [
+                        "Luis Díaz",
+                        "James Rodríguez",
+                        "Falcao",
+                        "Carlos Valderrama",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian footballer is known for wearing number 10 for the national team?",
+                    options: [
+                        "James Rodríguez",
+                        "David Ospina",
+                        "Falcao",
+                        "Davinson Sánchez",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "What is a bandeja paisa?",
+                    options: [
+                        "A hearty Colombian mixed plate",
+                        "A fruit juice",
+                        "A soup",
+                        "A dessert",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "Ajiaco is traditionally what type of dish?",
+                    options: ["Soup", "Bread", "Dessert", "Salad"],
+                    answer: 0,
+                },
+                {
+                    question: "Arepas are primarily made from what?",
+                    options: ["Corn", "Wheat", "Rice", "Cassava"],
+                    answer: 0,
+                },
+                {
+                    question: "What is a common filling for a Colombian arepa?",
+                    options: [
+                        "Cheese",
+                        "Chocolate cake",
+                        "Pasta",
+                        "Tuna salad",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "What is sancocho?",
+                    options: [
+                        "A hearty soup/stew",
+                        "A pastry",
+                        "A cheese",
+                        "A drink",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "What is empanada usually made with?",
+                    options: [
+                        "A stuffed dough shell",
+                        "A whole fish",
+                        "A fruit smoothie",
+                        "A rice cake",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "What is patacón made from?",
+                    options: ["Green plantain", "Corn", "Potato", "Cassava"],
+                    answer: 0,
+                },
+                {
+                    question: "What is hogao?",
+                    options: [
+                        "A tomato-and-onion sauce",
+                        "A cheese",
+                        "A dessert",
+                        "A type of bread",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "What is lechona?",
+                    options: [
+                        "Stuffed roasted pork dish",
+                        "Fish soup",
+                        "Corn drink",
+                        "Fruit salad",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "What is tamal in Colombian cuisine?",
+                    options: [
+                        "A steamed filled cornmeal dish",
+                        "A fried potato",
+                        "A fruit drink",
+                        "A cheese dessert",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "What is changua?",
+                    options: [
+                        "A milk-and-egg soup",
+                        "A meat pie",
+                        "A fruit salad",
+                        "A rice pudding",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "What is arroz con coco?",
+                    options: [
+                        "Coconut rice",
+                        "Coconut soup",
+                        "Coconut bread",
+                        "Coconut cheese",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "What is buñuelo?",
+                    options: [
+                        "A fried cheese dough ball",
+                        "A meat stew",
+                        "A fruit",
+                        "A soup",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "What is pandebono?",
+                    options: [
+                        "A cheese bread",
+                        "A meat dish",
+                        "A soup",
+                        "A fruit dessert",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "What is almojábana?",
+                    options: [
+                        "A Colombian cheese bread",
+                        "A seafood stew",
+                        "A fruit drink",
+                        "A plantain dish",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "What is aguapanela made from?",
+                    options: [
+                        "Panela and water",
+                        "Coffee and milk",
+                        "Cocoa and cream",
+                        "Rice and milk",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "What is panela?",
+                    options: [
+                        "Unrefined cane sugar",
+                        "A type of cheese",
+                        "Corn flour",
+                        "Coffee bean",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "What is a common Colombian coffee drink?",
+                    options: ["Tinto", "Mate", "Chai", "Kombucha"],
+                    answer: 0,
+                },
+                {
+                    question: "What does 'tinto' usually mean in Colombia?",
+                    options: [
+                        "Black coffee",
+                        "Red wine",
+                        "Black tea",
+                        "Hot chocolate",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian food is commonly served with chocolate caliente?",
+                    options: ["Cheese", "Rice", "Beef", "Plantain chips"],
+                    answer: 0,
+                },
+                {
+                    question: "What is morcilla?",
+                    options: [
+                        "Blood sausage",
+                        "Corn bread",
+                        "Fruit jam",
+                        "Cheese",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "What is chorizo?",
+                    options: ["A sausage", "A soup", "A drink", "A dessert"],
+                    answer: 0,
+                },
+                {
+                    question: "What is posta negra?",
+                    options: [
+                        "A dark, sweet-savory beef dish",
+                        "A fish soup",
+                        "A corn cake",
+                        "A fruit dessert",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which fruit is strongly associated with Colombia's tropical cuisine?",
+                    options: ["Lulo", "Apple", "Cranberry", "Pear"],
+                    answer: 0,
+                },
+                {
+                    question: "What is lulo?",
+                    options: [
+                        "A tart tropical fruit",
+                        "A type of cheese",
+                        "A spice",
+                        "A grain",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "What is granadilla?",
+                    options: [
+                        "A passion-fruit family fruit",
+                        "A potato dish",
+                        "A meat stew",
+                        "A coffee variety",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "What is guanábana?",
+                    options: ["Soursop", "Pineapple", "Papaya", "Mango"],
+                    answer: 0,
+                },
+                {
+                    question: "What is feijoa?",
+                    options: [
+                        "A fragrant green fruit",
+                        "A fish",
+                        "A cheese",
+                        "A pepper",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian dish is especially associated with Antioquia?",
+                    options: [
+                        "Bandeja paisa",
+                        "Ajiaco",
+                        "Arroz con coco",
+                        "Cazuela de mariscos",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which dish is especially associated with Bogotá and the Cundiboyacense region?",
+                    options: [
+                        "Ajiaco",
+                        "Bandeja paisa",
+                        "Lechona",
+                        "Sancocho de gallina",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian food is commonly made from yuca/cassava?",
+                    options: ["Casabe", "Ajiaco", "Bandeja paisa", "Changua"],
+                    answer: 0,
+                },
+                {
+                    question: "Which drink is made from coffee beans?",
+                    options: ["Café", "Aguapanela", "Lulada", "Cholado"],
+                    answer: 0,
+                },
+                {
+                    question: "What is lulada?",
+                    options: [
+                        "A drink made with lulo",
+                        "A cheese dish",
+                        "A soup",
+                        "A coffee dessert",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "What is cholado?",
+                    options: [
+                        "A shaved-ice dessert with fruit and syrup",
+                        "A meat stew",
+                        "A cheese bread",
+                        "A coffee drink",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which music genre is strongly associated with Colombia's Caribbean coast?",
+                    options: ["Cumbia", "Tango", "Samba", "Fado"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which genre is especially associated with Colombia's Valledupar region?",
+                    options: ["Vallenato", "Tango", "Reggae", "Flamenco"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which instrument is central to traditional vallenato?",
+                    options: ["Accordion", "Violin", "Trumpet", "Piano"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian singer is known worldwide for 'Hips Don't Lie'?",
+                    options: ["Shakira", "Karol G", "Rosalía", "Thalía"],
+                    answer: 0,
+                },
+                {
+                    question: "Which Colombian singer is known as 'Bichota'?",
+                    options: ["Karol G", "Shakira", "Caliuchis", "Sofía Reyes"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian artist is famous for paintings and sculptures with exaggerated volume?",
+                    options: [
+                        "Fernando Botero",
+                        "Alejandro Obregón",
+                        "Débora Arango",
+                        "Enrique Grau",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "What is Colombia's most famous dance style associated with cumbia?",
+                    options: [
+                        "Cumbia dance",
+                        "Ballet",
+                        "Tango",
+                        "Salsa cubana",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which city is particularly famous for salsa dancing?",
+                    options: ["Cali", "Tunja", "Pasto", "Riohacha"],
+                    answer: 0,
+                },
+                {
+                    question: "Which festival is famous in Barranquilla?",
+                    options: [
+                        "Carnaval de Barranquilla",
+                        "Feria de las Flores",
+                        "Feria de Cali",
+                        "Carnaval de Negros y Blancos",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "Which festival is associated with Medellín?",
+                    options: [
+                        "Feria de las Flores",
+                        "Carnaval de Barranquilla",
+                        "Feria de Cali",
+                        "Festival Vallenato",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "Which festival is associated with Cali?",
+                    options: [
+                        "Feria de Cali",
+                        "Feria de las Flores",
+                        "Carnaval de Barranquilla",
+                        "Festival de la Leyenda Vallenata",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "Which festival is famous in Pasto?",
+                    options: [
+                        "Carnaval de Negros y Blancos",
+                        "Feria de las Flores",
+                        "Feria de Cali",
+                        "Carnaval de Barranquilla",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "Which Colombian festival celebrates flowers?",
+                    options: [
+                        "Feria de las Flores",
+                        "Carnaval de Barranquilla",
+                        "Festival Vallenato",
+                        "Feria de Cali",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which language is the official language of Colombia?",
+                    options: ["Spanish", "Portuguese", "French", "English"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Indigenous language family is notably spoken by Wayuu people?",
+                    options: ["Wayuunaiki", "Quechua", "Guaraní", "Nahuatl"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which ethnic group is strongly associated with the Caribbean peninsula of La Guajira?",
+                    options: ["Wayuu", "Mapuche", "Maya", "Aymara"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian region contains much of the Amazon rainforest?",
+                    options: ["Amazonía", "Caribbean", "Andean", "Pacific"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian region is known for vast eastern plains?",
+                    options: [
+                        "Llanos Orientales",
+                        "Eje Cafetero",
+                        "La Guajira",
+                        "Chocó",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian department is famous for the Pacific port city of Buenaventura?",
+                    options: [
+                        "Valle del Cauca",
+                        "Antioquia",
+                        "Boyacá",
+                        "Caldas",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "Which city is Colombia's main Pacific port?",
+                    options: [
+                        "Buenaventura",
+                        "Cartagena",
+                        "Barranquilla",
+                        "Santa Marta",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian city is famous for its cable cars and hillside neighborhoods?",
+                    options: [
+                        "Medellín",
+                        "Cartagena",
+                        "Sincelejo",
+                        "Valledupar",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "Which city is famous for the Metrocable system?",
+                    options: ["Medellín", "Bogotá", "Cali", "Pereira"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which city has the TransMilenio bus rapid transit system?",
+                    options: ["Bogotá", "Cartagena", "Armenia", "Manizales"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which city is famous for the walled neighborhood of Getsemaní?",
+                    options: ["Cartagena", "Bogotá", "Medellín", "Cali"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which city is near the Sierra Nevada de Santa Marta?",
+                    options: ["Santa Marta", "Pereira", "Tunja", "Neiva"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian city is a major Caribbean tourism destination?",
+                    options: ["Cartagena", "Manizales", "Armenia", "Tunja"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian city is known for its coffee culture and nearby coffee farms?",
+                    options: ["Armenia", "Cartagena", "Riohacha", "Sincelejo"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which department is especially associated with Medellín?",
+                    options: ["Antioquia", "Caldas", "Quindío", "Atlántico"],
+                    answer: 0,
+                },
+                {
+                    question: "Which department is associated with Cartagena?",
+                    options: ["Bolívar", "Antioquia", "Boyacá", "Tolima"],
+                    answer: 0,
+                },
+                {
+                    question: "Which department is associated with Cali?",
+                    options: [
+                        "Valle del Cauca",
+                        "Atlántico",
+                        "Cesar",
+                        "Magdalena",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question: "Which department is associated with Bogotá?",
+                    options: [
+                        "Cundinamarca",
+                        "Bolívar",
+                        "Antioquia",
+                        "Quindío",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian city is located at a high altitude on the Andean plateau?",
+                    options: [
+                        "Bogotá",
+                        "Cartagena",
+                        "Santa Marta",
+                        "Barranquilla",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian city is known for its 'Feria de Cali'?",
+                    options: ["Cali", "Medellín", "Bogotá", "Pereira"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian city is known for its 'Festival de la Leyenda Vallenata' nearby?",
+                    options: ["Valledupar", "Manizales", "Cali", "Pasto"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian city is associated with the Coffee Cultural Landscape?",
+                    options: [
+                        "Manizales",
+                        "Cartagena",
+                        "Barranquilla",
+                        "Riohacha",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian city is a common gateway to Tayrona National Natural Park?",
+                    options: ["Santa Marta", "Bogotá", "Cali", "Armenia"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian city is closest to the famous Salt Cathedral of Zipaquirá?",
+                    options: ["Bogotá", "Cartagena", "Cali", "Pasto"],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "What material is the Salt Cathedral of Zipaquirá carved from?",
+                    options: ["Salt", "Granite", "Marble", "Limestone"],
+                    answer: 0,
+                },
+                {
+                    question: "What is tejo played with?",
+                    options: [
+                        "Metal discs and targets",
+                        "Cards",
+                        "Wooden bats",
+                        "Balls",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "What happens to traditional tejo targets when struck correctly?",
+                    options: [
+                        "They can produce a small explosion",
+                        "They turn blue",
+                        "They float",
+                        "They ring a bell only",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian sport is especially famous for mountain stages?",
+                    options: ["Cycling", "Surfing", "Ice hockey", "Cricket"],
+                    answer: 0,
+                },
+                {
+                    question: "Which Colombian cyclist won the Tour de France?",
+                    options: [
+                        "Egan Bernal",
+                        "Nairo Quintana",
+                        "Rigoberto Urán",
+                        "Esteban Chaves",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian cyclist is famous for winning the Giro d'Italia and Vuelta a España?",
+                    options: [
+                        "Nairo Quintana",
+                        "Egan Bernal",
+                        "Rigoberto Urán",
+                        "Fernando Gaviria",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian rider won the Tour de France in 2019?",
+                    options: [
+                        "Egan Bernal",
+                        "Nairo Quintana",
+                        "Rigoberto Urán",
+                        "Miguel Ángel López",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian athlete won multiple Olympic gold medals in BMX?",
+                    options: [
+                        "Mariana Pajón",
+                        "Caterine Ibargüen",
+                        "Yuri Alvear",
+                        "Jackeline Rentería",
+                    ],
+                    answer: 0,
+                },
+                {
+                    question:
+                        "Which Colombian athlete is famous for triple jump?",
+                    options: [
+                        "Caterine Ibargüen",
+                        "Mariana Pajón",
+                        "María Isabel Urrutia",
+                        "Yuri Alvear",
+                    ],
+                    answer: 0,
+                },
+            ];
+
+            let index = 0,
+                tokens = Number(localStorage.getItem("colombiaTokens") || 0);
+            const tokenEl = document.getElementById("tokens");
+            tokenEl.textContent = tokens;
+
+            function show() {
+                const q = QUESTIONS[index];
+                document.getElementById("number").textContent =
+                    `Question ${index + 1} of ${QUESTIONS.length}`;
+                document.getElementById("question").textContent = q.question;
+                const box = document.getElementById("answers");
+                box.innerHTML = "";
+                q.options.forEach((text, i) => {
+                    const b = document.createElement("button");
+                    b.className = "answer";
+                    b.textContent = `${String.fromCharCode(65 + i)}. ${text}`;
+                    b.onclick = () => answer(i);
+                    box.appendChild(b);
+                });
+            }
+            function answer(i) {
+                const q = QUESTIONS[index];
+                const buttons = [...document.querySelectorAll(".answer")];
+                buttons.forEach((b) => (b.disabled = true));
+                if (i !== q.answer) {
+                    buttons[q.answer].classList.add("correct");
+                    setTimeout(endGame, 450);
+                    return;
+                }
+                buttons[i].classList.add("correct");
+                tokens += 10;
+                localStorage.setItem("colombiaTokens", tokens);
+                tokenEl.textContent = tokens;
+                index++;
+                setTimeout(
+                    () => (index < QUESTIONS.length ? show() : endGame()),
+                    350,
+                );
+            }
+            function endGame() {
+                document.getElementById("quiz").style.display = "none";
+                document.getElementById("end").style.display = "block";
+                document.getElementById("finalTokens").textContent = tokens;
+            }
+            show();
+        </script>
+    </body>
+</html>

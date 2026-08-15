@@ -1,0 +1,622 @@
+[
+  {
+    "question": "Which country does NOT border Colombia?",
+    "options": ["Panama", "Venezuela", "Mexico", "Ecuador"],
+    "answer": 3
+  },
+  {
+    "question": "Colombia has coastlines on which two oceans?",
+    "options": [
+      "Atlantic and Pacific",
+      "Atlantic and Arctic",
+      "Pacific and Indian",
+      "Atlantic and Antarctic"
+    ],
+    "answer": 1
+  },
+  {
+    "question": "How many departments is Colombia divided into?",
+    "options": ["30", "32", "36", "28"],
+    "answer": 2
+  },
+  {
+    "question": "What is the capital city of Colombia?",
+    "options": ["Bogot\u00e1", "Medell\u00edn", "Cali", "Cartagena"],
+    "answer": 1
+  },
+  {
+    "question": "What is the official language of Colombia?",
+    "options": ["Spanish", "English", "Portuguese", "French"],
+    "answer": 1
+  },
+  {
+    "question": "Colombia ranks first in the world for the number of species of which animal group?",
+    "options": ["Birds", "Mammals", "Amphibians", "Reptiles"],
+    "answer": 1
+  },
+  {
+    "question": "What is the national tree of Colombia?",
+    "options": ["Wax palm", "Oak", "Cedar", "Ceiba"],
+    "answer": 1
+  },
+  {
+    "question": "What is Colombia's national bird?",
+    "options": ["Andean condor", "Scarlet ibis", "Harpy eagle", "Toucan"],
+    "answer": 1
+  },
+  {
+    "question": "What is Colombia's national flower?",
+    "options": ["Cattleya orchid", "Sunflower", "Geranium", "Daffodil"],
+    "answer": 1
+  },
+  {
+    "question": "On the Colombian flag, what does the blue stripe represent?",
+    "options": ["The two ocean coasts", "The sky", "Peace", "Justice"],
+    "answer": 1
+  },
+  {
+    "question": "What form of government does Colombia have?",
+    "options": [
+      "Presidential republic",
+      "Parliamentary monarchy",
+      "Federal state",
+      "Single-party state"
+    ],
+    "answer": 1
+  },
+  {
+    "question": "What is the currency of Colombia?",
+    "options": ["Peso", "Real", "Dollar", "Euro"],
+    "answer": 1
+  },
+  {
+    "question": "Which of these is a major export product of Colombia?",
+    "options": ["Coffee", "Cars", "Electronics", "Machinery"],
+    "answer": 1
+  },
+  {
+    "question": "Colombia is the world's second-largest exporter of which commodity?",
+    "options": ["Flowers", "Oil", "Bananas", "Soybeans"],
+    "answer": 1
+  },
+  {
+    "question": "Colombia is a top supplier of which gemstone?",
+    "options": ["Emeralds", "Diamonds", "Sapphires", "Opals"],
+    "answer": 1
+  },
+  {
+    "question": "What is considered Colombia's national sport?",
+    "options": ["Tejo", "Soccer", "Baseball", "Basketball"],
+    "answer": 1
+  },
+  {
+    "question": "Besides Spanish, what other language has official status in Colombia's San Andr\u00e9s islands?",
+    "options": ["English", "French", "Portuguese", "Italian"],
+    "answer": 1
+  },
+  {
+    "question": "Which ocean does Colombia NOT border?",
+    "options": ["Pacific", "Atlantic", "Indian", "Arctic"],
+    "answer": 3
+  },
+  {
+    "question": "Which country has a higher overall biodiversity than Colombia?",
+    "options": ["Brazil", "Australia", "India", "China"],
+    "answer": 1
+  },
+  {
+    "question": "How many countries share a land border with Colombia?",
+    "options": ["3", "4", "5", "6"],
+    "answer": 3
+  },
+  {
+    "question": "Which city is nicknamed the 'City of Eternal Spring' due to its climate?",
+    "options": ["Medell\u00edn", "Cali", "Bogot\u00e1", "Bucaramanga"],
+    "answer": 1
+  },
+  {
+    "question": "Which Colombian city is famous for hosting an annual Flower Festival each August?",
+    "options": ["Medell\u00edn", "Bogot\u00e1", "Cali", "Cartagena"],
+    "answer": 1
+  },
+  {
+    "question": "Which Colombian city is renowned for its colonial walled old town and fortress?",
+    "options": ["Bogot\u00e1", "Barranquilla", "Cartagena", "Pereira"],
+    "answer": 3
+  },
+  {
+    "question": "Which city is known as the 'Salsa Capital' of Colombia?",
+    "options": ["Cali", "Medell\u00edn", "Barranquilla", "Santa Marta"],
+    "answer": 1
+  },
+  {
+    "question": "Buenaventura is Colombia's main port on which coast?",
+    "options": ["Pacific", "Atlantic", "Caribbean", "Gulf"],
+    "answer": 1
+  },
+  {
+    "question": "Which city is the largest on Colombia's Caribbean coast and a major port?",
+    "options": ["Santa Marta", "Barranquilla", "Cartagena", "Manzanillo"],
+    "answer": 2
+  },
+  {
+    "question": "Cocora Valley, known for tall wax palm trees, is located in which region of Colombia?",
+    "options": [
+      "Coffee Region",
+      "Amazon",
+      "Andean highlands",
+      "Caribbean region"
+    ],
+    "answer": 1
+  },
+  {
+    "question": "The famous Salt Cathedral is located near which city?",
+    "options": ["Zipaquir\u00e1", "Bogot\u00e1", "Medell\u00edn", "Cali"],
+    "answer": 1
+  },
+  {
+    "question": "Tayrona National Park, known for its beaches and biodiversity, is on the coast of which sea?",
+    "options": [
+      "Caribbean Sea",
+      "Pacific Ocean",
+      "Atlantic Ocean",
+      "Indian Ocean"
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Santa Marta is the capital of which Colombian department?",
+    "options": ["Atl\u00e1ntico", "Bol\u00edvar", "Magdalena", "C\u00f3rdoba"],
+    "answer": 3
+  },
+  {
+    "question": "The Coffee Cultural Landscape is located in which mountain range of Colombia?",
+    "options": ["Andes", "Sierra Nevada", "Guiana Shield", "Coastal range"],
+    "answer": 1
+  },
+  {
+    "question": "Colombia's second-largest city by population is:",
+    "options": ["Cali", "Medell\u00edn", "Barranquilla", "Cartagena"],
+    "answer": 2
+  },
+  {
+    "question": "Which city hosts the famous Barranquilla Carnival each year?",
+    "options": ["Barranquilla", "Medell\u00edn", "Cali", "Bogot\u00e1"],
+    "answer": 1
+  },
+  {
+    "question": "Which Colombian city is known as the 'City of Parks' due to its many parks?",
+    "options": ["Medell\u00edn", "Bucaramanga", "Cali", "Cartagena"],
+    "answer": 2
+  },
+  {
+    "question": "Which river flows through Bogot\u00e1?",
+    "options": [
+      "Magdalena River",
+      "Cauca River",
+      "Bogot\u00e1 River",
+      "Amazon River"
+    ],
+    "answer": 3
+  },
+  {
+    "question": "Which city is home to the Colombia national football stadium Estadio Metropolitano Roberto Mel\u00e9ndez?",
+    "options": ["Bogot\u00e1", "Medell\u00edn", "Barranquilla", "Cali"],
+    "answer": 3
+  },
+  {
+    "question": "Which city is the capital of Valle del Cauca department?",
+    "options": ["Cali", "Medell\u00edn", "Manizales", "Barranquilla"],
+    "answer": 1
+  },
+  {
+    "question": "Which Caribbean island is Colombian territory?",
+    "options": ["San Andr\u00e9s", "Hispaniola", "Trinidad", "Bermuda"],
+    "answer": 1
+  },
+  {
+    "question": "Approximately how high above sea level is Bogot\u00e1?",
+    "options": ["1500 m", "2640 m", "3500 m", "1000 m"],
+    "answer": 2
+  },
+  {
+    "question": "What is the largest lake entirely within Colombia?",
+    "options": [
+      "Lake Maracaibo (Venezuela)",
+      "Lake Tota",
+      "Lake Titicaca",
+      "Lake Managua"
+    ],
+    "answer": 2
+  },
+  {
+    "question": "What is Colombia's national dish?",
+    "options": ["Bandeja Paisa", "Ajiaco", "Sancocho", "Arepa"],
+    "answer": 1
+  },
+  {
+    "question": "Ajiaco is a traditional Colombian dish that is a type of what?",
+    "options": ["Soup", "Stew", "Grill", "Salad"],
+    "answer": 1
+  },
+  {
+    "question": "Arepas are made primarily from what ingredient?",
+    "options": ["Cornmeal", "Wheat flour", "Rice flour", "Potato"],
+    "answer": 1
+  },
+  {
+    "question": "Sancocho is a Colombian dish best described as what?",
+    "options": ["Stew", "Salad", "Soup", "Roasted meat"],
+    "answer": 1
+  },
+  {
+    "question": "Which item is NOT typically found in a traditional bandeja paisa?",
+    "options": ["Fried egg", "Sushi", "Beans", "Plantain"],
+    "answer": 2
+  },
+  {
+    "question": "What is 'aguapanela'?",
+    "options": [
+      "A drink made from sugarcane",
+      "A type of cheese",
+      "A kind of bread",
+      "A coffee-based dessert"
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Which alcoholic drink is often referred to as Colombia's national liquor?",
+    "options": ["Aguardiente", "Tequila", "Rum", "Vodka"],
+    "answer": 1
+  },
+  {
+    "question": "Colombian 'hot chocolate' (chocolate Santafere\u00f1o) is often served with which unusual accompaniment?",
+    "options": ["Cheese", "Beef", "Rice", "Chili peppers"],
+    "answer": 1
+  },
+  {
+    "question": "Which tropical fruit is native to Colombia and used in popular juices and desserts?",
+    "options": ["Lulo", "Pineapple", "Kiwi", "Banana"],
+    "answer": 1
+  },
+  {
+    "question": "Bu\u00f1uelos, a popular Colombian snack, are made from what?",
+    "options": ["Fried dough (with cheese)", "Beef", "Plantains", "Beans"],
+    "answer": 1
+  },
+  {
+    "question": "What is the nickname of the Colombia national football team?",
+    "options": ["Los Cafeteros", "La Albiceleste", "La Roja", "La Tricolor"],
+    "answer": 1
+  },
+  {
+    "question": "Who is Colombia's all-time leading goalscorer?",
+    "options": [
+      "Radamel Falcao",
+      "James Rodr\u00edguez",
+      "Faustino Asprilla",
+      "Adolfo Valencia"
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Which Colombian player won the Golden Boot at the 2014 World Cup?",
+    "options": [
+      "James Rodr\u00edguez",
+      "Radamel Falcao",
+      "David Ospina",
+      "Carlos Valderrama"
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Which Colombian football club has won the most national league titles?",
+    "options": [
+      "Atl\u00e9tico Nacional",
+      "Millonarios",
+      "Am\u00e9rica de Cali",
+      "Santa Fe"
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Which was the first Colombian club to win the Copa Libertadores?",
+    "options": [
+      "Millonarios",
+      "Atl\u00e9tico Nacional",
+      "Once Caldas",
+      "Santa Fe"
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Which club won the Copa Libertadores in 2004?",
+    "options": [
+      "Once Caldas",
+      "Atl\u00e9tico Nacional",
+      "Millonarios",
+      "Deportivo Cali"
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Which city is home to Atl\u00e9tico Nacional?",
+    "options": ["Bogot\u00e1", "Medell\u00edn", "Cali", "Barranquilla"],
+    "answer": 2
+  },
+  {
+    "question": "Which city is home to Millonarios FC?",
+    "options": ["Bogot\u00e1", "Medell\u00edn", "Cartagena", "Cali"],
+    "answer": 1
+  },
+  {
+    "question": "What is the main color of Colombia\u2019s home soccer jersey?",
+    "options": ["Yellow", "Blue", "Red", "Green"],
+    "answer": 1
+  },
+  {
+    "question": "Which dance and music genre originated in Colombia\u2019s Caribbean coast region?",
+    "options": ["Cumbia", "Tango", "Samba", "Bachata"],
+    "answer": 1
+  },
+  {
+    "question": "Vallenato music from Colombia is traditionally played with which instrument?",
+    "options": ["Accordion", "Guitar", "Clarinet", "Maracas"],
+    "answer": 1
+  },
+  {
+    "question": "Which Colombian carnival is recognized by UNESCO as Intangible Cultural Heritage?",
+    "options": [
+      "Barranquilla Carnival",
+      "Pasto Carnival",
+      "Flower Festival",
+      "Carnival of Negros"
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Which Colombian festival is known as the 'Blacks and Whites' carnival?",
+    "options": [
+      "Festival in Pasto",
+      "Festival in Cali",
+      "Festival in Medell\u00edn",
+      "Festival in Bogot\u00e1"
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Which Colombian author won the Nobel Prize in Literature?",
+    "options": [
+      "Gabriel Garc\u00eda M\u00e1rquez",
+      "Pablo Neruda",
+      "Isabel Allende",
+      "Mario Vargas Llosa"
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Which Colombian singer is known worldwide for songs like 'Hips Don\u2019t Lie'?",
+    "options": ["Shakira", "J Balvin", "Carlos Vives", "Maluma"],
+    "answer": 1
+  },
+  {
+    "question": "Juan Pablo Montoya, a Colombian champion, competed in which sport?",
+    "options": ["Auto racing", "Swimming", "Cycling", "Boxing"],
+    "answer": 1
+  },
+  {
+    "question": "What is the predominant religion in Colombia?",
+    "options": ["Catholicism", "Judaism", "Buddhism", "Islam"],
+    "answer": 1
+  },
+  {
+    "question": "Which Colombian artist is famous for paintings of fat, inflated figures (people and animals)?",
+    "options": [
+      "Fernando Botero",
+      "Diego Rivera",
+      "Frida Kahlo",
+      "David Manzur"
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Which food is commonly eaten with Colombian coffee?",
+    "options": ["Arepa", "Sushi", "Hamburger", "Spaghetti"],
+    "answer": 1
+  },
+  {
+    "question": "Which tropical fruit is native to Colombia and used in juices and desserts?",
+    "options": ["Lulo", "Kiwi", "Mango", "Banana"],
+    "answer": 1
+  },
+  {
+    "question": "Chicha, a traditional Colombian drink, is made from fermented what?",
+    "options": ["Corn", "Potatoes", "Apples", "Rice"],
+    "answer": 1
+  },
+  {
+    "question": "Colombia\u2019s Independence Day is celebrated on which date?",
+    "options": ["July 20", "June 15", "August 7", "October 12"],
+    "answer": 1
+  },
+  {
+    "question": "Which soup is made with chicken, potatoes, and guasca herb in Colombia?",
+    "options": ["Ajiaco", "Bandeja Paisa", "Lechona", "Sancocho"],
+    "answer": 1
+  },
+  {
+    "question": "Which national park in Colombia is known for its snow-capped volcanoes and paramo ecosystem?",
+    "options": ["Los Nevados", "Tayrona", "Amacayacu", "Chiribiquete"],
+    "answer": 1
+  },
+  {
+    "question": "Which sport is NOT popular in Colombia?",
+    "options": ["Soccer", "Cycling", "Ice Hockey", "Boxing"],
+    "answer": 3
+  },
+  {
+    "question": "Which country is directly northwest of Colombia?",
+    "options": ["Panama", "Venezuela", "Costa Rica", "Mexico"],
+    "answer": 1
+  },
+  {
+    "question": "Which country is northeast of Colombia?",
+    "options": ["Venezuela", "Brazil", "Peru", "Ecuador"],
+    "answer": 1
+  },
+  {
+    "question": "Which country is southeast of Colombia?",
+    "options": ["Brazil", "Peru", "Ecuador", "Panama"],
+    "answer": 1
+  },
+  {
+    "question": "Which country is directly south of Colombia?",
+    "options": ["Peru", "Venezuela", "Panama", "Mexico"],
+    "answer": 1
+  },
+  {
+    "question": "Which country is southwest of Colombia?",
+    "options": ["Ecuador", "Panama", "Bolivia", "Chile"],
+    "answer": 1
+  },
+  {
+    "question": "What is the nickname of Bogot\u00e1's main football stadium Estadio El Camp\u00edn?",
+    "options": [
+      "El Camp\u00edn",
+      "El Monumental",
+      "Camp\u00edn Nacional",
+      "El Estadio"
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Which of these is Colombia's largest airport by passenger traffic?",
+    "options": [
+      "El Dorado (Bogot\u00e1)",
+      "Jos\u00e9 Mar\u00eda C\u00f3rdova (Medell\u00edn)",
+      "Alfonso Bonilla (Cali)",
+      "Rafael N\u00fa\u00f1ez (Cartagena)"
+    ],
+    "answer": 1
+  },
+  {
+    "question": "What is the traditional straw hat of Colombia often worn by farmers?",
+    "options": ["Sombrero vueltiao", "Panama hat", "Fedora", "Boater"],
+    "answer": 1
+  },
+  {
+    "question": "Which international alliance is Colombia a member of alongside Mexico, Peru, and Chile?",
+    "options": ["Pacific Alliance", "European Union", "ASEAN", "MERCOSUR"],
+    "answer": 1
+  },
+  {
+    "question": "Which Colombian cyclist is a two-time Olympic gold medalist in BMX?",
+    "options": [
+      "Mariana Paj\u00f3n",
+      "Rigoberto Ur\u00e1n",
+      "James Rodr\u00edguez",
+      "Fabi\u00e1n Cancellara"
+    ],
+    "answer": 1
+  },
+  {
+    "question": "What is Colombia\u2019s internet country code top-level domain?",
+    "options": [".co", ".cl", ".com", ".ca"],
+    "answer": 1
+  },
+  {
+    "question": "What is Colombia\u2019s international calling code?",
+    "options": ["+57", "+52", "+54", "+55"],
+    "answer": 1
+  },
+  {
+    "question": "Which Colombian city is nicknamed \u201cLa Sultana del Valle\u201d?",
+    "options": ["Cali", "Medell\u00edn", "Barranquilla", "Bogot\u00e1"],
+    "answer": 1
+  },
+  {
+    "question": "What is the currency symbol for the Colombian peso?",
+    "options": ["$", "\u20b1", "\u00a3", "\u20ac"],
+    "answer": 1
+  },
+  {
+    "question": "What is Colombia\u2019s national motto (on the coat of arms)?",
+    "options": [
+      "Libertad y Orden",
+      "Paz y Trabajo",
+      "Unidad y Fuerza",
+      "Justicia y Libertad"
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Which of these sports events has Colombia never won?",
+    "options": [
+      "FIFA World Cup",
+      "Copa Am\u00e9rica",
+      "Olympic Gold Medal",
+      "Pan American Games"
+    ],
+    "answer": 1
+  },
+  {
+    "question": "What is Colombia\u2019s national tree in English?",
+    "options": ["Wax palm", "Cypress", "Oak", "Baobab"],
+    "answer": 1
+  },
+  {
+    "question": "What does the color yellow on the Colombian flag represent?",
+    "options": ["Wealth of the country", "The sky", "The rivers", "The soil"],
+    "answer": 1
+  },
+  {
+    "question": "What is Colombia\u2019s internet country code top-level domain?",
+    "options": [".co", ".cl", ".com", ".ca"],
+    "answer": 1
+  },
+  {
+    "question": "What symbol is used for the Colombian peso currency?",
+    "options": ["$", "\u20b1", "\u00a3", "\u20ac"],
+    "answer": 1
+  },
+  {
+    "question": "What does the Colombian motto 'Libertad y Orden' mean in English?",
+    "options": [
+      "Freedom and Order",
+      "Justice and Peace",
+      "Land and Sea",
+      "Honor and Glory"
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Which Colombian city is known for its famous annual 'Lanterns' festival each December?",
+    "options": ["Medell\u00edn", "Popay\u00e1n", "Cali", "Barranquilla"],
+    "answer": 1
+  },
+  {
+    "question": "Which Colombian singer performed at the Super Bowl halftime show in 2020?",
+    "options": ["Shakira", "Karol G", "J Balvin", "Maluma"],
+    "answer": 1
+  },
+  {
+    "question": "What is celebrated in Colombia on December 7 each year?",
+    "options": [
+      "Independence of Cartagena",
+      "Colombia Independence Day",
+      "Day of the Little Candles",
+      "Christmas Eve"
+    ],
+    "answer": 3
+  },
+  {
+    "question": "Which national beverage made from fermented maize is traditional in Colombia?",
+    "options": ["Chicha", "Kombucha", "Kvass", "Tepache"],
+    "answer": 1
+  },
+  {
+    "question": "Which city is known for the annual Flower Festival (Feria de las Flores) parade of silleteros?",
+    "options": ["Medell\u00edn", "Bogot\u00e1", "Cali", "Barranquilla"],
+    "answer": 1
+  }
+]
