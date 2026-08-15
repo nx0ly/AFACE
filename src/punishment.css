@@ -5,6 +5,9 @@
 
 .page-pause-panel-overlay {
   align-items: center !important;
+  /* Opaque-proofing: the tint belongs to the backdrop only. A stray `opacity`
+     here would make every child translucent, panel included. */
+  opacity: 1 !important;
   background: rgb(104 77 58 / 0.72) !important;
   display: flex !important;
   inset: 0 !important;
@@ -15,6 +18,13 @@
 }
 
 .page-pause-panel {
+  /* Injected into arbitrary host pages: give the panel its own stacking
+     context and pin it above the backdrop, so nothing on the page can paint
+     through it or over it. */
+  isolation: isolate !important;
+  opacity: 1 !important;
+  position: relative !important;
+  z-index: 1 !important;
   background: #f6e5c7 !important;
   border: 3px solid #684d3a !important;
   border-radius: 20px !important;
