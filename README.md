@@ -16,9 +16,9 @@ bun dev
 ```
 
 The token balance starts at zero and persists across tabs and browser restarts.
-The Games page includes Tejo and roulette. Scoring in Tejo or
-landing on green in roulette awards one token. Spending one token
-spins a 50/50 Safe or Doom wheel. Safe whitelists the current hostname for
+The Games page includes Tejo and roulette. Scoring in Tejo or landing on green
+in roulette awards one token. Spending one token spins a 50/50 Safe or Doom
+wheel. Safe whitelists the current hostname for
 30 minutes; Doom spins a *second* wheel — one wedge per registered punishment —
 and sends you back to the target page to serve whichever one it lands on. The
 pass is granted once the punishment is over. A small toolbar badge shows the
@@ -40,7 +40,7 @@ array, so adding one is two steps:
 punishments need goes in `src/punishment.css` (namespaced `page-pause-*`, since
 it is injected into arbitrary host pages).
 
-Shipping today: arepa rain, la fila del banco, and la penitencia.
+Shipping today: arepa rain, la cosecha, la fila del banco, and la penitencia.
 
 ## Build
 

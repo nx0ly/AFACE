@@ -16,6 +16,7 @@
 
 import { arepaRain } from './arepa-rain.js';
 import { bankQueue } from './bank-queue.js';
+import { mangoHarvest } from './mango-harvest.js';
 import { penanceTyping } from './penance-typing.js';
 
 /**
@@ -46,7 +47,7 @@ import { penanceTyping } from './penance-typing.js';
  */
 
 /** @type {Punishment[]} */
-export const PUNISHMENTS = [arepaRain, bankQueue, penanceTyping];
+export const PUNISHMENTS = [arepaRain, mangoHarvest, bankQueue, penanceTyping];
 
 /**
  * @param {unknown} id

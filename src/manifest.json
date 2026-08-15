@@ -53,10 +53,12 @@
     ]
   },
   "chromium:permissions": [
-    "storage"
+    "storage",
+    "activeTab"
   ],
   "firefox:permissions": [
-    "storage"
+    "storage",
+    "activeTab"
   ],
   "host_permissions": [],
   "content_scripts": [
@@ -83,20 +85,19 @@
         "pages/minigames/roullete_wheel.html",
         "pages/minigames/shop.html",
         "pages/blocked.js",
-    "punishments/registry.js",
-    "punishments/overlay.js",
-    "punishments/arepa-rain.js",
-    "punishments/bank-queue.js",
-    "punishments/penance-typing.js",
         "punishments/registry.js",
         "punishments/overlay.js",
         "punishments/arepa-rain.js",
+        "punishments/mango-harvest.js",
         "punishments/bank-queue.js",
         "punishments/penance-typing.js",
         "pages/minigames/tejo.js",
         "pages/minigames/roullete_wheel.js",
         "pages/minigames/shop.js",
+        "pages/minigames/adivina.html",
+        "pages/minigames/adivina.js",
         "images/arepa.png",
+        "images/mango.png",
         "images/borders/top.webp",
         "images/borders/bottom.webp",
         "images/borders/left.webp",
@@ -122,12 +123,16 @@
     "punishments/registry.js",
     "punishments/overlay.js",
     "punishments/arepa-rain.js",
+    "punishments/mango-harvest.js",
     "punishments/bank-queue.js",
     "punishments/penance-typing.js",
     "pages/minigames/tejo.js",
     "pages/minigames/roullete_wheel.js",
     "pages/minigames/shop.js",
+    "pages/minigames/adivina.html",
+    "pages/minigames/adivina.js",
     "images/arepa.png",
+    "images/mango.png",
     "images/borders/top.webp",
     "images/borders/bottom.webp",
     "images/borders/left.webp",
