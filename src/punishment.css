@@ -1,7 +1,8 @@
 .page-pause-arepa-overlay {
-  background: rgb(7 14 21 / 58%);
+  background: transparent;
   inset: 0;
   overflow: hidden;
+  pointer-events: none;
   position: fixed;
   z-index: 2147483647;
 }
@@ -9,7 +10,7 @@
 .page-pause-arepa-stage {
   inset: 0;
   overflow: hidden;
-  pointer-events: auto;
+  pointer-events: none;
   position: absolute;
 }
 
@@ -23,22 +24,40 @@
 
 .page-pause-arepa {
   appearance: none;
-  background: transparent url("images/arepa.png") center / 190% auto no-repeat;
-  border: 0;
-  border-radius: 50%;
-  box-shadow: none;
-  cursor: crosshair;
-  height: var(--arepa-size);
-  padding: 0;
-  position: absolute;
-  width: var(--arepa-size);
+  background-color: transparent !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: 260% auto !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+  height: var(--arepa-size) !important;
+  outline: 0 !important;
+  padding: 0 !important;
+  pointer-events: auto !important;
+  position: absolute !important;
+  transition: none !important;
+  width: var(--arepa-size) !important;
   will-change: transform;
 }
 
 .page-pause-arepa:hover,
-.page-pause-arepa:focus-visible {
-  outline: 4px solid #fff1a8;
-  outline-offset: 3px;
+.page-pause-arepa:focus,
+.page-pause-arepa:focus-visible,
+.page-pause-arepa:active {
+  background-color: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+  outline: 0 !important;
+}
+
+.page-pause-arepa::before,
+.page-pause-arepa::after {
+  content: none !important;
+  display: none !important;
 }
 
 .page-pause-arepa-particle {
