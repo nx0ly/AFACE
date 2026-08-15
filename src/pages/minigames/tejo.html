@@ -66,6 +66,37 @@
                 background: rgba(0,0,0,0.5);
                 padding: 5px;
             }
+            /* Retry button — only shown after a throw lands */
+            #retry-btn {
+                position: fixed;
+                top: 55%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 40;
+                display: none;
+                padding: 16px 42px;
+                font-family: "Comic Sans MS", "Arial Black", sans-serif;
+                font-size: 34px;
+                font-weight: bold;
+                color: #2a1a00;
+                background: #ffe600;
+                border: 5px outset #fff700;
+                border-radius: 8px;
+                cursor: pointer;
+                box-shadow: 5px 5px 0 rgba(0,0,0,.6);
+                letter-spacing: 1px;
+                animation: retry-pulse 0.8s ease-in-out infinite;
+            }
+            #retry-btn:hover {
+                background: #fff700;
+            }
+            #retry-btn:active {
+                border-style: inset;
+            }
+            @keyframes retry-pulse {
+                0%, 100% { transform: translate(-50%, -50%) scale(1); }
+                50%      { transform: translate(-50%, -50%) scale(1.06); }
+            }
         </style>
     </head>
 
@@ -79,6 +110,8 @@
         <div class="falling-arepa" style="right: 5%; animation-duration: 4.5s; animation-delay: 0.5s;"></div>
         <div class="falling-arepa" style="right: 15%; animation-duration: 3.8s; animation-delay: 1.5s;"></div>
         <div class="falling-arepa" style="right: 10%; animation-duration: 5.2s; animation-delay: 3s;"></div>
+
+        <button id="retry-btn" type="button">⟳ REINTENTAR</button>
 
         <canvas
             id="canvas"

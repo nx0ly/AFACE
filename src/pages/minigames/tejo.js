@@ -1,12 +1,15 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+const retryBtn = document.getElementById("retry-btn");
+
 const mangoImg = new Image();
 mangoImg.src = "/images/mango.png";
 
 const gravity = 900;
 const powerMultiplier = 4.5;
-const powerVariance = 0.08;
+const powerVariance = 0.03; // keep shots close to the aim preview
+const angleJitter = 0.01;
 
 const target = {
     x: canvas.width / 2,
@@ -31,6 +34,8 @@ const tejo = {
     flying: false,
     landed: false,
     hit: false,
+
+    rotation: 0,
 
     dragX: 0,
     dragY: 0,
@@ -91,10 +96,13 @@ function reset() {
     tejo.flying = false;
     tejo.landed = false;
     tejo.hit = false;
+    tejo.rotation = 0;
 
     mechas.forEach((m) => (m.hit = false));
 
     message = "";
+
+    retryBtn.style.display = "none";
 }
 
 function drawField() {
@@ -180,30 +188,84 @@ function drawAim() {
 
     const dx = tejo.x - tejo.dragX;
     const dy = tejo.y - tejo.dragY;
-
     const length = Math.hypot(dx, dy);
 
     if (length < 2) return;
 
     const power = clamp(length / 250, 0, 1);
 
-    const nx = dx / length;
-    const ny = dy / length;
+    // Predicted trajectory arc (slingshot preview, Angry Birds style).
+    // Reuses the real launch physics with jitter = 0 so the dots trace
+    // exactly where a clean shot will fly.
+    const v = launchVelocity(0);
 
-    const lineLength = 40 + power * 150;
+    if (v) {
+        const points = [];
 
-    ctx.beginPath();
+        let x = tejo.x;
+        let y = tejo.y;
+        let z = 0;
+        let vz = v.vz;
 
-    ctx.moveTo(tejo.x, tejo.y);
+        const step = 0.02;
 
-    ctx.lineTo(tejo.x + nx * lineLength, tejo.y + ny * lineLength);
+        for (let t = 0; t < 4; t += step) {
+            points.push({ x, y, z });
 
-    ctx.strokeStyle = "#fff";
-    ctx.lineWidth = 3;
+            x += v.vx * step;
+            y += v.vy * step;
+            vz -= gravity * step;
+            z += vz * step;
 
-    ctx.setLineDash([8, 8]);
-    ctx.stroke();
-    ctx.setLineDash([]);
+            if (z <= 0 && t > 0) {
+                points.push({ x, y, z: 0 });
+                break;
+            }
+        }
+
+        // ~10 dots along the arc, lifted by z so it rises on screen the
+        // same way the mango will, shrinking toward the end.
+        const dotStep = Math.max(1, Math.floor(points.length / 10));
+
+        ctx.fillStyle = "#fff";
+
+        // Solid along the first half of the arc (the launch direction is a
+        // fair hint). Begin fading at 50%, fully invisible by 80% — so the
+        // far end (landing-point prediction, the OP part) never draws.
+        const FADE_START = 0.5;
+        const FADE_END = 0.8;
+        const MAX_ALPHA = 0.8;
+
+        for (let i = dotStep; i < points.length; i += dotStep) {
+            const p = points[i];
+            const tt = i / points.length;
+            const r = 5 - tt * 2.6;
+
+            if (r <= 0) break;
+
+            // Solid up to FADE_START, linear fade to invisible by FADE_END.
+            let alpha;
+            if (tt <= FADE_START) {
+                alpha = MAX_ALPHA;
+            } else if (tt >= FADE_END) {
+                break;
+            } else {
+                alpha = MAX_ALPHA * (1 - (tt - FADE_START) / (FADE_END - FADE_START));
+            }
+
+            ctx.globalAlpha = alpha;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y - p.z, r, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        ctx.globalAlpha = 1;
+    }
+
+    // Power label floating just off the tejo along the launch direction.
+    const nx = length > 0 ? dx / length : 0;
+    const ny = length > 0 ? dy / length : 0;
 
     ctx.fillStyle = "#fff";
     ctx.font = "bold 16px Arial";
@@ -211,8 +273,8 @@ function drawAim() {
 
     ctx.fillText(
         `${Math.round(power * 100)}%`,
-        tejo.x + nx * lineLength,
-        tejo.y + ny * lineLength - 12,
+        tejo.x + nx * 40,
+        tejo.y + ny * 40 - 12,
     );
 }
 
@@ -237,6 +299,7 @@ function drawTejo() {
 
     ctx.translate(tejo.x, tejo.y - tejo.z);
     ctx.scale(scale, scale);
+    ctx.rotate(tejo.rotation);
 
     const size = tejo.radius * 2.5;
     ctx.drawImage(mangoImg, -size / 2, -size / 2, size, size);
@@ -292,34 +355,38 @@ function draw() {
     drawUI();
 }
 
-function launch() {
+function launchVelocity(jitter) {
     const dx = tejo.x - tejo.dragX;
-
     const dy = tejo.y - tejo.dragY;
-
     const length = Math.hypot(dx, dy);
 
-    if (length < 10) return;
+    if (length < 1) return null;
 
     const power = Math.min(length, 250);
 
-    const nx = dx / length;
+    const vFactor = 1 + (Math.random() * 2 - 1) * powerVariance * jitter;
+    const aJitter = (Math.random() * 2 - 1) * angleJitter * jitter;
 
-    const ny = dy / length;
+    const angle = Math.atan2(dy, dx) + aJitter;
+    const speed = power * powerMultiplier * vFactor;
 
-    const variance = 1 + (Math.random() * 2 - 1) * powerVariance;
+    return {
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        vz: clamp(power * 3.3 * vFactor, 350, 900),
+        power,
+        length,
+    };
+}
 
-    const angleVariance = (Math.random() * 2 - 1) * 0.025;
+function launch() {
+    const v = launchVelocity(1);
 
-    const angle = Math.atan2(ny, nx) + angleVariance;
+    if (!v || v.length < 10) return;
 
-    const speed = power * powerMultiplier * variance;
-
-    tejo.vx = Math.cos(angle) * speed;
-
-    tejo.vy = Math.sin(angle) * speed;
-
-    tejo.vz = clamp(power * 3.3 * variance, 350, 900);
+    tejo.vx = v.vx;
+    tejo.vy = v.vy;
+    tejo.vz = v.vz;
 
     tejo.flying = true;
 }
@@ -375,9 +442,11 @@ function land() {
 
     if (tejo.hit) {
         void awardToken();
-        message = "ARRIBA TEJOOOOO!!! +1 BEAN";
     }
 
+    // Keep the result on screen and offer a retry instead of leaving a
+    // dead field after the throw lands.
+    retryBtn.style.display = "block";
     messageTimer = 1.5;
 }
 
@@ -389,6 +458,10 @@ function update(dt) {
 
     tejo.vz -= gravity * dt;
     tejo.z += tejo.vz * dt;
+
+    // Tumble the mango as it flies — faster shots spin quicker.
+    const horizSpeed = Math.hypot(tejo.vx, tejo.vy);
+    tejo.rotation += horizSpeed * dt * 0.004;
 
     if (tejo.z <= 0) {
         land();
@@ -433,6 +506,8 @@ canvas.addEventListener("pointerup", () => {
 
 canvas.addEventListener("dblclick", reset);
 
+retryBtn.addEventListener("click", reset);
+
 let lastTime = performance.now();
 
 function loop(time) {
@@ -442,7 +517,9 @@ function loop(time) {
 
     update(dt);
 
-    if (messageTimer > 0) {
+    // Hold the result message on screen while the tejo is landed — the
+    // retry button is up, so don't fade the score line out from under it.
+    if (messageTimer > 0 && !tejo.landed) {
         messageTimer -= dt;
     }
 
