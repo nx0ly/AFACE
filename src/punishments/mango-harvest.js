@@ -1,5 +1,9 @@
 /*
- * La cosecha: 5,000 mangos and you can have your page back. Pick.
+ * La cosecha: buy your way off the page for 5,000 mangos.
+ *
+ * Mangos are a currency, not a progress bar — freedom sits in the shop next to
+ * the upgrades and competes with them for the same pile. Spending on a machete
+ * gets you there faster but sets the pile back, which is the whole tension.
  *
  * This was a minigame first, which is why it has a combo meter and an upgrade
  * tree — they are what keep 5,000 from being 5,000 literal clicks. Nothing is
@@ -27,14 +31,14 @@ const UPGRADES = [
 function mount(context) {
   const panel = createPunishmentPanel({
     title: 'La cosecha',
-    subtitle: `Pick ${TARGET.toLocaleString()} mangos and the page is yours again.`,
+    subtitle: `Buy your way out for ${TARGET.toLocaleString()} mangos.`,
   });
 
   if (!panel) {
     return;
   }
 
-  const state = { mangos: 0, lifetime: 0, machete: 0, grove: 0, basket: 0 };
+  const state = { mangos: 0, machete: 0, grove: 0, basket: 0 };
 
   let combo = 1;
   let lastClick = 0;
@@ -69,6 +73,20 @@ function mount(context) {
   orchard.append(mango);
   panel.panel.append(orchard, meter, panel.status, shop);
 
+  // Freedom is the first thing in the shop: it is a purchase like any other,
+  // and it is what the upgrades below are competing with for the same mangos.
+  const freedomButton = document.createElement('button');
+
+  freedomButton.className = 'page-pause-mango-buy page-pause-mango-freedom';
+  freedomButton.type = 'button';
+  freedomButton.addEventListener('click', () => {
+    if (state.mangos < TARGET) return;
+
+    state.mangos -= TARGET;
+    finish();
+  });
+  shop.append(freedomButton);
+
   /** @type {HTMLButtonElement[]} */
   const shopButtons = UPGRADES.map((upgrade) => {
     const button = document.createElement('button');
@@ -89,12 +107,16 @@ function mount(context) {
   });
 
   function render() {
-    const left = Math.max(0, TARGET - Math.floor(state.lifetime));
+    const pile = Math.floor(state.mangos);
 
-    panel.status.textContent = left === 0
-      ? 'Basket full · returning to your page…'
-      : `${left.toLocaleString()} mangos to go`;
-    fill.style.setProperty('width', `${Math.min(100, (state.lifetime / TARGET) * 100)}%`, 'important');
+    panel.status.textContent = finished
+      ? 'Paid · returning to your page…'
+      : `${pile.toLocaleString()} / ${TARGET.toLocaleString()} mangos`;
+    fill.style.setProperty('width', `${Math.min(100, (pile / TARGET) * 100)}%`, 'important');
+
+    freedomButton.disabled = state.mangos < TARGET;
+    freedomButton.textContent =
+      `Buy your way out · ${TARGET.toLocaleString()} mangos`;
 
     UPGRADES.forEach((upgrade, index) => {
       const button = shopButtons[index];
@@ -122,11 +144,6 @@ function mount(context) {
     if (finished) return;
 
     state.mangos += amount;
-    state.lifetime += amount;
-
-    if (state.lifetime >= TARGET) {
-      finish();
-    }
   }
 
   function pop(x, y, amount) {
