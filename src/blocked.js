@@ -1,5 +1,6 @@
 const TOKEN_BALANCE_KEY = 'page-pause:tokens';
 const WHITELIST_PREFIX = 'page-pause:whitelist:';
+const PUNISHMENT_PREFIX = 'page-pause:punishment:';
 const WHITELIST_DURATION = 30 * 60 * 1000;
 const EXAMPLE_COM_WHITELIST_DURATION = 60 * 1000;
 
@@ -26,7 +27,8 @@ function getOriginalUrl(search) {
 }
 
 const continueButton = document.querySelector('#continue');
-const earnTokenButton = document.querySelector('#earn-token');
+const openGamesButton = document.querySelector('#open-games');
+const openShopButton = document.querySelector('#open-shop');
 const tokenCount = document.querySelector('#token-count');
 const whitelistDescription = document.querySelector('#whitelist-description');
 const wheelOverlay = document.querySelector('#wheel-overlay');
@@ -39,6 +41,7 @@ const whitelistDuration = originalUrl.hostname === 'example.com'
 const whitelistMinutes = whitelistDuration / 60_000;
 let balance = 0;
 let wheelIsRunning = false;
+const FORCE_PUNISHMENT_FOR_TESTING = true;
 
 function normalizeBalance(value) {
   return typeof value === 'number' && Number.isFinite(value)
@@ -76,19 +79,12 @@ async function loadBalance() {
   renderBalance();
 }
 
-earnTokenButton?.addEventListener('click', async () => {
-  const storage = getStorage();
+openGamesButton?.addEventListener('click', () => {
+  window.location.assign('games.html');
+});
 
-  if (!storage) {
-    return;
-  }
-
-  earnTokenButton.disabled = true;
-  const saved = await storage.get(TOKEN_BALANCE_KEY);
-  balance = normalizeBalance(saved[TOKEN_BALANCE_KEY]) + 1;
-  await storage.set({ [TOKEN_BALANCE_KEY]: balance });
-  earnTokenButton.disabled = false;
-  renderBalance();
+openShopButton?.addEventListener('click', () => {
+  window.location.assign('minigames/shop.html');
 });
 
 function chooseSafeOutcome() {
@@ -97,13 +93,27 @@ function chooseSafeOutcome() {
   return randomValue[0] % 2 === 0;
 }
 
+async function openArepaPunishment(storage) {
+  const punishmentKey = `${PUNISHMENT_PREFIX}${originalUrl.hostname}`;
+
+  await storage.set({
+    [punishmentKey]: {
+      url: originalUrl.toString(),
+      duration: whitelistDuration,
+    },
+  });
+
+  window.location.assign(originalUrl.toString());
+}
+
 async function spinChanceWheel(storage, whitelistKey) {
   if (!wheelOverlay || !chanceWheel || !wheelStatus || wheelIsRunning) {
     return;
   }
 
   wheelIsRunning = true;
-  const isSafe = chooseSafeOutcome();
+  // Keep this forced on while the arepa punishment is being tested.
+  const isSafe = FORCE_PUNISHMENT_FOR_TESTING ? false : chooseSafeOutcome();
   const rotation = (5 * 360) + (isSafe ? 0 : 180);
   const prefersReducedMotion = window.matchMedia(
     '(prefers-reduced-motion: reduce)',
@@ -127,7 +137,15 @@ async function spinChanceWheel(storage, whitelistKey) {
   await animation.finished;
   wheelStatus.textContent = isSafe
     ? `Safe — enjoy your ${whitelistMinutes} ${whitelistMinutes === 1 ? 'minute' : 'minutes'}.`
-    : 'Punishment — the second wheel is coming next.';
+    : 'Punishment — loading the arepa attack on your page…';
+
+  if (!isSafe) {
+    window.setTimeout(
+      () => void openArepaPunishment(storage),
+      prefersReducedMotion ? 250 : 1100,
+    );
+    return;
+  }
 
   await storage.set({
     [whitelistKey]: Date.now() + whitelistDuration,

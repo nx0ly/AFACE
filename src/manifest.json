@@ -56,19 +56,42 @@
       "matches": [
         "<all_urls>"
       ],
+      "css": ["punishment.css"],
       "js": ["index.ts"],
       "run_at": "document_start"
     }
   ],
   "chromium:web_accessible_resources": [
     {
-      "resources": ["blocked.html", "blocked.css", "blocked.js"],
+      "resources": [
+        "blocked.html",
+        "blocked.css",
+        "blocked.js",
+        "images/arepa.png",
+        "games.html",
+        "games.css",
+        "minigames/tejo.html",
+        "minigames/tejo.js",
+        "minigames/roullete_wheel.html",
+        "minigames/roullete_wheel.js",
+        "minigames/shop.html",
+        "minigames/shop.js"
+      ],
       "matches": ["<all_urls>"]
     }
   ],
   "firefox:web_accessible_resources": [
     "blocked.html",
     "blocked.css",
-    "blocked.js"
+    "blocked.js",
+    "images/arepa.png",
+    "games.html",
+    "games.css",
+    "minigames/tejo.html",
+    "minigames/tejo.js",
+    "minigames/roullete_wheel.html",
+    "minigames/roullete_wheel.js",
+    "minigames/shop.html",
+    "minigames/shop.js"
   ]
 }
