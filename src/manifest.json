@@ -6,7 +6,9 @@
   "firefox:browser_specific_settings": {
     "gecko": {
       "data_collection_permissions": {
-        "required": ["none"]
+        "required": [
+          "none"
+        ]
       }
     }
   },
@@ -46,51 +48,78 @@
     "type": "module"
   },
   "firefox:background": {
-    "scripts": ["background.ts"]
+    "scripts": [
+      "background.ts"
+    ]
   },
-  "chromium:permissions": ["storage"],
-  "firefox:permissions": ["storage"],
+  "chromium:permissions": [
+    "storage"
+  ],
+  "firefox:permissions": [
+    "storage"
+  ],
   "host_permissions": [],
   "content_scripts": [
     {
       "matches": [
         "<all_urls>"
       ],
-      "css": ["punishment.css"],
-      "js": ["index.ts"],
+      "css": [
+        "punishment.css"
+      ],
+      "js": [
+        "index.ts"
+      ],
       "run_at": "document_start"
     }
   ],
   "chromium:web_accessible_resources": [
     {
       "resources": [
-        "blocked.html",
-        "blocked.js",
         "theme.css",
+        "pages/blocked.html",
+        "pages/games.html",
+        "pages/minigames/tejo.html",
+        "pages/minigames/roullete_wheel.html",
+        "pages/minigames/shop.html",
+        "pages/blocked.js",
+        "pages/minigames/tejo.js",
+        "pages/minigames/roullete_wheel.js",
+        "pages/minigames/shop.js",
         "images/arepa.png",
-        "images/borders/*.webp",
-        "games.html",
-        "minigames/tejo.html",
-        "minigames/tejo.js",
-        "minigames/roullete_wheel.html",
-        "minigames/roullete_wheel.js",
-        "minigames/shop.html",
-        "minigames/shop.js"
+        "images/borders/top.webp",
+        "images/borders/bottom.webp",
+        "images/borders/left.webp",
+        "images/borders/right.webp",
+        "images/borders/top_left_2.webp",
+        "images/borders/top_right.webp",
+        "images/borders/bottom_left.webp",
+        "images/borders/bottom_right_2.webp"
       ],
-      "matches": ["<all_urls>"]
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ],
   "firefox:web_accessible_resources": [
-    "blocked.html",
-    "blocked.js",
     "theme.css",
+    "pages/blocked.html",
+    "pages/games.html",
+    "pages/minigames/tejo.html",
+    "pages/minigames/roullete_wheel.html",
+    "pages/minigames/shop.html",
+    "pages/blocked.js",
+    "pages/minigames/tejo.js",
+    "pages/minigames/roullete_wheel.js",
+    "pages/minigames/shop.js",
     "images/arepa.png",
-    "games.html",
-    "minigames/tejo.html",
-    "minigames/tejo.js",
-    "minigames/roullete_wheel.html",
-    "minigames/roullete_wheel.js",
-    "minigames/shop.html",
-    "minigames/shop.js"
+    "images/borders/top.webp",
+    "images/borders/bottom.webp",
+    "images/borders/left.webp",
+    "images/borders/right.webp",
+    "images/borders/top_left_2.webp",
+    "images/borders/top_right.webp",
+    "images/borders/bottom_left.webp",
+    "images/borders/bottom_right_2.webp"
   ]
 }

@@ -468,7 +468,7 @@ async function blockCurrentPage(): Promise<void> {
     return;
   }
 
-  const blockedPage = new URL(runtime.getURL('blocked.html'));
+  const blockedPage = new URL(runtime.getURL('pages/blocked.html'));
   blockedPage.searchParams.set('url', currentUrl.toString());
   window.location.replace(blockedPage.toString());
 }

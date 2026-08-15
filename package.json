@@ -8,6 +8,7 @@
   "packageManager": "bun@1.3.14",
   "dependencies": {},
   "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/bun": "latest",
     "extension": "^4.0.32",
@@ -19,12 +20,14 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "dev": "extension dev",
-    "start": "extension start",
-    "build": "extension build",
-    "preview": "extension preview",
-    "build:chrome": "extension build --browser chrome",
-    "build:firefox": "extension build --browser firefox",
-    "build:edge": "extension build --browser edge"
+    "dev": "bun run css && extension dev",
+    "start": "bun run css && extension start",
+    "build": "bun run css && extension build",
+    "preview": "bun run css && extension preview",
+    "build:chrome": "bun run css && extension build --browser chrome",
+    "build:firefox": "bun run css && extension build --browser firefox",
+    "build:edge": "bun run css && extension build --browser edge",
+    "css": "tailwindcss -i ./tailwind.css -o ./src/theme.css",
+    "css:watch": "tailwindcss -i ./tailwind.css -o ./src/theme.css --watch"
   }
 }

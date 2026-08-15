@@ -1,8 +1,8 @@
 /*
  * Page Pause design system.
  *
- * Single shared stylesheet for every extension page (popup, blocked, games and
- * the minigames). Loaded via <link rel="stylesheet" href="theme.css" />.
+ * SOURCE file. Compiled by `bun run css` into src/theme.css, which is what the
+ * pages actually link. src/theme.css is generated — do not edit it by hand.
  *
  * NOTE: punishment.css is deliberately NOT part of this file. It is injected
  * into arbitrary host pages by the content script, so it must stay free of
@@ -13,7 +13,7 @@
 
 /* Deterministic scanning: every page lives under src/, and dist/ is gitignored
    so it is skipped automatically. */
-@source "./**/*.{html,js,ts}";
+@source "./src/**/*.{html,js,ts}";
 
 @theme {
   /* One font for everything. Previously four competing stacks. */
