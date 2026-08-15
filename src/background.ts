@@ -24,7 +24,7 @@ function getExtensionApi(): ExtensionApi | undefined {
 
 function normalizeBalance(value: unknown): number {
   return typeof value === 'number' && Number.isFinite(value)
-    ? Math.max(0, Math.floor(value))
+    ? Math.floor(value)
     : 0;
 }
 

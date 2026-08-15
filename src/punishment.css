@@ -18,21 +18,17 @@
 }
 
 .page-pause-panel {
-  /* Injected into arbitrary host pages: give the panel its own stacking
-     context and pin it above the backdrop, so nothing on the page can paint
-     through it or over it. */
   isolation: isolate !important;
   opacity: 1 !important;
   position: relative !important;
   z-index: 1 !important;
-  background: #f6e5c7 !important;
-  border: 3px solid #684d3a !important;
-  border-radius: 20px !important;
-  box-shadow: 12px 12px 0 rgb(104 77 58 / 0.2) !important;
+  background: #c0c0c0 !important;
+  border: 8px outset #ffffff !important;
+  box-shadow: 10px 10px 0 #000 !important;
   box-sizing: border-box !important;
-  color: #684d3a !important;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif !important;
-  max-width: 420px !important;
+  color: #000000 !important;
+  font-family: "Times New Roman", Times, serif !important;
+  max-width: 500px !important;
   padding: 28px !important;
   text-align: center !important;
   width: 100% !important;
@@ -87,22 +83,26 @@
 }
 
 .page-pause-panel-button {
-  background: #684d3a !important;
-  border: 0 !important;
-  border-radius: 12px !important;
-  color: #f6e5c7 !important;
+  background: silver !important;
+  border: 5px outset white !important;
+  color: black !important;
   cursor: pointer !important;
-  font-family: inherit !important;
-  font-size: 15px !important;
-  font-weight: 800 !important;
+  font-family: "Courier New", Courier, monospace !important;
+  font-size: 18px !important;
+  font-weight: bold !important;
   margin-top: 16px !important;
   padding: 15px 24px !important;
   width: 100% !important;
 }
 
+.page-pause-panel-button:active {
+  border-style: inset !important;
+}
+
 .page-pause-panel-button:disabled {
   cursor: not-allowed !important;
-  opacity: 0.65 !important;
+  background: #888888 !important;
+  border-color: #555555 !important;
 }
 
 .page-pause-panel-button:focus-visible,
@@ -280,22 +280,25 @@
 }
 
 .page-pause-mango-buy {
-  background: #eacfb3 !important;
-  border: 2px solid #684d3a !important;
-  border-radius: 12px !important;
-  color: #684d3a !important;
+  background: silver !important;
+  border: 4px outset white !important;
+  color: black !important;
   cursor: pointer !important;
-  font-family: inherit !important;
-  font-size: 13px !important;
-  font-weight: 800 !important;
+  font-family: "Courier New", Courier, monospace !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
   padding: 10px 12px !important;
   text-align: left !important;
 }
 
+.page-pause-mango-buy:active {
+  border-style: inset !important;
+}
+
 .page-pause-mango-freedom {
-  background: #f2bf40 !important;
-  border-color: #684d3a !important;
-  font-size: 14px !important;
+  background: yellow !important;
+  border-color: #aaaaaa !important;
+  font-size: 16px !important;
   padding: 13px 12px !important;
   text-align: center !important;
 }

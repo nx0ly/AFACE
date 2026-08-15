@@ -1,99 +1,185 @@
 <!doctype html>
-<html lang="en" class="scheme-dark">
+<html lang="en">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <title>Color Roulette</title>
         <link rel="stylesheet" href="../../theme.css" />
+        <style>
+            /* 2000s Retro Styles */
+            body {
+                background-color: var(--color-brown, #684d3a);
+                color: #ffffff;
+                font-family: "Courier New", Courier, monospace;
+                margin: 0;
+                padding: 20px;
+                text-align: center;
+                overflow-x: hidden;
+            }
+            h1 {
+                color: #ffcc00;
+                text-decoration: underline;
+                font-size: 32px;
+            }
+            .retro-box {
+                border: 5px solid #aaaaaa;
+                background-color: #222222;
+                padding: 20px;
+                width: 500px;
+                margin: 0 auto;
+                position: relative;
+                z-index: 20;
+            }
+            .wheel-container {
+                margin: 20px auto;
+                width: 300px;
+                height: 300px;
+                border: 10px solid #888888;
+                border-radius: 50%;
+                position: relative;
+                overflow: hidden;
+            }
+            #wheel {
+                width: 100%;
+                height: 100%;
+                transition: transform 5.5s cubic-bezier(0.12, 0.72, 0.13, 1);
+            }
+            .pointer {
+                position: absolute;
+                top: -15px;
+                left: 140px;
+                width: 0;
+                height: 0;
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+                border-top: 20px solid white;
+                z-index: 10;
+            }
+            .btn-retro {
+                background-color: #aaaaaa;
+                color: #000000;
+                border: 3px outset #dddddd;
+                padding: 10px 20px;
+                font-size: 16px;
+                font-weight: bold;
+                font-family: "Courier New", Courier, monospace;
+                cursor: pointer;
+            }
+            .btn-retro:active {
+                border-style: inset;
+            }
+            .btn-retro:disabled {
+                background-color: #555555;
+                color: #888888;
+                border-color: #444444;
+            }
+            .color-btn {
+                background-color: #444444;
+                color: white;
+                border: 3px outset #777777;
+                padding: 10px 15px;
+                cursor: pointer;
+                font-family: "Courier New", Courier, monospace;
+                font-weight: bold;
+            }
+            .color-btn[data-selected="true"] {
+                border-style: inset;
+                color: black;
+            }
+            #btn-yellow { border-color: yellow; }
+            #btn-yellow[data-selected="true"] { background-color: yellow; }
+            #btn-blue { border-color: #0000ff; }
+            #btn-blue[data-selected="true"] { background-color: #0000ff; color: white; }
+            #btn-red { border-color: red; }
+            #btn-red[data-selected="true"] { background-color: red; color: white; }
+            
+            input[type="number"] {
+                border: 3px inset #aaaaaa;
+                background-color: #ffffff;
+                color: #000000;
+                padding: 5px;
+                font-size: 16px;
+                font-weight: bold;
+                width: 100px;
+                font-family: "Courier New", Courier, monospace;
+            }
+            table {
+                margin: 0 auto;
+                border-collapse: collapse;
+            }
+            td {
+                padding: 10px;
+            }
+            #result {
+                font-size: 24px;
+                font-weight: bold;
+                margin: 20px 0;
+                min-height: 30px;
+            }
+            
+            /* Falling Arepas Animation */
+            .falling-arepa {
+                position: fixed;
+                top: -100px;
+                width: 64px;
+                height: 64px;
+                background-image: url('/images/arepa.png');
+                background-size: cover;
+                animation: fall linear infinite;
+                z-index: 10;
+                pointer-events: none;
+                image-rendering: pixelated;
+            }
+            @keyframes fall {
+                0% { transform: translateY(-100px) rotate(0deg); }
+                100% { transform: translateY(110vh) rotate(360deg); }
+            }
+        </style>
     </head>
 
-    <body
-        class="m-0 flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_center,var(--color-felt-700)_0%,var(--color-felt-950)_70%)] font-sans text-white"
-    >
-        <div class="text-center">
-            <h1
-                class="mb-[25px] text-[20px] font-extrabold tracking-[5px] text-neutral-200 min-[520px]:mb-[35px] min-[520px]:text-[26px]"
-            >
-                COLOR ROULETTE
-            </h1>
+    <body>
+        <div class="falling-arepa" style="left: 5%; animation-duration: 4s; animation-delay: 0s;"></div>
+        <div class="falling-arepa" style="left: 15%; animation-duration: 5s; animation-delay: 1s;"></div>
+        <div class="falling-arepa" style="left: 10%; animation-duration: 3.5s; animation-delay: 2.5s;"></div>
+        <div class="falling-arepa" style="right: 5%; animation-duration: 4.5s; animation-delay: 0.5s;"></div>
+        <div class="falling-arepa" style="right: 15%; animation-duration: 3.8s; animation-delay: 1.5s;"></div>
+        <div class="falling-arepa" style="right: 10%; animation-duration: 5.2s; animation-delay: 3s;"></div>
 
-            <div
-                class="relative mx-auto h-[320px] w-[320px] min-[520px]:h-[430px] min-[520px]:w-[430px]"
-            >
-                <!-- pointer -->
-                <div
-                    class="absolute top-[-12px] left-1/2 z-20 h-0 w-0 -translate-x-1/2 border-x-[17px] border-t-[38px] border-x-transparent border-t-neutral-100 drop-shadow-[0_3px_3px_rgb(0_0_0/0.8)]"
-                ></div>
+        <div class="retro-box">
+            <marquee scrollamount="5">
+                <h1>*** COLOR ROULETTE ***</h1>
+            </marquee>
 
-                <!-- rim -->
-                <div
-                    class="absolute inset-0 rounded-full bg-[linear-gradient(135deg,var(--color-gilt-light),#8c6420_25%,#e5bd50_50%,var(--color-gilt-dark)_75%,#edcb68)] p-[11px] shadow-[0_20px_50px_rgb(0_0_0/0.65),inset_0_0_8px_rgb(255_255_255/0.7)]"
-                >
-                    <!-- background is replaced with a conic-gradient by roullete_wheel.js -->
-                    <div
-                        id="wheel"
-                        class="relative h-full w-full overflow-hidden rounded-full bg-felt-900 shadow-[inset_0_0_0_4px_var(--color-felt-800),inset_0_0_30px_rgb(0_0_0/0.8)] transition-transform duration-[5500ms] ease-[cubic-bezier(0.12,0.72,0.13,1)]"
-                    >
-                        <div
-                            class="pointer-events-none absolute inset-0 z-3 rounded-full bg-[repeating-conic-gradient(from_0deg,transparent_0deg_2.7deg,rgb(255_255_255/0.2)_2.7deg_2.8125deg)]"
-                        ></div>
-
-                        <div
-                            class="pointer-events-none absolute inset-[17%] z-4 rounded-full border-4 border-gilt/90 shadow-[inset_0_0_0_4px_#171717,0_0_10px_rgb(0_0_0/0.5)]"
-                        ></div>
-
-                        <div
-                            class="absolute top-1/2 left-1/2 z-10 h-[80px] w-[80px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[7px] border-[#a77a26] bg-[radial-gradient(circle,#444_0%,var(--color-felt-800)_45%,#090909_100%)] shadow-[0_5px_15px_rgb(0_0_0/0.7),inset_0_0_15px_rgb(255_255_255/0.08)] after:absolute after:top-1/2 after:left-1/2 after:h-[18px] after:w-[18px] after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:bg-[#d7d7d7] after:shadow-[0_0_8px_rgb(255_255_255/0.5)] after:content-[''] min-[520px]:h-[105px] min-[520px]:w-[105px]"
-                        ></div>
-                    </div>
-                </div>
+            <div class="wheel-container">
+                <div class="pointer"></div>
+                <div id="wheel"></div>
             </div>
 
-            <div class="mt-[25px] h-[65px] min-[520px]:mt-[35px]">
-                <div class="text-[11px] tracking-[4px] text-neutral-500">
-                    RESULT
-                </div>
+            <div id="result">--</div>
 
-                <!-- colour is set inline by roullete_wheel.js -->
-                <div
-                    id="result"
-                    class="mt-[7px] text-[28px] font-extrabold tracking-[3px]"
-                >
-                    -
-                </div>
-            </div>
+            <hr size="3" color="#aaaaaa" />
 
-            <button
-                id="spin"
-                class="mt-[15px] cursor-pointer rounded-[50px] border-none bg-[linear-gradient(180deg,#f5f5f5,#cfcfcf)] px-[60px] py-[15px] text-[15px] font-extrabold tracking-[3px] text-felt-900 shadow-[0_7px_20px_rgb(0_0_0/0.4)] transition-[transform,box-shadow] duration-150 hover:-translate-y-0.5 hover:shadow-[0_10px_25px_rgb(0_0_0/0.5)] active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50"
-            >
-                SPIN
-            </button>
+            <table>
+                <tr>
+                    <td><b>BET (BEANS):</b></td>
+                    <td><input type="number" id="bet-amount" value="1" min="1" /></td>
+                </tr>
+            </table>
 
-            <div
-                class="mt-[25px] flex justify-center gap-[22px] text-xs text-neutral-400"
-            >
-                <div class="flex items-center gap-[7px]">
-                    <span
-                        class="h-[9px] w-[9px] rounded-full bg-chip-red"
-                    ></span>
-                    RED
-                </div>
+            <br />
+            
+            <button id="btn-yellow" class="color-btn">YELLOW</button>
+            <button id="btn-blue" class="color-btn">BLUE</button>
+            <button id="btn-red" class="color-btn">RED</button>
 
-                <div class="flex items-center gap-[7px]">
-                    <span
-                        class="h-[9px] w-[9px] rounded-full border border-neutral-600 bg-felt-900"
-                    ></span>
-                    BLACK
-                </div>
+            <br /><br />
+            <button id="spin" class="btn-retro">SPIN THE WHEEL!</button>
 
-                <div class="flex items-center gap-[7px]">
-                    <span
-                        class="h-[9px] w-[9px] rounded-full bg-chip-green"
-                    ></span>
-                    GREEN
-                </div>
-            </div>
+            <br /><br />
+            <hr size="3" color="#aaaaaa" />
+            <b>BALANCE: <span id="balance">0</span> BEANS</b>
+            <br /><br />
+            <a href="../games.html" style="color: #00ffff;"><< BACK TO GAMES</a>
         </div>
 
         <script src="roullete_wheel.js"></script>

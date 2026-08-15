@@ -1,78 +1,99 @@
 <!doctype html>
-<html lang="en" class="scheme-light">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Page Pause Games</title>
     <link rel="stylesheet" href="../theme.css" />
+    <style>
+      body {
+        background-color: var(--color-parchment);
+        color: var(--color-brown);
+        font-family: "Comic Sans MS", "Times New Roman", serif;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+      .retro-container {
+        width: 800px;
+        margin: 40px auto;
+        background-color: var(--color-cream);
+        border: 5px outset var(--color-brown);
+        padding: 20px;
+        text-align: center;
+        box-shadow: 10px 10px 0px #000;
+      }
+      h1 {
+        font-size: 32px;
+        color: #ff0000;
+        text-decoration: underline;
+      }
+      a {
+        color: #0000ee;
+        text-decoration: underline;
+        font-weight: bold;
+        font-size: 24px;
+        display: block;
+        margin: 20px 0;
+      }
+      a:hover {
+        background-color: yellow;
+      }
+      a:visited {
+        color: #551a8b;
+      }
+      hr {
+        border: 0;
+        border-bottom: 3px dashed var(--color-brown);
+        margin: 20px 0;
+      }
+      
+      /* Falling Arepas Animation */
+      .falling-arepa {
+        position: fixed;
+        top: -100px;
+        width: 64px;
+        height: 64px;
+        background-image: url('/images/arepa.png');
+        background-size: cover;
+        animation: fall linear infinite;
+        z-index: 1000;
+        pointer-events: none;
+        image-rendering: pixelated;
+      }
+      @keyframes fall {
+        0% { transform: translateY(-100px) rotate(0deg); }
+        100% { transform: translateY(110vh) rotate(360deg); }
+      }
+    </style>
   </head>
-  <body
-    class="min-h-screen bg-parchment p-[clamp(28px,6vw,72px)] font-sans text-brown"
-  >
-    <main class="mx-auto max-w-[1100px]">
-      <header>
-        <p class="mb-2 text-[13px] font-black tracking-[0.14em] uppercase">
-          Page Pause
-        </p>
-        <h1
-          class="text-[clamp(48px,8vw,88px)] leading-[0.95] tracking-[-0.06em]"
-        >
-          Games
-        </h1>
-        <p class="mt-[18px] mb-[38px] text-[18px] text-brown/72">
-          Play to earn tokens. More games are coming soon.
-        </p>
-      </header>
+  <body>
+    <!-- Falling Arepas -->
+    <div class="falling-arepa" style="left: 5%; animation-duration: 4s; animation-delay: 0s;"></div>
+    <div class="falling-arepa" style="left: 15%; animation-duration: 5s; animation-delay: 1s;"></div>
+    <div class="falling-arepa" style="left: 10%; animation-duration: 3.5s; animation-delay: 2.5s;"></div>
+    <div class="falling-arepa" style="right: 5%; animation-duration: 4.5s; animation-delay: 0.5s;"></div>
+    <div class="falling-arepa" style="right: 15%; animation-duration: 3.8s; animation-delay: 1.5s;"></div>
+    <div class="falling-arepa" style="right: 10%; animation-duration: 5.2s; animation-delay: 3s;"></div>
 
-      <section
-        class="grid grid-cols-1 gap-5 md:grid-cols-2"
-        aria-label="Available games"
-      >
-        <a
-          class="group flex min-h-[240px] flex-col rounded-[20px] border-[3px] border-brown bg-cream p-7 text-inherit no-underline shadow-hard transition-[transform,box-shadow] duration-150 ease-out hover:-translate-x-1 hover:-translate-y-1 hover:shadow-hard-xl focus-visible:-translate-x-1 focus-visible:-translate-y-1 focus-visible:shadow-hard-xl focus-visible:outline-none md:min-h-[300px]"
-          href="minigames/tejo.html"
-        >
-          <span
-            class="self-start rounded-full bg-sun px-[10px] py-[7px] text-xs font-black uppercase"
-            >Earn tokens</span
-          >
-          <h2 class="mt-[22px] mb-2 text-4xl">Tejo</h2>
-          <p class="leading-[1.5] text-brown/72">
-            Score a throw to earn one token.
-          </p>
-          <span class="mt-auto pt-7 font-black">Play →</span>
-        </a>
+    <div class="retro-container">
+      <marquee scrollamount="10" behavior="alternate">
+        <h1>*** PLAY GAMES TO EARN COFFEE BEANS ***</h1>
+      </marquee>
+      
+      <hr />
+      
+      <h2>CHOOSE A GAME:</h2>
+      
+      <a href="minigames/tejo.html">1. TEJO (Earn 1 Bean per hit!)</a>
+      
+      <a href="minigames/roullete_wheel.html">2. COLOR ROULETTE (Gamble your beans!)</a>
+      
+      <a href="minigames/adivina.html">3. ADIVINA (Guess the number!)</a>
 
-        <a
-          class="group flex min-h-[240px] flex-col rounded-[20px] border-[3px] border-brown bg-cream p-7 text-inherit no-underline shadow-hard transition-[transform,box-shadow] duration-150 ease-out hover:-translate-x-1 hover:-translate-y-1 hover:shadow-hard-xl focus-visible:-translate-x-1 focus-visible:-translate-y-1 focus-visible:shadow-hard-xl focus-visible:outline-none md:min-h-[300px]"
-          href="minigames/roullete_wheel.html"
-        >
-          <span
-            class="self-start rounded-full bg-sun px-[10px] py-[7px] text-xs font-black uppercase"
-            >Earn tokens</span
-          >
-          <h2 class="mt-[22px] mb-2 text-4xl">Roulette</h2>
-          <p class="leading-[1.5] text-brown/72">
-            Land on green to earn one token.
-          </p>
-          <span class="mt-auto pt-7 font-black">Spin →</span>
-        </a>
-
-        <a
-          class="group flex min-h-[240px] flex-col rounded-[20px] border-[3px] border-brown bg-cream p-7 text-inherit no-underline shadow-hard transition-[transform,box-shadow] duration-150 ease-out hover:-translate-x-1 hover:-translate-y-1 hover:shadow-hard-xl focus-visible:-translate-x-1 focus-visible:-translate-y-1 focus-visible:shadow-hard-xl focus-visible:outline-none md:min-h-[300px]"
-          href="minigames/adivina.html"
-        >
-          <span
-            class="self-start rounded-full bg-sun px-[10px] py-[7px] text-xs font-black uppercase"
-            >Free tokens</span
-          >
-          <h2 class="mt-[22px] mb-2 text-4xl">Adivina</h2>
-          <p class="leading-[1.5] text-brown/72">
-            Guess the number between 1 and 1. You will get it.
-          </p>
-          <span class="mt-auto pt-7 font-black">Guess →</span>
-        </a>
-      </section>
-    </main>
+      <hr />
+      
+      <p style="font-size: 14px; color: #666;">Page Pause 2026 - All Rights Reserved.</p>
+    </div>
   </body>
 </html>

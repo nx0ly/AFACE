@@ -1,6 +1,9 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+const mangoImg = new Image();
+mangoImg.src = "/images/mango.png";
+
 const gravity = 900;
 const powerMultiplier = 4.5;
 const powerVariance = 0.08;
@@ -50,7 +53,7 @@ async function awardToken() {
 
     const key = "page-pause:tokens";
     const saved = await storage.get(key);
-    const current = typeof saved[key] === "number" ? Math.max(0, Math.floor(saved[key])) : 0;
+    const current = typeof saved[key] === "number" ? Math.floor(saved[key]) : 0;
     await storage.set({ [key]: current + 1 });
 }
 
@@ -218,8 +221,8 @@ function drawTejo() {
 
     ctx.save();
 
+    // Shadow
     ctx.beginPath();
-
     ctx.ellipse(
         tejo.x,
         tejo.y + 8,
@@ -229,86 +232,37 @@ function drawTejo() {
         0,
         Math.PI * 2,
     );
-
     ctx.fillStyle = "rgba(0,0,0,.2)";
-
     ctx.fill();
 
     ctx.translate(tejo.x, tejo.y - tejo.z);
-
     ctx.scale(scale, scale);
 
-    ctx.beginPath();
+    const size = tejo.radius * 2.5;
+    ctx.drawImage(mangoImg, -size / 2, -size / 2, size, size);
 
-    ctx.arc(0, 0, tejo.radius, 0, Math.PI * 2);
-
-    ctx.fillStyle = tejo.landed
-        ? tejo.hit
-            ? "#d62828"
-            : "#a91f1f"
-        : "#999";
-
-    ctx.fill();
-
-    ctx.strokeStyle = "#222";
-    ctx.lineWidth = 3;
-    ctx.stroke();
-
-    if (!tejo.landed) {
+    if (tejo.hit) {
+        ctx.strokeStyle = "yellow";
+        ctx.lineWidth = 3;
         ctx.beginPath();
-
-        ctx.arc(-7, -7, 4, 0, Math.PI * 2);
-
-        ctx.fillStyle = "#ddd";
-        ctx.fill();
+        ctx.arc(0, 0, tejo.radius * 1.5, 0, Math.PI * 2);
+        ctx.stroke();
     }
 
     ctx.restore();
 }
 
-function drawColombia() {
-    ctx.fillStyle = "rgba(255,255,255,.94)";
-    ctx.fillRect(20, 20, 180, 62);
 
-    ctx.fillStyle = "#111";
-    ctx.font = "bold 17px Arial";
-    ctx.textAlign = "left";
-
-    ctx.fillText("TEJO", 34, 45);
-
-    ctx.font = "12px Arial";
-
-    ctx.fillStyle = "#666";
-
-    ctx.fillText("COLOMBIA", 34, 64);
-
-    const flagX = 130;
-    const flagY = 31;
-    const flagW = 52;
-    const flagH = 30;
-
-    ctx.fillStyle = "#FCD116";
-    ctx.fillRect(flagX, flagY, flagW, flagH * 0.5);
-
-    ctx.fillStyle = "#003893";
-    ctx.fillRect(flagX, flagY + flagH * 0.5, flagW, flagH * 0.25);
-
-    ctx.fillStyle = "#CE1126";
-    ctx.fillRect(flagX, flagY + flagH * 0.75, flagW, flagH * 0.25);
-}
 
 function drawUI() {
-    drawColombia();
-
     ctx.fillStyle = "rgba(0,0,0,.5)";
-
-    ctx.fillRect(canvas.width - 150, 20, 130, 45);
+    ctx.fillRect(canvas.width - 250, 20, 230, 45);
 
     ctx.fillStyle = "#fff";
     ctx.font = "bold 20px Arial";
     ctx.textAlign = "left";
 
-    ctx.fillText(`Puntos: ${score}`, canvas.width - 135, 49);
+    ctx.fillText(`COFFEE BEANS: ${score}`, canvas.width - 235, 49);
 
     if (!tejo.flying && !tejo.landed) {
         ctx.font = "16px Arial";
@@ -421,7 +375,7 @@ function land() {
 
     if (tejo.hit) {
         void awardToken();
-        message += " · +1 TOKEN";
+        message = "ARRIBA TEJOOOOO!!! +1 BEAN";
     }
 
     messageTimer = 1.5;

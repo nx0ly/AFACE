@@ -5,15 +5,15 @@
 
 import { createPunishmentButton, createPunishmentPanel } from './overlay.js';
 
-const QUEUE_LENGTH = 12;
-const SECONDS_PER_TICKET = 2;
+const QUEUE_LENGTH = 60;
+const SECONDS_PER_TICKET = 5;
 
 /** @param {import('./registry.js').PunishmentContext} context */
 function mount(context) {
   const ticketNumber = 40 + Math.floor(Math.random() * 40);
   const panel = createPunishmentPanel({
-    title: 'La fila del banco',
-    subtitle: `Ticket A-${ticketNumber}. Take a seat, they will call you.`,
+    title: 'Fila de la EPS',
+    subtitle: `Turno A-${ticketNumber}. Por favor tome asiento, lo llamaremos.`,
   });
 
   if (!panel) {
@@ -32,7 +32,7 @@ function mount(context) {
     ahead -= 1;
 
     if (ahead > 0) {
-      panel.status.textContent = `${ahead} ${ahead === 1 ? 'person' : 'people'} ahead of you`;
+      panel.status.textContent = `${ahead} ${ahead === 1 ? 'persona' : 'personas'} delante de usted`;
       return;
     }
 
@@ -54,12 +54,11 @@ function mount(context) {
   });
 }
 
-/** @type {import('./registry.js').Punishment} */
 export const bankQueue = {
   id: 'bank-queue',
-  label: 'Bank queue',
-  color: '#684d3a',
-  textColor: '#f6e5c7',
-  taunt: 'Take a ticket. The queue does not care about your plans.',
+  label: 'EPS Queue',
+  color: '#c0c0c0',
+  textColor: '#000000',
+  taunt: 'Tome un turno. A la EPS no le importa su tiempo.',
   mount,
 };

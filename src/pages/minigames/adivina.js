@@ -1,72 +1,122 @@
 "use strict";
 
-/*
- * Adivina el número: the number is always 1, the range is always 1 to 1, and
- * you always win. It exists so tokens can be had without grinding a real game.
- */
-
 const TOKEN_BALANCE_KEY = "page-pause:tokens";
 
-const WINS = [
-    "Correct. Uncanny.",
-    "Right again. Are you cheating?",
-    "Nailed it. Nobody has ever guessed that fast.",
-    "Correct. This game may be broken.",
-    "Yes. Truly a student of the game.",
+const cards = [
+    document.getElementById("card-0"),
+    document.getElementById("card-1"),
+    document.getElementById("card-2"),
 ];
-
-const guessInput = document.getElementById("guess");
-const submitButton = document.getElementById("submit");
 const statusLine = document.getElementById("status");
 const balanceLabel = document.getElementById("balance");
+const resetBtn = document.getElementById("reset-btn");
+
+let currentBalance = 0;
+let playing = true;
+
+const OUTCOMES = [
+    { type: "WIN", amount: 20, text: "WIN 20 BEANS!" },
+    { type: "LOSE", amount: -50, text: "LOSE 50 BEANS!" },
+    { type: "LOSE_ALL", amount: 0, text: "LOSE ALL BEANS!" },
+];
 
 function getStorage() {
     return globalThis.browser?.storage?.local ?? globalThis.chrome?.storage?.local;
 }
 
-async function readBalance() {
+async function loadBalance() {
     const storage = getStorage();
-    if (!storage) return 0;
+    if (!storage) return;
 
     const saved = await storage.get(TOKEN_BALANCE_KEY);
     const value = saved[TOKEN_BALANCE_KEY];
 
-    return typeof value === "number" && Number.isFinite(value)
-        ? Math.max(0, Math.floor(value))
-        : 0;
+    currentBalance = typeof value === "number" && Number.isFinite(value) ? value : 0;
+    updateBalanceDisplay();
 }
 
-async function awardToken() {
+async function setBalance(newBalance) {
     const storage = getStorage();
-    if (!storage) return null;
+    if (!storage) return;
 
-    const next = (await readBalance()) + 1;
-    await storage.set({ [TOKEN_BALANCE_KEY]: next });
-
-    return next;
+    currentBalance = newBalance;
+    updateBalanceDisplay();
+    await storage.set({ [TOKEN_BALANCE_KEY]: currentBalance });
 }
 
-async function render() {
-    balanceLabel.textContent = String(await readBalance());
+function updateBalanceDisplay() {
+    balanceLabel.textContent = Math.floor(currentBalance).toString();
+    balanceLabel.style.color = currentBalance >= 0 ? "lime" : "red";
 }
 
-submitButton.addEventListener("click", async () => {
-    // The guess is not consulted. There is only one number.
-    submitButton.disabled = true;
-
-    const next = await awardToken();
-
-    if (next === null) {
-        statusLine.textContent = "No extension storage — token not saved.";
-        submitButton.disabled = false;
-        return;
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
     }
+}
 
-    statusLine.textContent =
-        WINS[Math.floor(Math.random() * WINS.length)] + " +1 token.";
-    balanceLabel.textContent = String(next);
-    submitButton.disabled = false;
-    guessInput.focus();
+let currentOutcomes = [];
+
+function initGame() {
+    playing = true;
+    currentOutcomes = [...OUTCOMES];
+    shuffle(currentOutcomes);
+
+    cards.forEach((card, i) => {
+        card.textContent = "?";
+        card.style.backgroundColor = "#ff0000";
+        card.disabled = false;
+    });
+
+    statusLine.textContent = "CHOOSE YOUR FATE...";
+    statusLine.style.color = "yellow";
+    resetBtn.classList.add("hidden");
+}
+
+cards.forEach((card, index) => {
+    card.addEventListener("click", async () => {
+        if (!playing) return;
+        playing = false;
+
+        const outcome = currentOutcomes[index];
+
+        // Reveal the picked card
+        card.textContent = outcome.type === "WIN" ? "+20" : outcome.type === "LOSE" ? "-50" : "0";
+        card.style.backgroundColor = outcome.type === "WIN" ? "lime" : "black";
+
+        // Process logic
+        if (outcome.type === "WIN") {
+            await setBalance(currentBalance + 20);
+            statusLine.textContent = outcome.text;
+            statusLine.style.color = "lime";
+        } else if (outcome.type === "LOSE") {
+            await setBalance(currentBalance - 50);
+            statusLine.textContent = outcome.text;
+            statusLine.style.color = "red";
+        } else if (outcome.type === "LOSE_ALL") {
+            if (currentBalance > 0) {
+                await setBalance(0);
+            }
+            statusLine.textContent = outcome.text;
+            statusLine.style.color = "red";
+        }
+
+        // Reveal other cards
+        cards.forEach((otherCard, otherIndex) => {
+            if (otherIndex !== index) {
+                otherCard.disabled = true;
+                const otherOutcome = currentOutcomes[otherIndex];
+                otherCard.textContent = otherOutcome.type === "WIN" ? "+20" : otherOutcome.type === "LOSE" ? "-50" : "0";
+                otherCard.style.backgroundColor = "#555555"; // dimmed
+            }
+        });
+
+        resetBtn.classList.remove("hidden");
+    });
 });
 
-void render();
+resetBtn.addEventListener("click", initGame);
+
+loadBalance();
+initGame();

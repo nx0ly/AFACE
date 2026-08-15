@@ -1,60 +1,148 @@
 <!doctype html>
-<html lang="en" class="scheme-light">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Adivina</title>
+    <title>3-Card Monte</title>
     <link rel="stylesheet" href="../../theme.css" />
+    <style>
+      body {
+        background-color: var(--color-brown, #684d3a);
+        color: #ffffff;
+        font-family: "Courier New", Courier, monospace;
+        margin: 0;
+        padding: 20px;
+        text-align: center;
+        overflow-x: hidden;
+      }
+      h1 {
+        color: #ff00ff;
+        font-size: 36px;
+        text-decoration: underline;
+      }
+      .retro-container {
+        width: 700px;
+        margin: 40px auto;
+        background-color: #333333;
+        border: 10px ridge silver;
+        padding: 30px;
+        position: relative;
+        z-index: 20;
+      }
+      .cards-wrapper {
+        display: flex;
+        justify-content: space-around;
+        margin: 40px 0;
+      }
+      .monte-card {
+        width: 150px;
+        height: 220px;
+        background-color: #ff0000;
+        border: 5px outset #ffaaaa;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 80px;
+        color: yellow;
+        font-weight: bold;
+      }
+      .monte-card:hover {
+        background-color: #cc0000;
+      }
+      .monte-card:active {
+        border-style: inset;
+      }
+      .monte-card:disabled {
+        background-color: #555555;
+        border-color: #333333;
+        color: #888888;
+        cursor: not-allowed;
+      }
+      #status {
+        font-size: 24px;
+        color: yellow;
+        font-weight: bold;
+        min-height: 30px;
+        margin: 20px 0;
+      }
+      #reset-btn {
+        background-color: silver;
+        color: black;
+        border: 4px outset white;
+        padding: 10px 20px;
+        font-size: 20px;
+        font-weight: bold;
+        font-family: "Courier New", Courier, monospace;
+        cursor: pointer;
+      }
+      #reset-btn:active {
+        border-style: inset;
+      }
+      #reset-btn.hidden {
+        display: none;
+      }
+
+      /* Falling Arepas Animation */
+      .falling-arepa {
+        position: fixed;
+        top: -100px;
+        width: 64px;
+        height: 64px;
+        background-image: url('/images/arepa.png');
+        background-size: cover;
+        animation: fall linear infinite;
+        z-index: 10;
+        pointer-events: none;
+        image-rendering: pixelated;
+      }
+      @keyframes fall {
+        0% { transform: translateY(-100px) rotate(0deg); }
+        100% { transform: translateY(110vh) rotate(360deg); }
+      }
+    </style>
   </head>
 
-  <body
-    class="flex min-h-screen items-center justify-center bg-parchment p-[clamp(20px,5vw,60px)] font-sans text-brown"
-  >
-    <main
-      class="w-full max-w-[520px] rounded-[20px] border-[3px] border-brown bg-cream p-8 text-center shadow-hard"
-    >
-      <p class="mb-2 text-[13px] font-black tracking-[0.14em] uppercase">
-        Page Pause
-      </p>
-      <h1 class="text-[clamp(38px,7vw,56px)] leading-[0.95] tracking-[-0.06em]">
-        Adivina el número
-      </h1>
-      <p class="mt-4 text-[17px] text-brown/72">
-        I am thinking of a whole number between
-        <strong>1</strong> and <strong>1</strong>. Guess it and the token is
-        yours.
-      </p>
+  <body>
+    <!-- Falling Arepas -->
+    <div class="falling-arepa" style="left: 5%; animation-duration: 4s; animation-delay: 0s;"></div>
+    <div class="falling-arepa" style="left: 15%; animation-duration: 5s; animation-delay: 1s;"></div>
+    <div class="falling-arepa" style="left: 10%; animation-duration: 3.5s; animation-delay: 2.5s;"></div>
+    <div class="falling-arepa" style="right: 5%; animation-duration: 4.5s; animation-delay: 0.5s;"></div>
+    <div class="falling-arepa" style="right: 15%; animation-duration: 3.8s; animation-delay: 1.5s;"></div>
+    <div class="falling-arepa" style="right: 10%; animation-duration: 5.2s; animation-delay: 3s;"></div>
 
-      <input
-        id="guess"
-        type="number"
-        value="1"
-        min="1"
-        max="1"
-        aria-label="Your guess"
-        class="mt-6 w-full rounded-xl border-2 border-brown/40 bg-white p-3 text-center text-2xl font-black text-brown"
-      />
-
-      <button
-        id="submit"
-        type="button"
-        class="mt-4 w-full rounded-xl border-0 bg-brown p-4 text-[15px] font-black text-cream"
-      >
-        Guess
-      </button>
-
-      <p id="status" class="mt-4 min-h-[24px] text-[15px] font-black"></p>
-
-      <p class="mt-6 text-sm text-brown/72">
-        Tokens: <strong id="balance">0</strong>
+    <div class="retro-container">
+      <marquee scrollamount="15">
+        <h1>*** PICK A CARD! WIN BIG OR LOSE IT ALL! ***</h1>
+      </marquee>
+      
+      <p style="font-size: 18px; color: #aaaaaa;">
+        One card wins 20 beans. One card loses 50 beans. One card LOSES EVERYTHING.
       </p>
 
-      <p class="mt-6 text-sm">
-        <a class="font-black text-inherit underline" href="../games.html"
-          >← Back to games</a
-        >
+      <div class="cards-wrapper">
+        <button type="button" class="monte-card" id="card-0">?</button>
+        <button type="button" class="monte-card" id="card-1">?</button>
+        <button type="button" class="monte-card" id="card-2">?</button>
+      </div>
+
+      <div id="status">CHOOSE YOUR FATE...</div>
+      
+      <button id="reset-btn" class="hidden">PLAY AGAIN</button>
+
+      <br /><br />
+      <hr size="3" color="silver" />
+
+      <p style="font-size: 20px;">
+        <b>COFFEE BEANS: <span id="balance" style="color: lime;">0</span></b>
       </p>
-    </main>
+
+      <br />
+      <a style="color: #00ffff; font-size: 18px; font-weight: bold; text-decoration: underline;" href="../games.html">
+        << RUN AWAY (BACK TO GAMES)
+      </a>
+    </div>
 
     <script src="adivina.js"></script>
   </body>

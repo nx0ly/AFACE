@@ -1,20 +1,89 @@
 <!doctype html>
-<html lang="en" class="scheme-dark">
+<html lang="en">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <title>Tejo</title>
-        <link rel="stylesheet" href="../../theme.css" />
+        <style>
+            /* 2000s Retro Styles */
+            body {
+                background-color: var(--color-brown, #684d3a);
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+            #canvas {
+                width: 100vw;
+                height: 100vh;
+                display: block;
+                border: none;
+                cursor: crosshair;
+            }
+            /* Falling Arepas Animation */
+            .falling-arepa {
+                position: fixed;
+                top: -100px;
+                width: 64px;
+                height: 64px;
+                background-image: url('/images/arepa.png');
+                background-size: cover;
+                animation: fall linear infinite;
+                z-index: 10;
+                pointer-events: none;
+                image-rendering: pixelated;
+            }
+            @keyframes fall {
+                0% { transform: translateY(-100px) rotate(0deg); }
+                100% { transform: translateY(110vh) rotate(360deg); }
+            }
+            #retro-title {
+                position: fixed;
+                top: 20%;
+                width: 100%;
+                z-index: 20;
+                color: red;
+                font-family: "Comic Sans MS", "Arial Black", sans-serif;
+                font-size: 100px;
+                font-weight: bold;
+                text-align: center;
+                pointer-events: none;
+                text-shadow: 5px 5px 0 yellow, -5px -5px 0 blue;
+                animation: blinker 0.2s linear infinite;
+            }
+            @keyframes blinker {
+                50% { opacity: 0; }
+            }
+            #retro-back {
+                position: fixed;
+                bottom: 10px;
+                left: 10px;
+                z-index: 30;
+                color: #00ffff;
+                font-family: "Courier New", Courier, monospace;
+                font-size: 20px;
+                font-weight: bold;
+                text-decoration: underline;
+                background: rgba(0,0,0,0.5);
+                padding: 5px;
+            }
+        </style>
     </head>
 
-    <body
-        class="flex h-screen items-center justify-center overflow-hidden bg-felt-800 font-sans"
-    >
+    <body>
+        <marquee id="retro-title" scrollamount="30">!!! TEJO !!! TEJO !!! TEJO !!!</marquee>
+        <a id="retro-back" href="../games.html"><< BACK</a>
+
+        <div class="falling-arepa" style="left: 5%; animation-duration: 4s; animation-delay: 0s;"></div>
+        <div class="falling-arepa" style="left: 15%; animation-duration: 5s; animation-delay: 1s;"></div>
+        <div class="falling-arepa" style="left: 10%; animation-duration: 3.5s; animation-delay: 2.5s;"></div>
+        <div class="falling-arepa" style="right: 5%; animation-duration: 4.5s; animation-delay: 0.5s;"></div>
+        <div class="falling-arepa" style="right: 15%; animation-duration: 3.8s; animation-delay: 1.5s;"></div>
+        <div class="falling-arepa" style="right: 10%; animation-duration: 5.2s; animation-delay: 3s;"></div>
+
         <canvas
             id="canvas"
             width="1200"
             height="650"
-            class="h-auto w-[min(1200px,96vw)] cursor-grab touch-none border-2 border-felt-900 bg-clay is-dragging:cursor-grabbing"
         ></canvas>
 
         <script src="tejo.js"></script>
