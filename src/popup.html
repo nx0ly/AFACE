@@ -31,7 +31,25 @@
       >
         Clear punishments here
       </button>
+
+      <hr class="my-[14px] border-0 border-t-2 border-brown/20" />
+
+      <p id="rig-status" class="mb-[10px] leading-[1.4]">
+        Rig the next punishment on this site.
+      </p>
+      <select
+        id="rig-pick"
+        aria-label="Punishment to run"
+        class="mb-[10px] w-full rounded-[10px] border-2 border-brown/40 bg-white p-[9px] font-sans text-[13px] font-bold text-brown"
+      ></select>
+      <button
+        id="rig-run"
+        type="button"
+        class="btn rounded-[10px] px-[14px] py-[11px]"
+      >
+        Run it here
+      </button>
     </main>
-    <script src="popup.js"></script>
+    <script type="module" src="popup.js"></script>
   </body>
 </html>

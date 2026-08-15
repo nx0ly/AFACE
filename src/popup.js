@@ -1,4 +1,8 @@
+import { PUNISHMENTS } from './punishments/registry.js';
+
 const WHITELIST_PREFIX = 'page-pause:whitelist:';
+// Matches blocked.js, so a rigged punishment grants the same pass as a real one.
+const WHITELIST_DURATION = 30 * 60 * 1000;
 const PUNISHMENT_PREFIX = 'page-pause:punishment:';
 
 const clearButton = document.querySelector('#clear-whitelist');
@@ -100,3 +104,58 @@ void (async () => {
     punishmentStatus.textContent = `Cancel any punishment waiting on ${hostname}.`;
   }
 })();
+
+/* --- Rig a punishment -------------------------------------------------- */
+
+const rigPick = document.querySelector('#rig-pick');
+const rigRunButton = document.querySelector('#rig-run');
+const rigStatus = document.querySelector('#rig-status');
+
+for (const punishment of PUNISHMENTS) {
+  const option = document.createElement('option');
+
+  option.value = punishment.id;
+  option.textContent = punishment.label;
+  rigPick?.append(option);
+}
+
+rigRunButton?.addEventListener('click', async () => {
+  const storage = getStorage();
+  const tabs = getTabs();
+
+  if (!storage || !tabs || !rigStatus || !rigPick) {
+    return;
+  }
+
+  rigRunButton.disabled = true;
+  const hostname = await getActiveHostname();
+
+  if (!hostname) {
+    rigStatus.textContent = 'No site here to punish.';
+    rigRunButton.disabled = false;
+    return;
+  }
+
+  try {
+    const [tab] = await tabs.query({ active: true, currentWindow: true });
+
+    // Same payload shape the Doom wheel writes — see pages/blocked.js.
+    await storage.set({
+      [`${PUNISHMENT_PREFIX}${hostname}`]: {
+        url: tab.url,
+        duration: WHITELIST_DURATION,
+        punishment: rigPick.value,
+      },
+    });
+
+    // The punishment is served by the content script at document_start, so the
+    // tab has to load again for it to pick this up.
+    await storage.remove(`${WHITELIST_PREFIX}${hostname}`);
+    await tabs.reload(tab.id);
+    rigStatus.textContent = `Running it on ${hostname}…`;
+    window.close();
+  } catch {
+    rigStatus.textContent = 'Could not start it. Try again.';
+    rigRunButton.disabled = false;
+  }
+});
