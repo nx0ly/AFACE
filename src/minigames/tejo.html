@@ -1,44 +1,21 @@
 <!doctype html>
-<html>
+<html lang="en" class="scheme-dark">
     <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Tejo • Colombia</title>
-
-        <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-
-            body {
-                height: 100vh;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background: #222;
-                overflow: hidden;
-                font-family: Arial, sans-serif;
-            }
-
-            canvas {
-                width: min(1200px, 96vw);
-                height: auto;
-                background: #c9a66b;
-                border: 2px solid #111;
-                touch-action: none;
-                cursor: grab;
-            }
-
-            canvas.dragging {
-                cursor: grabbing;
-            }
-        </style>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Tejo</title>
+        <link rel="stylesheet" href="../theme.css" />
     </head>
 
-    <body>
-        <canvas id="canvas" width="1200" height="650"></canvas>
+    <body
+        class="flex h-screen items-center justify-center overflow-hidden bg-felt-800 font-sans"
+    >
+        <canvas
+            id="canvas"
+            width="1200"
+            height="650"
+            class="h-auto w-[min(1200px,96vw)] cursor-grab touch-none border-2 border-felt-900 bg-clay is-dragging:cursor-grabbing"
+        ></canvas>
 
         <script src="tejo.js"></script>
     </body>

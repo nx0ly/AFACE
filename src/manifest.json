@@ -65,12 +65,11 @@
     {
       "resources": [
         "blocked.html",
-        "blocked.css",
         "blocked.js",
+        "theme.css",
         "images/arepa.png",
         "images/borders/*.webp",
         "games.html",
-        "games.css",
         "minigames/tejo.html",
         "minigames/tejo.js",
         "minigames/roullete_wheel.html",
@@ -83,11 +82,10 @@
   ],
   "firefox:web_accessible_resources": [
     "blocked.html",
-    "blocked.css",
     "blocked.js",
+    "theme.css",
     "images/arepa.png",
     "games.html",
-    "games.css",
     "minigames/tejo.html",
     "minigames/tejo.js",
     "minigames/roullete_wheel.html",

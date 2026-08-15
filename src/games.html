@@ -1,32 +1,61 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scheme-light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Page Pause Games</title>
-    <link rel="stylesheet" href="games.css" />
+    <link rel="stylesheet" href="theme.css" />
   </head>
-  <body>
-    <main>
+  <body
+    class="min-h-screen bg-parchment p-[clamp(28px,6vw,72px)] font-sans text-brown"
+  >
+    <main class="mx-auto max-w-[1100px]">
       <header>
-        <p class="eyebrow">Page Pause</p>
-        <h1>Games</h1>
-        <p>Play to earn tokens. More games are coming soon.</p>
+        <p class="mb-2 text-[13px] font-black tracking-[0.14em] uppercase">
+          Page Pause
+        </p>
+        <h1
+          class="text-[clamp(48px,8vw,88px)] leading-[0.95] tracking-[-0.06em]"
+        >
+          Games
+        </h1>
+        <p class="mt-[18px] mb-[38px] text-[18px] text-brown/72">
+          Play to earn tokens. More games are coming soon.
+        </p>
       </header>
 
-      <section class="game-grid" aria-label="Available games">
-        <a class="game-card tejo" href="minigames/tejo.html">
-          <span class="tag">Earn tokens</span>
-          <h2>Tejo</h2>
-          <p>Score a throw to earn one token.</p>
-          <span class="play">Play →</span>
+      <section
+        class="grid grid-cols-1 gap-5 md:grid-cols-2"
+        aria-label="Available games"
+      >
+        <a
+          class="group flex min-h-[240px] flex-col rounded-[20px] border-[3px] border-brown bg-cream p-7 text-inherit no-underline shadow-hard transition-[transform,box-shadow] duration-150 ease-out hover:-translate-x-1 hover:-translate-y-1 hover:shadow-hard-xl focus-visible:-translate-x-1 focus-visible:-translate-y-1 focus-visible:shadow-hard-xl focus-visible:outline-none md:min-h-[300px]"
+          href="minigames/tejo.html"
+        >
+          <span
+            class="self-start rounded-full bg-sun px-[10px] py-[7px] text-xs font-black uppercase"
+            >Earn tokens</span
+          >
+          <h2 class="mt-[22px] mb-2 text-4xl">Tejo</h2>
+          <p class="leading-[1.5] text-brown/72">
+            Score a throw to earn one token.
+          </p>
+          <span class="mt-auto pt-7 font-black">Play →</span>
         </a>
 
-        <a class="game-card roulette" href="minigames/roullete_wheel.html">
-          <span class="tag">Earn tokens</span>
-          <h2>Roulette</h2>
-          <p>Land on green to earn one token.</p>
-          <span class="play">Spin →</span>
+        <a
+          class="group flex min-h-[240px] flex-col rounded-[20px] border-[3px] border-brown bg-cream p-7 text-inherit no-underline shadow-hard transition-[transform,box-shadow] duration-150 ease-out hover:-translate-x-1 hover:-translate-y-1 hover:shadow-hard-xl focus-visible:-translate-x-1 focus-visible:-translate-y-1 focus-visible:shadow-hard-xl focus-visible:outline-none md:min-h-[300px]"
+          href="minigames/roullete_wheel.html"
+        >
+          <span
+            class="self-start rounded-full bg-sun px-[10px] py-[7px] text-xs font-black uppercase"
+            >Earn tokens</span
+          >
+          <h2 class="mt-[22px] mb-2 text-4xl">Roulette</h2>
+          <p class="leading-[1.5] text-brown/72">
+            Land on green to earn one token.
+          </p>
+          <span class="mt-auto pt-7 font-black">Spin →</span>
         </a>
       </section>
     </main>

@@ -1,225 +1,81 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scheme-dark">
     <head>
-        <meta charset="UTF-8" />
+        <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <title>Orange Clicker</title>
-        <style>
-            * {
-                box-sizing: border-box;
-                user-select: none;
-            }
-
-            body {
-                margin: 0;
-                min-height: 100vh;
-                overflow: hidden;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-family: Arial, sans-serif;
-                color: white;
-                background: radial-gradient(
-                    circle at center,
-                    #ffb52e,
-                    #ff7a00 55%,
-                    #c83c00
-                );
-            }
-
-            .game {
-                width: min(900px, 95vw);
-                min-height: 650px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-            }
-
-            h1 {
-                margin: 0;
-                font-size: 42px;
-                text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            }
-
-            .score {
-                margin-top: 12px;
-                font-size: 30px;
-                font-weight: bold;
-            }
-
-            .rate {
-                margin-top: 5px;
-                opacity: 0.8;
-            }
-
-            .cookie-area {
-                width: 430px;
-                height: 430px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                position: relative;
-            }
-
-            .cookie {
-                width: 275px;
-                height: 275px;
-                border-radius: 50%;
-                border: 12px solid #873600;
-                background: radial-gradient(
-                    circle at 35% 30%,
-                    #ffc45b,
-                    #f27a00 65%,
-                    #b94200
-                );
-                box-shadow:
-                    inset 0 -15px 0 rgba(80, 25, 0, 0.2),
-                    0 20px 40px rgba(70, 20, 0, 0.4);
-                position: relative;
-                cursor: pointer;
-                touch-action: manipulation;
-                transition: transform 0.06s;
-            }
-
-            .cookie:active {
-                transform: scale(0.94);
-            }
-
-            .chip {
-                position: absolute;
-                width: 28px;
-                height: 28px;
-                border-radius: 50%;
-                background: #713000;
-            }
-
-            .c1 {
-                left: 45px;
-                top: 65px;
-            }
-            .c2 {
-                left: 120px;
-                top: 45px;
-            }
-            .c3 {
-                right: 48px;
-                top: 85px;
-            }
-            .c4 {
-                left: 75px;
-                bottom: 55px;
-            }
-            .c5 {
-                right: 70px;
-                bottom: 65px;
-            }
-            .c6 {
-                left: 125px;
-                top: 130px;
-            }
-            .c7 {
-                right: 90px;
-                top: 145px;
-            }
-
-            .plus {
-                position: absolute;
-                font-size: 24px;
-                font-weight: bold;
-                pointer-events: none;
-                animation: floatUp 0.7s ease-out forwards;
-            }
-
-            @keyframes floatUp {
-                from {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-                to {
-                    opacity: 0;
-                    transform: translateY(-80px);
-                }
-            }
-
-            .stats {
-                display: flex;
-                gap: 15px;
-            }
-
-            .stat {
-                min-width: 130px;
-                padding: 12px 20px;
-                text-align: center;
-                border-radius: 14px;
-                background: rgba(100, 35, 0, 0.3);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-            }
-
-            .stat strong {
-                display: block;
-                font-size: 20px;
-            }
-
-            .status {
-                margin-top: 12px;
-                font-size: 12px;
-                opacity: 0.6;
-            }
-
-            @media (max-width: 600px) {
-                .cookie-area {
-                    width: 330px;
-                    height: 330px;
-                }
-
-                .cookie {
-                    width: 220px;
-                    height: 220px;
-                }
-
-                .game {
-                    min-height: 100vh;
-                }
-            }
-        </style>
+        <link rel="stylesheet" href="../theme.css" />
     </head>
 
-    <body>
-        <div class="game">
-            <h1>🍊 Orange Clicker</h1>
+    <body
+        class="flex min-h-screen select-none items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_center,#ffb52e,#ff7a00_55%,#c83c00)] font-sans text-white"
+    >
+        <div
+            class="flex min-h-screen w-[min(900px,95vw)] flex-col items-center justify-center sm:min-h-[650px]"
+        >
+            <h1 class="text-[42px] drop-shadow-[0_4px_10px_rgb(0_0_0/0.3)]">
+                🍊 Orange Clicker
+            </h1>
 
-            <div class="score"><span id="score">0</span> oranges</div>
+            <div class="mt-3 text-[30px] font-bold">
+                <span id="score">0</span> oranges
+            </div>
 
-            <div class="rate">+<span id="power">1</span> per click</div>
+            <div class="mt-[5px] opacity-80">
+                +<span id="power">1</span> per click
+            </div>
 
-            <div class="cookie-area">
-                <div id="cookie" class="cookie">
-                    <span class="chip c1"></span>
-                    <span class="chip c2"></span>
-                    <span class="chip c3"></span>
-                    <span class="chip c4"></span>
-                    <span class="chip c5"></span>
-                    <span class="chip c6"></span>
-                    <span class="chip c7"></span>
+            <div
+                class="relative flex h-[330px] w-[330px] items-center justify-center sm:h-[430px] sm:w-[430px]"
+            >
+                <div
+                    id="cookie"
+                    class="relative h-[220px] w-[220px] cursor-pointer touch-manipulation rounded-full border-[12px] border-[#873600] bg-[radial-gradient(circle_at_35%_30%,#ffc45b,#f27a00_65%,#b94200)] shadow-[inset_0_-15px_0_rgb(80_25_0/0.2),0_20px_40px_rgb(70_20_0/0.4)] transition-transform duration-[60ms] active:scale-[0.94] sm:h-[275px] sm:w-[275px]"
+                >
+                    <span
+                        class="absolute top-[65px] left-[45px] h-7 w-7 rounded-full bg-[#713000]"
+                    ></span>
+                    <span
+                        class="absolute top-[45px] left-[120px] h-7 w-7 rounded-full bg-[#713000]"
+                    ></span>
+                    <span
+                        class="absolute top-[85px] right-[48px] h-7 w-7 rounded-full bg-[#713000]"
+                    ></span>
+                    <span
+                        class="absolute bottom-[55px] left-[75px] h-7 w-7 rounded-full bg-[#713000]"
+                    ></span>
+                    <span
+                        class="absolute right-[70px] bottom-[65px] h-7 w-7 rounded-full bg-[#713000]"
+                    ></span>
+                    <span
+                        class="absolute top-[130px] left-[125px] h-7 w-7 rounded-full bg-[#713000]"
+                    ></span>
+                    <span
+                        class="absolute top-[145px] right-[90px] h-7 w-7 rounded-full bg-[#713000]"
+                    ></span>
                 </div>
             </div>
 
-            <div class="stats">
-                <div class="stat">
-                    <strong id="total">0</strong>
+            <div class="flex gap-[15px]">
+                <div
+                    class="min-w-[130px] rounded-[14px] border border-white/20 bg-[rgb(100_35_0/0.3)] px-5 py-3 text-center"
+                >
+                    <strong id="total" class="block text-[20px]">0</strong>
                     total clicks
                 </div>
 
-                <div class="stat">
-                    <strong id="best">0</strong>
+                <div
+                    class="min-w-[130px] rounded-[14px] border border-white/20 bg-[rgb(100_35_0/0.3)] px-5 py-3 text-center"
+                >
+                    <strong id="best" class="block text-[20px]">0</strong>
                     best CPS
                 </div>
             </div>
 
-            <div class="status" id="status">Protected input active</div>
+            <div class="mt-3 text-xs opacity-60" id="status">
+                Protected input active
+            </div>
         </div>
-
         <script>
             "use strict";
 
@@ -252,7 +108,8 @@
 
                 const plus = document.createElement("div");
 
-                plus.className = "plus";
+                plus.className =
+                    "pointer-events-none absolute animate-float-up text-2xl font-bold";
                 plus.textContent = "+" + POWER;
                 plus.style.left = x + "px";
                 plus.style.top = y + "px";
