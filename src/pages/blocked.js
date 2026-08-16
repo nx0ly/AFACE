@@ -3,6 +3,7 @@ import { PUNISHMENTS } from '../punishments/registry.js';
 const TOKEN_BALANCE_KEY = 'page-pause:tokens';
 const WHITELIST_PREFIX = 'page-pause:whitelist:';
 const PUNISHMENT_PREFIX = 'page-pause:punishment:';
+const RIG_PREFIX = 'page-pause:rig:';
 const WHITELIST_DURATION = 30 * 60 * 1000;
 const COST = 50;
 
@@ -89,8 +90,30 @@ async function startRandomizer(storage, whitelistKey) {
     
     randomizerText.classList.remove('blink');
 
-    // 25% safe, 75% punishment
-    const isSafe = Math.random() < 0.25;
+    // The popup can rig the next spin: 'safe' forces Safe, 'doom' forces a
+    // punishment (optionally a specific one), 'random' leaves the wheel alone.
+    // It is one-shot, so it is deleted here and never re-rigs a later spin.
+    const rigKey = `${RIG_PREFIX}${originalUrl.hostname}`;
+    let riggedOutcome;
+    let riggedPunishmentId;
+    try {
+        const saved = await storage.get(rigKey);
+        const rig = saved[rigKey];
+        if (rig && typeof rig === 'object') {
+            riggedOutcome = typeof rig.outcome === 'string' ? rig.outcome : undefined;
+            riggedPunishmentId = typeof rig.punishment === 'string' ? rig.punishment : '';
+        }
+        await storage.remove(rigKey);
+    } catch {
+        // Storage unavailable — fall back to a fair roll.
+    }
+
+    // 25% safe by default, unless the rig forces a side.
+    const isSafe = riggedOutcome === 'safe'
+        ? true
+        : riggedOutcome === 'doom'
+            ? false
+            : Math.random() < 0.25;
 
     if (isSafe) {
         randomizerText.textContent = "SAFE!!!";
@@ -101,7 +124,11 @@ async function startRandomizer(storage, whitelistKey) {
         });
         window.location.assign(originalUrl.toString());
     } else {
-        const punishment = PUNISHMENTS[Math.floor(Math.random() * PUNISHMENTS.length)];
+        // A rigged id wins if it names a real punishment; otherwise fair draw.
+        const rigged = riggedPunishmentId
+            ? PUNISHMENTS.find((p) => p.id === riggedPunishmentId)
+            : undefined;
+        const punishment = rigged ?? PUNISHMENTS[Math.floor(Math.random() * PUNISHMENTS.length)];
         randomizerText.textContent = `PUNISHMENT: ${punishment.label.toUpperCase()}`;
         randomizerText.style.color = "red";
         await pause(2000);
