@@ -21,7 +21,7 @@ const target = {
 
 const tejo = {
     x: 0,
-    y: canvas.height - 85,
+    y: canvas.height - 150,
     z: 0,
 
     vx: 0,
@@ -64,7 +64,7 @@ async function awardToken() {
 
 function randomSpawn() {
     tejo.x = 300 + Math.random() * 600;
-    tejo.y = canvas.height - 85;
+    tejo.y = canvas.height - 150;
 }
 
 function distance(x1, y1, x2, y2) {
