@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Capybara wash — punishment mockup</title>
+<style>
+  :root {
+    --mud: #5a3a1e;
+    --mud-dark: #3f2712;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    height: 100%;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+
+  /* Stand-in for whatever page the user was trying to reach. */
+  .fake-page {
+    padding: 48px 64px;
+    color: #333;
+    background: #fff;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .fake-page h1 { font-size: 42px; margin: 0 0 16px; }
+
+  .fake-page p {
+    max-width: 60ch;
+    line-height: 1.7;
+    color: #666;
+  }
+
+  .fake-page .bar {
+    height: 14px;
+    border-radius: 7px;
+    background: #eee;
+    margin: 14px 0;
+    max-width: 60ch;
+  }
+
+  .fake-page .bar:nth-child(even) { max-width: 44ch; }
+
+  .capy-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483000;
+    /* Dimmed, but the page stays readable behind so it reads as an invasion. */
+    background: rgba(24, 14, 6, 0.42);
+    overflow: hidden;
+    cursor: default;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* Contact shadow that travels with the animal. An earlier version painted a
+     full-width brown band across the bottom of the page, which just read as a
+     smear — the trail of prints is what sells the ground now. */
+  .capy-shadow {
+    /* Child of .capy but a sibling of .capy-body, so it stays put while the
+       animal wobbles above it. */
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    width: 54%;
+    height: 16px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(20, 12, 4, 0.32) 0%, rgba(20, 12, 4, 0) 70%);
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  /* The whole animal. --capy-t is its centre as a fraction of viewport width,
+     so 0 is the left edge and 1 the right — no pixel maths, resize-proof. */
+  .capy {
+    position: absolute;
+    bottom: 6vh;
+    left: calc(var(--capy-t, -0.2) * 100%);
+    width: var(--capy-w);
+    height: var(--capy-h);
+    transform: translate3d(-50%, 0, 0);
+    will-change: left;
+  }
+
+  /* Wobble lives on an inner wrapper so it composes with the walk translation. */
+  .capy-body {
+    position: absolute;
+    inset: 0;
+    transform-origin: 50% 100%;
+    /* Confines the mud's multiply blend to the sprite layers, so it stains the
+       capybara instead of blending with the page behind it. */
+    isolation: isolate;
+  }
+
+  .capy.is-walking .capy-body { animation: capy-wobble 520ms ease-in-out infinite; }
+
+  .capy.is-smug .capy-body { animation: capy-smug-breathe 2.2s ease-in-out infinite; }
+
+  @keyframes capy-wobble {
+    /* One sprite only — the stumble does the work a second frame would do. */
+    0%   { transform: rotate(-7deg) translateY(0)    scaleY(1);    }
+    22%  { transform: rotate(-2deg) translateY(-8px) scaleY(1.02); }
+    50%  { transform: rotate(6deg)  translateY(0)    scaleY(0.97); }
+    72%  { transform: rotate(2deg)  translateY(-6px) scaleY(1.02); }
+    100% { transform: rotate(-7deg) translateY(0)    scaleY(1);    }
+  }
+
+  @keyframes capy-smug-breathe {
+    0%, 100% { transform: rotate(-1.5deg) scale(1);              }
+    50%      { transform: rotate(1.5deg)  scale(1.03, 0.985);    }
+  }
+
+  .capy-sprite {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* Without these the browser lets you pick the capybara up and drag it out
+       of the page as an image, which ends the scrub mid-stroke. */
+    -webkit-user-drag: none;
+    user-drag: none;
+    pointer-events: none;
+    image-rendering: auto;
+    filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.45));
+    transition: opacity 180ms ease;
+  }
+
+  .capy-sprite.is-hidden { opacity: 0; }
+
+  /* The walk sprite is drawn facing right, which is the way it always travels,
+     so it is never flipped. */
+
+  /* Mud canvas sits exactly over the sprite box and is scrubbed away. Multiply
+     is what makes it read as staining rather than as blobs stuck on top — the
+     fur's own colour still shows through the dirt. */
+  .capy-mud {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+    transition: opacity 400ms ease;
+  }
+
+  /* Cursor hides only once the sponge is in hand and standing in for it. */
+  .capy-overlay.is-holding { cursor: none; }
+
+  /* The sponge is a physics object first and a cursor second: it falls in, lands
+     on the floor and waits there until picked up. Its transform is driven
+     entirely from JS, so nothing here may set one. */
+  .capy-sponge {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.45));
+    pointer-events: none;
+    -webkit-user-drag: none;
+    user-drag: none;
+    opacity: 0;
+    z-index: 3;
+  }
+
+  .capy-sponge.is-visible { opacity: 1; }
+
+  /* Only a sponge that has come to rest is clickable. While it is still falling
+     it stays inert, otherwise the cursor flickers between grab and default every
+     time the sponge passes under the pointer on its way down. */
+  .capy-sponge.is-pickable {
+    pointer-events: auto;
+    cursor: grab;
+    /* Breathing halo, so a sponge lying on the floor reads as "pick me up". */
+    animation: sponge-beckon 1.6s ease-in-out infinite;
+  }
+
+  .capy-sponge.is-pickable:active { cursor: grabbing; }
+
+  @keyframes sponge-beckon {
+    0%, 100% { filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.45)); }
+    50%      { filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 14px rgba(255, 226, 150, 0.9)); }
+  }
+
+  .capy-bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 30%, rgba(255, 255, 255, 0.95), rgba(190, 225, 255, 0.35) 60%, rgba(190, 225, 255, 0) 72%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    pointer-events: none;
+    animation: bubble-rise 900ms ease-out forwards;
+    z-index: 4;
+  }
+
+  @keyframes bubble-rise {
+    0%   { transform: translate(-50%, -50%) scale(0.4); opacity: 0.9; }
+    100% { transform: translate(-50%, calc(-50% - 90px)) scale(1.1); opacity: 0; }
+  }
+
+  /* Muddy footprints left behind on the way in. */
+  /* Muddy prints: squashed circles, nothing more. */
+  .capy-print {
+    /* Size comes from the animal at drop time — see dropFootprint(). */
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(52, 32, 14, 0.72);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    animation: print-fade 6s ease-out forwards;
+  }
+
+  @keyframes print-fade {
+    /* Stamped wet and dark, then dries out and disappears. */
+    0%   { opacity: 0;    }
+    6%   { opacity: 0.85; }
+    100% { opacity: 0;    }
+  }
+
+  .capy-progress {
+    position: absolute;
+    bottom: 34px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(420px, 60vw);
+    height: 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.18);
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 250ms ease;
+  }
+
+  .capy-progress.is-visible { opacity: 1; }
+
+  .capy-progress-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #7ec8ff, #d8f0ff);
+    transition: width 120ms linear;
+  }
+
+  /* --- mockup-only chrome, not part of the real punishment --- */
+  .mock-controls {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 2147483001;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(15, 10, 4, 0.9);
+    color: #ffd9a0;
+    font-size: 13px;
+  }
+
+  .mock-controls button {
+    font: inherit;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 217, 160, 0.35);
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .mock-controls button:hover { background: rgba(255, 217, 160, 0.15); }
+</style>
+</head>
+<body>
+  <div class="fake-page">
+    <h1>Some website you were trying to read</h1>
+    <p>This is the page behind the punishment. It exists only so the overlay has something to cover.</p>
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+  </div>
+
+  <div class="capy-overlay" id="overlay">
+    <div class="capy" id="capy">
+      <div class="capy-shadow"></div>
+      <div class="capy-body">
+        <img class="capy-sprite capy-sprite-walk" id="spriteWalk" src="../src/images/capybara/walk.png" alt="" draggable="false" />
+        <img class="capy-sprite capy-sprite-smug is-hidden" id="spriteSmug" src="../src/images/capybara/smug.png" alt="" draggable="false" />
+        <canvas class="capy-mud" id="mud"></canvas>
+      </div>
+    </div>
+
+    <img class="capy-sponge" id="sponge" src="../src/images/capybara/sponge.png" alt="" draggable="false" />
+
+    <div class="capy-progress" id="progress"><div class="capy-progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <div class="mock-controls">
+    <span>mockup</span>
+    <button id="replay" type="button">Replay</button>
+    <button id="autoclean" type="button">Skip scrub</button>
+  </div>
+
+<script>
+  const WALK_ASPECT = 872 / 1156;
+  const SMUG_ASPECT = 1194 / 1566;
+  const CAPY_HEIGHT_VH = 46;      // how tall the animal stands, in vh
+  const WALK_IN_MS = 4200;
+  const TURN_PAUSE_MS = 700;
+  const SMUG_STARE_MS = 1400;
+  const WALK_OUT_MS = 3200;
+  const CLEAN_TARGET = 0.95;      // fraction of mud removed to pass
+  const BRUSH_RADIUS = 24;
+  // How much dirt one pass lifts. Well under 1, so a single swipe fades the mud
+  // rather than deleting it and you have to work the same patch over and over —
+  // this is a punishment, not a coat of paint.
+  const SCRUB_STRENGTH = 0.14;
+
+  const overlay = document.getElementById('overlay');
+  const capy = document.getElementById('capy');
+  const spriteWalk = document.getElementById('spriteWalk');
+  const spriteSmug = document.getElementById('spriteSmug');
+  const mud = document.getElementById('mud');
+  const sponge = document.getElementById('sponge');
+  const progress = document.getElementById('progress');
+  const progressFill = document.getElementById('progressFill');
+
+  const context = mud.getContext('2d', { willReadFrequently: true });
+
+  let phase = 'idle';
+  let lastPoint = null;
+  let mudPixels = 0;
+  let runToken = 0;
+
+  const sleep = (ms, token) => new Promise((resolve, reject) => {
+    setTimeout(() => (token === runToken ? resolve() : reject(new Error('cancelled'))), ms);
+  });
+
+  const randomBetween = (min, max) => min + Math.random() * (max - min);
+
+  function layout() {
+    // Floor the viewport the way arepa-rain does: a 0-height tab would otherwise
+    // collapse the animal to nothing and leave no mud to scrub.
+    const height = Math.max(240, window.innerHeight) * (CAPY_HEIGHT_VH / 100);
+    const aspect = phase === 'smug' || phase === 'scrub' ? SMUG_ASPECT : WALK_ASPECT;
+    capy.style.setProperty('--capy-h', `${height}px`);
+    capy.style.setProperty('--capy-w', `${height * aspect}px`);
+  }
+
+  /* Desaturated grey-browns. Saturated chocolate browns are what made the first
+     version look less like mud and more like something else entirely. */
+  const MUD_TONES = [
+    [78, 64, 46],
+    [96, 82, 62],
+    [64, 53, 39],
+    [110, 96, 74],
+  ];
+
+  /**
+   * An irregular patch: a closed curve whose radius wanders per vertex, so no
+   * two are the same shape and none of them are round.
+   */
+  function splat(x, y, radius, tone, alpha) {
+    const points = Math.round(randomBetween(8, 13));
+    const [red, green, blue] = tone;
+    /** @type {Array<{ x: number, y: number }>} */
+    const vertices = [];
+
+    for (let index = 0; index < points; index += 1) {
+      const angle = (index / points) * Math.PI * 2;
+      // Squashed slightly on the vertical, the way a thrown splat lands.
+      const reach = radius * randomBetween(0.55, 1.35);
+      vertices.push({ x: x + Math.cos(angle) * reach, y: y + Math.sin(angle) * reach * 0.8 });
+    }
+
+    context.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha.toFixed(2)})`;
+    context.beginPath();
+    context.moveTo(
+      (vertices[points - 1].x + vertices[0].x) / 2,
+      (vertices[points - 1].y + vertices[0].y) / 2,
+    );
+
+    // Midpoints as curve anchors and vertices as control points: the outline
+    // stays smooth and closed however far the radii wander.
+    for (let index = 0; index < points; index += 1) {
+      const current = vertices[index];
+      const next = vertices[(index + 1) % points];
+      context.quadraticCurveTo(current.x, current.y, (current.x + next.x) / 2, (current.y + next.y) / 2);
+    }
+
+    context.closePath();
+    context.fill();
+  }
+
+  /** Paint a fresh coat of mud sized to the current sprite box. */
+  function paintMud() {
+    const rect = capy.getBoundingClientRect();
+    const ratio = window.devicePixelRatio || 1;
+    mud.width = Math.max(1, Math.round(rect.width * ratio));
+    mud.height = Math.max(1, Math.round(rect.height * ratio));
+    context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    context.clearRect(0, 0, rect.width, rect.height);
+    context.globalCompositeOperation = 'source-over';
+
+    // Mud sits on the body and below, never over the face — the smug look is
+    // the whole point of the pause, so dirt is not allowed to cover it.
+    const faceLine = rect.height * (phase === 'smug' || phase === 'scrub' ? 0.5 : 0.34);
+
+    // Base coat first: the animal is caked, not spotted. This is what makes it
+    // read as dirty all over instead of as a handful of odd-shaped patches.
+    const coat = context.createLinearGradient(0, faceLine - rect.height * 0.1, 0, rect.height);
+    coat.addColorStop(0, 'rgba(74, 61, 44, 0)');
+    coat.addColorStop(0.3, 'rgba(70, 58, 42, 0.66)');
+    coat.addColorStop(1, 'rgba(54, 44, 32, 0.86)');
+    context.fillStyle = coat;
+    context.fillRect(0, 0, rect.width, rect.height);
+
+    // Mottling on top of the coat, at low alpha. These only need to break up the
+    // flat wash — at full strength they were the shapes that looked wrong.
+    for (let index = 0; index < 26; index += 1) {
+      splat(
+        randomBetween(0, rect.width),
+        randomBetween(faceLine - rect.height * 0.05, rect.height),
+        randomBetween(rect.width * 0.06, rect.width * 0.18),
+        MUD_TONES[index % MUD_TONES.length],
+        randomBetween(0.16, 0.34),
+      );
+    }
+
+    // Drips: mud runs downhill, and the vertical streaks are most of what tells
+    // the eye this is wet dirt.
+    for (let index = 0; index < 10; index += 1) {
+      const x = randomBetween(rect.width * 0.15, rect.width * 0.85);
+      const y = randomBetween(faceLine, rect.height * 0.8);
+      const length = randomBetween(rect.height * 0.05, rect.height * 0.16);
+      const width = randomBetween(rect.width * 0.012, rect.width * 0.032);
+
+      context.fillStyle = `rgba(84, 70, 50, ${randomBetween(0.45, 0.68).toFixed(2)})`;
+      context.beginPath();
+      context.ellipse(x, y + length / 2, width, length / 2, 0, 0, Math.PI * 2);
+      context.fill();
+      // The bead of mud that collects at the bottom of a run.
+      splat(x, y + length, width * 1.6, MUD_TONES[0], randomBetween(0.5, 0.7));
+    }
+
+    // Spray: fine flecks thrown up by its own feet.
+    for (let index = 0; index < 130; index += 1) {
+      const size = randomBetween(1.5, 5);
+      context.fillStyle = `rgba(70, 58, 42, ${randomBetween(0.35, 0.65).toFixed(2)})`;
+      context.beginPath();
+      context.ellipse(
+        randomBetween(0, rect.width),
+        randomBetween(faceLine * 0.85, rect.height),
+        size,
+        size * randomBetween(0.5, 0.9),
+        randomBetween(0, Math.PI),
+        0,
+        Math.PI * 2,
+      );
+      context.fill();
+    }
+
+    // Clip everything to the capybara's own outline. Without this, spray and
+    // splat edges that land beyond the animal hang in mid-air beside it — the
+    // canvas is a rectangle, the capybara is not.
+    const sprite = phase === 'smug' || phase === 'scrub' ? spriteSmug : spriteWalk;
+
+    if (sprite.naturalWidth > 0) {
+      context.globalCompositeOperation = 'destination-in';
+      context.drawImage(sprite, 0, 0, rect.width, rect.height);
+      context.globalCompositeOperation = 'source-over';
+    }
+
+    mud.style.opacity = '1';
+    mudPixels = countMud();
+  }
+
+  /** Alpha coverage, sampled on a coarse grid — exact counts are not worth the cost. */
+  function countMud() {
+    const { width, height } = mud;
+    if (width < 2 || height < 2) return 0;
+    const data = context.getImageData(0, 0, width, height).data;
+    const step = 4 * 6; // every 6th pixel
+    let count = 0;
+    for (let index = 3; index < data.length; index += step) {
+      if (data[index] > 24) count += 1;
+    }
+    return count;
+  }
+
+  function updateProgress() {
+    if (mudPixels === 0) return 1;
+    const cleaned = 1 - countMud() / mudPixels;
+    progressFill.style.width = `${Math.min(100, (cleaned / CLEAN_TARGET) * 100)}%`;
+    return cleaned;
+  }
+
+  function eraseAt(clientX, clientY) {
+    const rect = capy.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    context.globalCompositeOperation = 'destination-out';
+    context.globalAlpha = SCRUB_STRENGTH;
+    context.lineCap = 'round';
+    context.lineJoin = 'round';
+    context.lineWidth = BRUSH_RADIUS * 2;
+    context.strokeStyle = 'rgba(0, 0, 0, 1)';
+    context.beginPath();
+    if (lastPoint) {
+      context.moveTo(lastPoint.x, lastPoint.y);
+    } else {
+      context.moveTo(x, y);
+    }
+    context.lineTo(x, y);
+    context.stroke();
+    // Everything else on this canvas paints at full strength — leaving the alpha
+    // turned down would quietly wash out the next coat of mud.
+    context.globalAlpha = 1;
+    lastPoint = { x, y };
+  }
+
+  function spawnBubble(clientX, clientY) {
+    const bubble = document.createElement('div');
+    const size = randomBetween(10, 26);
+    bubble.className = 'capy-bubble';
+    bubble.style.width = `${size}px`;
+    bubble.style.height = `${size}px`;
+    bubble.style.left = `${clientX + randomBetween(-30, 30)}px`;
+    bubble.style.top = `${clientY + randomBetween(-20, 20)}px`;
+    bubble.addEventListener('animationend', () => bubble.remove(), { once: true });
+    overlay.append(bubble);
+  }
+
+  // Prints alternate feet, so the trail staggers instead of running down one line.
+  let footIndex = 0;
+
+  function dropFootprint(x) {
+    const print = document.createElement('div');
+    const rect = capy.getBoundingClientRect();
+    const isLeftFoot = (footIndex += 1) % 2 === 0;
+    // Sized and placed off the animal itself, so feet and prints stay matched at
+    // any viewport size instead of drifting apart.
+    const width = rect.width * 0.13;
+    // Half the old stagger: the wide version pushed every other print clear of
+    // the body, which read as a separate line of dots rather than as its tracks.
+    const stagger = rect.height * 0.009;
+
+    print.className = 'capy-print';
+    print.style.width = `${width}px`;
+    print.style.height = `${width * 0.42}px`;
+    print.style.left = `${x + randomBetween(-width * 0.3, width * 0.3)}px`;
+    // Tucked up into the sole rather than resting on the box bottom. The body
+    // wobbles up to 8px as it walks, so a print pinned to the exact bottom edge
+    // reads as floating below the feet for most of the stride.
+    print.style.top = `${rect.bottom - rect.height * 0.035 + (isLeftFoot ? stagger : -stagger)}px`;
+    print.addEventListener('animationend', () => print.remove(), { once: true });
+    overlay.append(print);
+  }
+
+  /**
+   * Ease the capybara between two viewport fractions, stumbling the whole way.
+   * `leavesPrints` is false on the way out — by then it has been scrubbed, and
+   * a clean animal has nothing left to track across the page.
+   */
+  function walkTo(from, to, duration, token, leavesPrints) {
+    return new Promise((resolve, reject) => {
+      const start = performance.now();
+      let lastPrint = 0;
+
+      const frame = (now) => {
+        if (token !== runToken) return reject(new Error('cancelled'));
+        const t = Math.min(1, (now - start) / duration);
+        // Slight ease-out on arrival, so the stumble lands rather than stopping dead.
+        const eased = 1 - Math.pow(1 - t, 1.6);
+        const position = from + (to - from) * eased;
+        capy.style.setProperty('--capy-t', position.toFixed(4));
+
+        if (leavesPrints && now - lastPrint > 260) {
+          dropFootprint(position * window.innerWidth);
+          lastPrint = now;
+        }
+
+        if (t < 1) {
+          requestAnimationFrame(frame);
+        } else {
+          resolve();
+        }
+      };
+
+      requestAnimationFrame(frame);
+    });
+  }
+
+  /* Sponge physics. Gravity matches arepa-rain so falling things across the
+     extension share a weight. */
+  const SPONGE_GRAVITY = 2600;      // px/s²
+  const SPONGE_RESTITUTION = 0.42;  // how much bounce survives each landing
+  const SPONGE_FRICTION = 0.78;
+  const SPONGE_REST_ANGLE = -8;     // how it lies once it stops rolling
+
+  const spongeState = {
+    x: 0, y: 0,
+    velocityX: 0, velocityY: 0,
+    rotation: 0, spin: 0,
+    squish: 1,
+    held: false, landed: false, active: false,
+  };
+
+  let spongeFrame = 0;
+  let spongeLast = 0;
+
+  /** The line it comes to rest on: the same ground the capybara stands on. */
+  function spongeFloor() {
+    return window.innerHeight * 0.94 - sponge.offsetHeight * 0.3;
+  }
+
+  function renderSponge() {
+    sponge.style.transform =
+      `translate3d(${spongeState.x}px, ${spongeState.y}px, 0) translate(-50%, -50%)` +
+      ` rotate(${spongeState.rotation.toFixed(1)}deg) scale(${(2 - spongeState.squish).toFixed(3)}, ${spongeState.squish.toFixed(3)})`;
+  }
+
+  /** Toss the sponge in from off-screen so it falls, bounces and settles. */
+  function dropSponge() {
+    spongeState.x = window.innerWidth * 0.7;
+    spongeState.y = -sponge.offsetHeight;
+    spongeState.velocityX = randomBetween(-60, 20);
+    spongeState.velocityY = 0;
+    spongeState.rotation = randomBetween(-50, 50);
+    spongeState.spin = randomBetween(-260, 260);
+    spongeState.squish = 1;
+    spongeState.held = false;
+    spongeState.landed = false;
+    spongeState.active = true;
+
+    sponge.classList.add('is-visible');
+    sponge.classList.remove('is-pickable');
+    renderSponge();
+
+    spongeLast = performance.now();
+    window.cancelAnimationFrame(spongeFrame);
+    spongeFrame = window.requestAnimationFrame(stepSponge);
+  }
+
+  function hideSponge() {
+    spongeState.active = false;
+    spongeState.held = false;
+    window.cancelAnimationFrame(spongeFrame);
+    sponge.classList.remove('is-visible', 'is-pickable');
+    overlay.classList.remove('is-holding');
+  }
+
+  function stepSponge(now) {
+    if (!spongeState.active) return;
+
+    // Clamped so a backgrounded tab doesn't fire one enormous catch-up step.
+    const delta = Math.min(0.032, Math.max(0.001, (now - spongeLast) / 1000));
+    spongeLast = now;
+
+    if (!spongeState.held) {
+      spongeState.velocityY += SPONGE_GRAVITY * delta;
+      spongeState.x += spongeState.velocityX * delta;
+      spongeState.y += spongeState.velocityY * delta;
+      spongeState.rotation += spongeState.spin * delta;
+
+      const floor = spongeFloor();
+
+      if (spongeState.y >= floor) {
+        spongeState.y = floor;
+
+        if (spongeState.velocityY > 70) {
+          spongeState.velocityY = -spongeState.velocityY * SPONGE_RESTITUTION;
+          // Squash on impact, and kick the spin the other way.
+          spongeState.squish = 0.78;
+          spongeState.spin *= -0.45;
+        } else {
+          spongeState.velocityY = 0;
+          spongeState.landed = true;
+        }
+
+        spongeState.velocityX *= SPONGE_FRICTION;
+        spongeState.spin *= SPONGE_FRICTION;
+      }
+
+      // Keep it on screen — a sponge that skids out of reach is unpickupable.
+      const margin = sponge.offsetWidth * 0.5;
+      if (spongeState.x < margin) {
+        spongeState.x = margin;
+        spongeState.velocityX = Math.abs(spongeState.velocityX) * 0.4;
+      } else if (spongeState.x > window.innerWidth - margin) {
+        spongeState.x = window.innerWidth - margin;
+        spongeState.velocityX = -Math.abs(spongeState.velocityX) * 0.4;
+      }
+
+      if (spongeState.landed) {
+        // Settle flat instead of freezing at whatever angle it landed on.
+        spongeState.rotation += (SPONGE_REST_ANGLE - spongeState.rotation) * Math.min(1, delta * 7);
+        spongeState.spin = 0;
+        sponge.classList.add('is-pickable');
+      }
+    }
+
+    // Squish always eases back out, whether it came from a bounce or a scrub.
+    spongeState.squish += (1 - spongeState.squish) * Math.min(1, delta * 9);
+
+    renderSponge();
+    spongeFrame = window.requestAnimationFrame(stepSponge);
+  }
+
+  function showSprite(which) {
+    spriteWalk.classList.toggle('is-hidden', which !== 'walk');
+    spriteSmug.classList.toggle('is-hidden', which !== 'smug');
+  }
+
+  function waitForClean(token) {
+    return new Promise((resolve, reject) => {
+      const check = () => {
+        if (token !== runToken) return reject(new Error('cancelled'));
+        if (updateProgress() >= CLEAN_TARGET) return resolve();
+        requestAnimationFrame(check);
+      };
+      requestAnimationFrame(check);
+    });
+  }
+
+  async function run() {
+    const token = (runToken += 1);
+    lastPoint = null;
+    hideSponge();
+    progress.classList.remove('is-visible');
+    progressFill.style.width = '0%';
+    capy.classList.remove('is-smug');
+
+    try {
+      // 1 — stumble in from the left.
+      phase = 'walk-in';
+      layout();
+      showSprite('walk');
+      capy.classList.add('is-walking');
+      paintMud();
+      capy.style.setProperty('--capy-t', '-0.2');
+      await walkTo(-0.2, 0.5, WALK_IN_MS, token, true);
+
+      // 2 — turn, face you, look extremely pleased with itself.
+      phase = 'smug';
+      capy.classList.remove('is-walking');
+      layout();
+      showSprite('smug');
+      paintMud();
+      capy.classList.add('is-smug');
+      await sleep(TURN_PAUSE_MS + SMUG_STARE_MS, token);
+
+      // 3 — scrub it clean.
+      phase = 'scrub';
+      progress.classList.add('is-visible');
+      dropSponge();
+      await waitForClean(token);
+
+      // 4 — clean, smug about that too, then off it goes.
+      phase = 'leaving';
+      capy.classList.remove('is-smug');
+      hideSponge();
+      progress.classList.remove('is-visible');
+      mud.style.opacity = '0';
+      await sleep(900, token);
+
+      showSprite('walk');
+      layout();
+      capy.classList.add('is-walking');
+      await walkTo(0.5, 1.2, WALK_OUT_MS, token, false);
+
+      phase = 'done';
+    } catch {
+      // Cancelled by a replay; nothing to clean up beyond what run() already reset.
+    }
+  }
+
+  // Picking the sponge up is the sponge's own job — the element is only
+  // clickable while it is loose, so no manual hit testing is needed.
+  sponge.addEventListener('pointerdown', (event) => {
+    if (phase !== 'scrub' || spongeState.held) return;
+
+    event.preventDefault();
+    spongeState.held = true;
+    spongeState.velocityX = 0;
+    spongeState.velocityY = 0;
+    spongeState.spin = 0;
+    spongeState.x = event.clientX;
+    spongeState.y = event.clientY;
+    lastPoint = null;
+    sponge.classList.remove('is-pickable');
+    overlay.classList.add('is-holding');
+  });
+
+  overlay.addEventListener('pointermove', (event) => {
+    if (!spongeState.held) return;
+
+    spongeState.x = event.clientX;
+    spongeState.y = event.clientY;
+
+    // In hand, contact is the scrub — there is no second button to hold down.
+    const rect = capy.getBoundingClientRect();
+    const overCapy =
+      event.clientX > rect.left && event.clientX < rect.right &&
+      event.clientY > rect.top && event.clientY < rect.bottom;
+
+    if (overCapy) {
+      eraseAt(event.clientX, event.clientY);
+      spongeState.squish = 0.9;
+      if (Math.random() < 0.35) spawnBubble(event.clientX, event.clientY);
+    } else {
+      lastPoint = null;
+    }
+  });
+
+  // Belt and braces with the CSS above: a scrub stroke is a drag, and the
+  // browser would otherwise try to turn it into a native image/text drag.
+  overlay.addEventListener('dragstart', (event) => event.preventDefault());
+
+  window.addEventListener('resize', () => {
+    layout();
+    if (phase === 'walk-in' || phase === 'smug') paintMud();
+  });
+
+  document.getElementById('replay').addEventListener('click', run);
+  document.getElementById('autoclean').addEventListener('click', () => {
+    if (phase !== 'scrub') return;
+    context.globalCompositeOperation = 'destination-out';
+    context.fillStyle = 'rgba(0, 0, 0, 1)';
+    context.fillRect(0, 0, mud.width, mud.height);
+  });
+
+  run();
+</script>
+</body>
+</html>

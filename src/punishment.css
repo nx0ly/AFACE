@@ -438,3 +438,217 @@
     will-change: auto;
   }
 }
+
+/* --- Capybara wash -----------------------------------------------------
+   A muddy capybara stumbles in, stares at you, and has to be scrubbed clean
+   (punishments/capybara-wash.js). Same house rule as the rest of this file:
+   every property spelled out and !important, because this lands on arbitrary
+   host pages with their own aggressive stylesheets. */
+
+.page-pause-capy-overlay {
+  /* Dimmed, but the page stays readable behind so it reads as an invasion. */
+  background: rgb(24 14 6 / 0.42) !important;
+  cursor: default !important;
+  inset: 0 !important;
+  overflow: hidden !important;
+  position: fixed !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  z-index: 2147483647 !important;
+}
+
+/* The cursor hides only once the sponge is in hand and standing in for it. */
+.page-pause-capy-overlay.page-pause-capy-holding {
+  cursor: none !important;
+}
+
+/* The whole animal. --page-pause-capy-t is its centre as a fraction of viewport
+   width, so 0 is the left edge and 1 the right — no pixel maths, resize-proof. */
+.page-pause-capy {
+  bottom: 6vh !important;
+  height: var(--page-pause-capy-h, 300px) !important;
+  left: calc(var(--page-pause-capy-t, -0.2) * 100%) !important;
+  position: absolute !important;
+  transform: translate3d(-50%, 0, 0) !important;
+  width: var(--page-pause-capy-w, 226px) !important;
+  will-change: left !important;
+}
+
+/* Contact shadow. A sibling of the body, so it stays planted while the animal
+   wobbles above it. */
+.page-pause-capy-shadow {
+  background: radial-gradient(ellipse at center, rgb(20 12 4 / 0.32) 0%, rgb(20 12 4 / 0) 70%) !important;
+  border-radius: 50% !important;
+  bottom: -2px !important;
+  height: 16px !important;
+  left: 50% !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  transform: translateX(-50%) !important;
+  width: 54% !important;
+}
+
+/* The wobble lives on an inner wrapper so it composes with the walk translation. */
+.page-pause-capy-body {
+  inset: 0 !important;
+  /* Confines the mud's multiply blend to the sprite layers, so it stains the
+     capybara instead of blending with the host page behind it. */
+  isolation: isolate !important;
+  position: absolute !important;
+  transform-origin: 50% 100% !important;
+}
+
+.page-pause-capy-walking .page-pause-capy-body {
+  animation: page-pause-capy-wobble 520ms ease-in-out infinite !important;
+}
+
+.page-pause-capy-smug .page-pause-capy-body {
+  animation: page-pause-capy-breathe 2.2s ease-in-out infinite !important;
+}
+
+@keyframes page-pause-capy-wobble {
+  /* One walk sprite only — the stumble does the work a second frame would do. */
+  0%   { transform: rotate(-7deg) translateY(0)    scaleY(1);    }
+  22%  { transform: rotate(-2deg) translateY(-8px) scaleY(1.02); }
+  50%  { transform: rotate(6deg)  translateY(0)    scaleY(0.97); }
+  72%  { transform: rotate(2deg)  translateY(-6px) scaleY(1.02); }
+  100% { transform: rotate(-7deg) translateY(0)    scaleY(1);    }
+}
+
+@keyframes page-pause-capy-breathe {
+  0%, 100% { transform: rotate(-1.5deg) scale(1);           }
+  50%      { transform: rotate(1.5deg)  scale(1.03, 0.985); }
+}
+
+/* The walk sprite is drawn facing right, which is the way it always travels,
+   so it is never flipped. */
+.page-pause-capy-sprite {
+  filter: drop-shadow(0 12px 18px rgb(0 0 0 / 0.45)) !important;
+  height: 100% !important;
+  inset: 0 !important;
+  object-fit: contain !important;
+  /* Without these the host page lets you pick the capybara up and drag it out
+     as an image, which ends the scrub mid-stroke. */
+  pointer-events: none !important;
+  position: absolute !important;
+  transition: opacity 180ms ease !important;
+  -webkit-user-drag: none !important;
+  user-drag: none !important;
+  width: 100% !important;
+}
+
+.page-pause-capy-sprite.page-pause-capy-hidden {
+  opacity: 0 !important;
+}
+
+/* Mud sits exactly over the sprite box and is scrubbed away. Multiply is what
+   makes it read as staining rather than as blobs stuck on top — the fur's own
+   colour still shows through the dirt. */
+.page-pause-capy-mud {
+  height: 100% !important;
+  inset: 0 !important;
+  mix-blend-mode: multiply !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  transition: opacity 400ms ease !important;
+  width: 100% !important;
+}
+
+/* The sponge is a physics object first and a cursor second: it falls in, lands
+   on the floor and waits there until picked up. Its transform is driven
+   entirely from JS, so nothing here may set one. */
+.page-pause-capy-sponge {
+  filter: drop-shadow(0 10px 14px rgb(0 0 0 / 0.45)) !important;
+  height: 120px !important;
+  left: 0 !important;
+  object-fit: contain !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  top: 0 !important;
+  -webkit-user-drag: none !important;
+  user-drag: none !important;
+  width: 120px !important;
+  z-index: 3 !important;
+}
+
+.page-pause-capy-sponge.page-pause-capy-visible {
+  opacity: 1 !important;
+}
+
+/* Only a sponge that has come to rest is clickable. While it is still falling
+   it stays inert, otherwise the cursor flickers between grab and default every
+   time the sponge passes under the pointer on its way down. */
+.page-pause-capy-sponge.page-pause-capy-pickable {
+  /* Breathing halo, so a sponge lying on the floor reads as "pick me up". */
+  animation: page-pause-capy-beckon 1.6s ease-in-out infinite !important;
+  cursor: grab !important;
+  pointer-events: auto !important;
+}
+
+.page-pause-capy-sponge.page-pause-capy-pickable:active {
+  cursor: grabbing !important;
+}
+
+@keyframes page-pause-capy-beckon {
+  0%, 100% { filter: drop-shadow(0 10px 14px rgb(0 0 0 / 0.45)); }
+  50%      { filter: drop-shadow(0 10px 14px rgb(0 0 0 / 0.45)) drop-shadow(0 0 14px rgb(255 226 150 / 0.9)); }
+}
+
+.page-pause-capy-bubble {
+  animation: page-pause-capy-bubble-rise 900ms ease-out forwards !important;
+  background: radial-gradient(circle at 32% 30%, rgb(255 255 255 / 0.95), rgb(190 225 255 / 0.35) 60%, rgb(190 225 255 / 0) 72%) !important;
+  border: 1px solid rgb(255 255 255 / 0.6) !important;
+  border-radius: 50% !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  z-index: 4 !important;
+}
+
+@keyframes page-pause-capy-bubble-rise {
+  0%   { transform: translate(-50%, -50%) scale(0.4); opacity: 0.9; }
+  100% { transform: translate(-50%, calc(-50% - 90px)) scale(1.1); opacity: 0; }
+}
+
+/* Muddy prints: squashed circles, sized off the animal at drop time. */
+.page-pause-capy-print {
+  animation: page-pause-capy-print-fade 6s ease-out forwards !important;
+  background: rgb(52 32 14 / 0.72) !important;
+  border-radius: 50% !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+@keyframes page-pause-capy-print-fade {
+  /* Stamped wet and dark, then dries out and disappears. */
+  0%   { opacity: 0;    }
+  6%   { opacity: 0.85; }
+  100% { opacity: 0;    }
+}
+
+.page-pause-capy-progress {
+  background: rgb(255 255 255 / 0.18) !important;
+  border-radius: 999px !important;
+  bottom: 34px !important;
+  height: 14px !important;
+  left: 50% !important;
+  opacity: 0 !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  transform: translateX(-50%) !important;
+  transition: opacity 250ms ease !important;
+  width: min(420px, 60vw) !important;
+}
+
+.page-pause-capy-progress.page-pause-capy-visible {
+  opacity: 1 !important;
+}
+
+.page-pause-capy-progress-fill {
+  background: linear-gradient(90deg, #7ec8ff, #d8f0ff) !important;
+  border-radius: 999px !important;
+  height: 100% !important;
+  transition: width 120ms linear !important;
+  width: 0% !important;
+}

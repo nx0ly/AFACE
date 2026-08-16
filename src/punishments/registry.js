@@ -19,6 +19,7 @@ import { bankQueue } from './bank-queue.js';
 import { mangoHarvest } from './mango-harvest.js';
 import { penanceTyping } from './penance-typing.js';
 import { adInvasion } from './ad-invasion.js';
+import { capybaraWash } from './capybara-wash.js';
 
 /**
  * What a punishment gets handed when it runs. It runs inside the content
@@ -48,7 +49,7 @@ import { adInvasion } from './ad-invasion.js';
  */
 
 /** @type {Punishment[]} */
-export const PUNISHMENTS = [arepaRain, mangoHarvest, bankQueue, penanceTyping, adInvasion];
+export const PUNISHMENTS = [arepaRain, mangoHarvest, bankQueue, penanceTyping, adInvasion, capybaraWash];
 
 /**
  * @param {unknown} id
