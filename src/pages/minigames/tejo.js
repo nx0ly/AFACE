@@ -279,27 +279,27 @@ function drawMeters() {
 }
 
 function drawUI() {
-  ctx.fillStyle = "rgba(0,0,0,.5)";
-  ctx.fillRect(canvas.width - 250, 20, 230, 45);
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 20px Arial";
+    ctx.textAlign = "left";
 
-  ctx.fillStyle = "#fff";
-  ctx.font = "bold 20px Arial";
-  ctx.textAlign = "left";
+    if (messageTimer > 0) {
+        // Flashing CARAMBOLA
+        ctx.font = "bold 80px 'Arial Black', sans-serif";
+        ctx.textAlign = "center";
+        
+        // Random colors for MLG flashing
+        if (Math.random() > 0.5) {
+            ctx.fillStyle = "yellow";
+            ctx.strokeStyle = "red";
+        } else {
+            ctx.fillStyle = "cyan";
+            ctx.strokeStyle = "magenta";
+        }
 
-  ctx.fillText(`COFFEE BEANS: ${score}`, canvas.width - 235, 49);
-
-  if (messageTimer > 0) {
-    // Flashing CARAMBOLA
-    ctx.font = "bold 80px 'Arial Black', sans-serif";
-    ctx.textAlign = "center";
-
-    // Random colors for MLG flashing
-    if (Math.random() > 0.5) {
-      ctx.fillStyle = "yellow";
-      ctx.strokeStyle = "red";
-    } else {
-      ctx.fillStyle = "cyan";
-      ctx.strokeStyle = "magenta";
+        ctx.lineWidth = 5;
+        ctx.strokeText(message, canvas.width / 2, 350);
+        ctx.fillText(message, canvas.width / 2, 350);
     }
 
     ctx.lineWidth = 5;

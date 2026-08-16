@@ -1,3 +1,4 @@
+// Global UI: Global Music & Top-Right Points
 document.addEventListener("DOMContentLoaded", async () => {
   const extApi = globalThis.browser ?? globalThis.chrome;
 
