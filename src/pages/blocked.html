@@ -13,11 +13,14 @@
         color: var(--color-brown);
         font-family: "Times New Roman", Times, serif;
         margin: 0;
-        padding: 0;
+        padding: 0 24px;
+        box-sizing: border-box;
         overflow-x: hidden;
       }
       .retro-container {
-        width: 800px;
+        width: 100%;
+        max-width: 800px;
+        box-sizing: border-box;
         margin: 40px auto;
         background-color: var(--color-cream);
         border: 5px outset var(--color-brown);
@@ -26,9 +29,11 @@
         box-shadow: 10px 10px 0px #000;
       }
       h1 {
-        font-size: 28px;
+        font-size: clamp(16px, 3.2vw, 28px);
         color: #ff0000;
         text-decoration: underline;
+        margin: 0;
+        white-space: nowrap;
       }
       .btn-retro {
         background-color: var(--color-sun);
@@ -127,7 +132,7 @@
     <div class="falling-arepa" style="right: 10%; animation-duration: 5.2s; animation-delay: 3s;"></div>
 
     <div class="retro-container">
-      <marquee scrollamount="10" behavior="alternate">
+      <marquee scrollamount="10">
         <h1>PAGINA BLOQUEADA PLAY TO GET COFFE BEANS AND BUY UR AREPA TO UNCLOK THE WEBSITE</h1>
       </marquee>
       
