@@ -245,14 +245,9 @@ function drawMeters() {
 }
 
 function drawUI() {
-    ctx.fillStyle = "rgba(0,0,0,.5)";
-    ctx.fillRect(canvas.width - 250, 20, 230, 45);
-
     ctx.fillStyle = "#fff";
     ctx.font = "bold 20px Arial";
     ctx.textAlign = "left";
-
-    ctx.fillText(`COFFEE BEANS: ${score}`, canvas.width - 235, 49);
 
     if (messageTimer > 0) {
         // Flashing CARAMBOLA
