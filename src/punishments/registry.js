@@ -3,22 +3,17 @@
  *
  * ADDING A PUNISHMENT
  * -------------------
- * 1. Copy any file in this folder (bank-queue.js is the smallest) and edit it.
+ * 1. Copy any file in this folder and edit it.
  * 2. Import it below and drop it in the PUNISHMENTS array.
- * That is the whole checklist — the Wheel of Doom draws its wedges from this
- * array, and the content script dispatches on `id`.
  *
- * Plain JS on purpose: this module is imported both by the blocked page
- * (pages/blocked.js) and by the TypeScript content script (index.ts), so the
- * import specifier has to work whether or not the bundler rewrites it. Types
- * come from the JSDoc below.
+ * Have to use plain js here, the content script needs to be able to import it.
  */
 
-import { arepaRain } from './arepa-rain.js';
-import { bankQueue } from './bank-queue.js';
-import { mangoHarvest } from './mango-harvest.js';
-import { adInvasion } from './ad-invasion.js';
-import { capybaraTracks } from './capybara-tracks.js';
+import { arepaRain } from "./arepa-rain.js";
+import { bankQueue } from "./bank-queue.js";
+import { mangoHarvest } from "./mango-harvest.js";
+import { adInvasion } from "./ad-invasion.js";
+import { capybaraTracks } from "./capybara-tracks.js";
 
 /**
  * What a punishment gets handed when it runs. It runs inside the content
@@ -31,7 +26,7 @@ import { capybaraTracks } from './capybara-tracks.js';
  *   e.g. `getAssetUrl('images/arepa.png')`.
  * @property {() => Promise<void>} grantPass Call when the user has served their
  *   sentence. It writes the whitelist entry, clears the pending punishment and
- *   reloads the page. Never resolves on success — the page navigates away.
+ *   reloads the page.
  */
 
 /**
@@ -48,29 +43,31 @@ import { capybaraTracks } from './capybara-tracks.js';
  */
 
 /** @type {Punishment[]} */
-export const PUNISHMENTS = [arepaRain, mangoHarvest, bankQueue, adInvasion, capybaraTracks];
+export const PUNISHMENTS = [
+  arepaRain,
+  mangoHarvest,
+  bankQueue,
+  adInvasion,
+  capybaraTracks,
+];
 
 /**
- * Ids that were stored under an older name. A rig staged before a rename — or
- * a punishment already pending when the extension reloaded — otherwise falls
- * through to PUNISHMENTS[0] and serves the wrong wedge entirely.
+ * Self explanatory.
  *
  * @type {Record<string, string>}
  */
 const RENAMED_IDS = {
-  'capybara-wash': 'capybara-tracks',
+  "capybara-wash": "capybara-tracks",
 };
 
 /**
- * Look up an id, old names included. Returns undefined for ids that name no
- * punishment at all — callers that want a fair draw instead of a wrong wedge
- * (the rig, in blocked.js and popup.js) need to tell those two cases apart.
+ * Looks up a punishment by id, including any renamed ids.
  *
  * @param {unknown} id
  * @returns {Punishment | undefined}
  */
 export function findPunishmentById(id) {
-  const wanted = typeof id === 'string' ? (RENAMED_IDS[id] ?? id) : id;
+  const wanted = typeof id === "string" ? (RENAMED_IDS[id] ?? id) : id;
 
   return PUNISHMENTS.find((punishment) => punishment.id === wanted);
 }

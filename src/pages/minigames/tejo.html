@@ -5,7 +5,6 @@
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <title>Tejo</title>
         <style>
-            /* 2000s Retro Styles */
             body {
                 margin: 0;
                 padding: 0;
@@ -13,8 +12,10 @@
             }
             #bg-image {
                 position: fixed;
-                top: 0; left: 0;
-                width: 100vw; height: 100vh;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
                 object-fit: cover;
                 z-index: -1;
             }
@@ -38,7 +39,7 @@
                 top: -100px;
                 width: 64px;
                 height: 64px;
-                background-image: url('/images/arepa.png');
+                background-image: url("/images/arepa.png");
                 background-size: cover;
                 animation: fall linear infinite;
                 z-index: 10;
@@ -46,8 +47,12 @@
                 image-rendering: pixelated;
             }
             @keyframes fall {
-                0% { transform: translateY(-100px) rotate(0deg); }
-                100% { transform: translateY(110vh) rotate(360deg); }
+                0% {
+                    transform: translateY(-100px) rotate(0deg);
+                }
+                100% {
+                    transform: translateY(110vh) rotate(360deg);
+                }
             }
             #retro-title {
                 position: fixed;
@@ -60,11 +65,15 @@
                 font-weight: bold;
                 text-align: center;
                 pointer-events: none;
-                text-shadow: 5px 5px 0 yellow, -5px -5px 0 blue;
+                text-shadow:
+                    5px 5px 0 yellow,
+                    -5px -5px 0 blue;
                 animation: blinker 0.2s linear infinite;
             }
             @keyframes blinker {
-                50% { opacity: 0; }
+                50% {
+                    opacity: 0;
+                }
             }
             #retro-back {
                 position: fixed;
@@ -76,7 +85,7 @@
                 font-size: 20px;
                 font-weight: bold;
                 text-decoration: underline;
-                background: rgba(0,0,0,0.5);
+                background: rgba(0, 0, 0, 0.5);
                 padding: 5px;
             }
             /* Retry button — only shown after a throw lands */
@@ -96,7 +105,7 @@
                 border: 5px outset #fff700;
                 border-radius: 8px;
                 cursor: pointer;
-                box-shadow: 5px 5px 0 rgba(0,0,0,.6);
+                box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.6);
                 letter-spacing: 1px;
                 animation: retry-pulse 0.8s ease-in-out infinite;
             }
@@ -107,15 +116,22 @@
                 border-style: inset;
             }
             @keyframes retry-pulse {
-                0%, 100% { transform: translate(-50%, -50%) scale(1); }
-                50%      { transform: translate(-50%, -50%) scale(1.06); }
+                0%,
+                100% {
+                    transform: translate(-50%, -50%) scale(1);
+                }
+                50% {
+                    transform: translate(-50%, -50%) scale(1.06);
+                }
             }
 
-            /* 2000s Modal */
             #instructions-modal {
                 position: fixed;
-                top: 0; left: 0; width: 100%; height: 100%;
-                background: rgba(0,0,0,0.7);
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -153,8 +169,10 @@
             .play-btn:active {
                 border-style: inset;
             }
-            .hidden { display: none !important; }
-            
+            .hidden {
+                display: none !important;
+            }
+
             /* MLG Surprised Guys */
             .surprised-guy {
                 position: fixed;
@@ -164,12 +182,26 @@
                 animation: mlg-flash 0.1s infinite;
                 pointer-events: none;
             }
-            #guy-left { left: -50px; }
-            #guy-right { right: -50px; transform: scaleX(-1); }
+            #guy-left {
+                left: -50px;
+            }
+            #guy-right {
+                right: -50px;
+                transform: scaleX(-1);
+            }
             @keyframes mlg-flash {
-                0% { opacity: 1; filter: hue-rotate(0deg); }
-                50% { opacity: 0; filter: hue-rotate(180deg); }
-                100% { opacity: 1; filter: hue-rotate(360deg); }
+                0% {
+                    opacity: 1;
+                    filter: hue-rotate(0deg);
+                }
+                50% {
+                    opacity: 0;
+                    filter: hue-rotate(180deg);
+                }
+                100% {
+                    opacity: 1;
+                    filter: hue-rotate(360deg);
+                }
             }
         </style>
     </head>
@@ -180,8 +212,18 @@
 
         <!-- DVD Bouncing Ads -->
         <img id="ad-tejo" src="/images/ad_tejo.png" alt="Ad" />
-        <img id="ad-tejo-2" src="/images/hot_capy_ad.jpg" alt="Ad" style="position: absolute; width: 200px; z-index: 100;" />
-        <img id="ad-tejo-3" src="/images/arepa.png" alt="Ad" style="position: absolute; width: 100px; z-index: 100;" />
+        <img
+            id="ad-tejo-2"
+            src="/images/hot_capy_ad.jpg"
+            alt="Ad"
+            style="position: absolute; width: 200px; z-index: 100"
+        />
+        <img
+            id="ad-tejo-3"
+            src="/images/arepa.png"
+            alt="Ad"
+            style="position: absolute; width: 100px; z-index: 100"
+        />
 
         <!-- Instructions Modal -->
         <div id="instructions-modal">
@@ -190,38 +232,88 @@
                 <p>1. Click to lock your DIRECTION (Left/Right)</p>
                 <p>2. Click to lock your POWER (Red/Yellow/Green)</p>
                 <p>3. SCORE A BULLSEYE FOR MLG GLORY!</p>
-                <button class="play-btn" id="start-game-btn">LET'S GO!!!</button>
+                <button class="play-btn" id="start-game-btn">
+                    LET'S GO!!!
+                </button>
             </div>
         </div>
 
         <!-- MLG Surprised Guys (Hidden initially) -->
-        <img src="/images/surprised_guy.png" id="guy-left" class="surprised-guy hidden" />
-        <img src="/images/surprised_guy.png" id="guy-right" class="surprised-guy hidden" />
-        <marquee id="retro-title" scrollamount="30">!!! TEJO !!! TEJO !!! TEJO !!!</marquee>
+        <img
+            src="/images/surprised_guy.png"
+            id="guy-left"
+            class="surprised-guy hidden"
+        />
+        <img
+            src="/images/surprised_guy.png"
+            id="guy-right"
+            class="surprised-guy hidden"
+        />
+        <marquee id="retro-title" scrollamount="30">
+            !!! TEJO !!! TEJO !!! TEJO !!!
+        </marquee>
         <a id="retro-back" href="../games.html"><< BACK</a>
 
-        <div class="falling-arepa" style="left: 5%; animation-duration: 4s; animation-delay: 0s;"></div>
-        <div class="falling-arepa" style="left: 15%; animation-duration: 5s; animation-delay: 1s;"></div>
-        <div class="falling-arepa" style="left: 10%; animation-duration: 3.5s; animation-delay: 2.5s;"></div>
-        <div class="falling-arepa" style="right: 5%; animation-duration: 4.5s; animation-delay: 0.5s;"></div>
-        <div class="falling-arepa" style="right: 15%; animation-duration: 3.8s; animation-delay: 1.5s;"></div>
-        <div class="falling-arepa" style="right: 10%; animation-duration: 5.2s; animation-delay: 3s;"></div>
-        <div class="falling-arepa" style="left: 25%; animation-duration: 4.2s; animation-delay: 0.2s;"></div>
-        <div class="falling-arepa" style="left: 35%; animation-duration: 5.5s; animation-delay: 1.2s;"></div>
-        <div class="falling-arepa" style="left: 45%; animation-duration: 3.7s; animation-delay: 2.1s;"></div>
-        <div class="falling-arepa" style="right: 25%; animation-duration: 4.8s; animation-delay: 0.8s;"></div>
-        <div class="falling-arepa" style="right: 35%; animation-duration: 3.9s; animation-delay: 1.7s;"></div>
-        <div class="falling-arepa" style="right: 45%; animation-duration: 5.1s; animation-delay: 2.9s;"></div>
-        <div class="falling-arepa" style="left: 55%; animation-duration: 3.3s; animation-delay: 0.4s;"></div>
-        <div class="falling-arepa" style="right: 55%; animation-duration: 4.1s; animation-delay: 1.1s;"></div>
+        <div
+            class="falling-arepa"
+            style="left: 5%; animation-duration: 4s; animation-delay: 0s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="left: 15%; animation-duration: 5s; animation-delay: 1s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="left: 10%; animation-duration: 3.5s; animation-delay: 2.5s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="right: 5%; animation-duration: 4.5s; animation-delay: 0.5s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="right: 15%; animation-duration: 3.8s; animation-delay: 1.5s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="right: 10%; animation-duration: 5.2s; animation-delay: 3s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="left: 25%; animation-duration: 4.2s; animation-delay: 0.2s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="left: 35%; animation-duration: 5.5s; animation-delay: 1.2s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="left: 45%; animation-duration: 3.7s; animation-delay: 2.1s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="right: 25%; animation-duration: 4.8s; animation-delay: 0.8s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="right: 35%; animation-duration: 3.9s; animation-delay: 1.7s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="right: 45%; animation-duration: 5.1s; animation-delay: 2.9s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="left: 55%; animation-duration: 3.3s; animation-delay: 0.4s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="right: 55%; animation-duration: 4.1s; animation-delay: 1.1s"
+        ></div>
 
         <button id="retry-btn" type="button">⟳ RETRY</button>
 
-        <canvas
-            id="canvas"
-            width="1200"
-            height="650"
-        ></canvas>
+        <canvas id="canvas" width="1200" height="650"></canvas>
 
         <script src="tejo.js"></script>
         <script src="../cursor.js"></script>

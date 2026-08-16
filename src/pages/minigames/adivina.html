@@ -1,155 +1,189 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GRANDAMA GAME</title>
-    <link rel="stylesheet" href="../../theme.css" />
-    <style>
-      /* 2000s Retro Styles */
-      body {
-        background-color: var(--color-parchment);
-        background-image: url('/images/diomedes.jpg');
-        background-size: cover;
-        background-attachment: fixed;
-        color: var(--color-brown);
-        font-family: "Times New Roman", Times, serif;
-        margin: 0;
-        padding: 20px;
-        text-align: center;
-        overflow-x: hidden;
-      }
-      h1 {
-        color: #ff00ff;
-        font-size: 36px;
-        text-decoration: underline;
-      }
-      .retro-container {
-        width: 700px;
-        margin: 40px auto;
-        background-color: #333333;
-        border: 10px ridge silver;
-        padding: 30px;
-        position: relative;
-        z-index: 20;
-      }
-      .cards-wrapper {
-        display: flex;
-        justify-content: space-around;
-        margin: 40px 0;
-      }
-      .monte-card {
-        width: 150px;
-        height: 220px;
-        background-color: #ff0000;
-        border: 5px outset #ffaaaa;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 80px;
-        color: yellow;
-        font-weight: bold;
-      }
-      .monte-card:hover {
-        background-color: #cc0000;
-      }
-      .monte-card:active {
-        border-style: inset;
-      }
-      .monte-card:disabled {
-        background-color: #555555;
-        border-color: #333333;
-        color: #888888;
-        cursor: not-allowed;
-      }
-      #status {
-        font-size: 24px;
-        color: yellow;
-        font-weight: bold;
-        min-height: 30px;
-        margin: 20px 0;
-      }
-      #reset-btn {
-        background-color: silver;
-        color: black;
-        border: 4px outset white;
-        padding: 10px 20px;
-        font-size: 20px;
-        font-weight: bold;
-        font-family: "Courier New", Courier, monospace;
-        cursor: pointer;
-      }
-      #reset-btn:active {
-        border-style: inset;
-      }
-      #reset-btn.hidden {
-        display: none;
-      }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>GRANDAMA GAME</title>
+        <link rel="stylesheet" href="../../theme.css" />
+        <style>
+            body {
+                background-color: var(--color-parchment);
+                background-image: url("/images/diomedes.jpg");
+                background-size: cover;
+                background-attachment: fixed;
+                color: var(--color-brown);
+                font-family: "Times New Roman", Times, serif;
+                margin: 0;
+                padding: 20px;
+                text-align: center;
+                overflow-x: hidden;
+            }
+            h1 {
+                color: #ff00ff;
+                font-size: 36px;
+                text-decoration: underline;
+            }
+            .retro-container {
+                width: 700px;
+                margin: 40px auto;
+                background-color: #333333;
+                border: 10px ridge silver;
+                padding: 30px;
+                position: relative;
+                z-index: 20;
+            }
+            .cards-wrapper {
+                display: flex;
+                justify-content: space-around;
+                margin: 40px 0;
+            }
+            .monte-card {
+                width: 150px;
+                height: 220px;
+                background-color: #ff0000;
+                border: 5px outset #ffaaaa;
+                cursor: pointer;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 80px;
+                color: yellow;
+                font-weight: bold;
+            }
+            .monte-card:hover {
+                background-color: #cc0000;
+            }
+            .monte-card:active {
+                border-style: inset;
+            }
+            .monte-card:disabled {
+                background-color: #555555;
+                border-color: #333333;
+                color: #888888;
+                cursor: not-allowed;
+            }
+            #status {
+                font-size: 24px;
+                color: yellow;
+                font-weight: bold;
+                min-height: 30px;
+                margin: 20px 0;
+            }
+            #reset-btn {
+                background-color: silver;
+                color: black;
+                border: 4px outset white;
+                padding: 10px 20px;
+                font-size: 20px;
+                font-weight: bold;
+                font-family: "Courier New", Courier, monospace;
+                cursor: pointer;
+            }
+            #reset-btn:active {
+                border-style: inset;
+            }
+            #reset-btn.hidden {
+                display: none;
+            }
 
-      /* Falling Arepas Animation */
-      .falling-arepa {
-        position: fixed;
-        top: -100px;
-        width: 64px;
-        height: 64px;
-        background-image: url('/images/arepa.png');
-        background-size: cover;
-        animation: fall linear infinite;
-        z-index: 10;
-        pointer-events: none;
-        image-rendering: pixelated;
-      }
-      @keyframes fall {
-        0% { transform: translateY(-100px) rotate(0deg); }
-        100% { transform: translateY(110vh) rotate(360deg); }
-      }
-    </style>
-  </head>
+            /* Falling Arepas Animation */
+            .falling-arepa {
+                position: fixed;
+                top: -100px;
+                width: 64px;
+                height: 64px;
+                background-image: url("/images/arepa.png");
+                background-size: cover;
+                animation: fall linear infinite;
+                z-index: 10;
+                pointer-events: none;
+                image-rendering: pixelated;
+            }
+            @keyframes fall {
+                0% {
+                    transform: translateY(-100px) rotate(0deg);
+                }
+                100% {
+                    transform: translateY(110vh) rotate(360deg);
+                }
+            }
+        </style>
+    </head>
 
-  <body>
-    <!-- Falling Arepas -->
-    <div class="falling-arepa" style="left: 5%; animation-duration: 4s; animation-delay: 0s;"></div>
-    <div class="falling-arepa" style="left: 15%; animation-duration: 5s; animation-delay: 1s;"></div>
-    <div class="falling-arepa" style="left: 10%; animation-duration: 3.5s; animation-delay: 2.5s;"></div>
-    <div class="falling-arepa" style="right: 5%; animation-duration: 4.5s; animation-delay: 0.5s;"></div>
-    <div class="falling-arepa" style="right: 15%; animation-duration: 3.8s; animation-delay: 1.5s;"></div>
-    <div class="falling-arepa" style="right: 10%; animation-duration: 5.2s; animation-delay: 3s;"></div>
+    <body>
+        <!-- Falling Arepas -->
+        <!-- AGAIN SORRY -->
+        <div
+            class="falling-arepa"
+            style="left: 5%; animation-duration: 4s; animation-delay: 0s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="left: 15%; animation-duration: 5s; animation-delay: 1s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="left: 10%; animation-duration: 3.5s; animation-delay: 2.5s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="right: 5%; animation-duration: 4.5s; animation-delay: 0.5s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="right: 15%; animation-duration: 3.8s; animation-delay: 1.5s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="right: 10%; animation-duration: 5.2s; animation-delay: 3s"
+        ></div>
 
-    <div class="retro-container">
-      <marquee scrollamount="15">
-        <h1>*** GRANDAMA GAME! WIN BIG OR LOSE IT ALL! ***</h1>
-      </marquee>
-      
-      <p style="font-size: 18px; color: #aaaaaa;">
-        One card wins 5000k beans. One card does nothing (0). One card loses 10k beans.
-      </p>
+        <div class="retro-container">
+            <marquee scrollamount="15">
+                <h1>*** GRANDAMA GAME! WIN BIG OR LOSE IT ALL! ***</h1>
+            </marquee>
 
-      <div class="cards-wrapper">
-        <button type="button" class="monte-card" id="card-0">?</button>
-        <button type="button" class="monte-card" id="card-1">?</button>
-        <button type="button" class="monte-card" id="card-2">?</button>
-      </div>
+            <p style="font-size: 18px; color: #aaaaaa">
+                One card wins 5000k beans. One card does nothing (0). One card
+                loses 10k beans.
+            </p>
 
-      <div id="status">CHOOSE YOUR FATE...</div>
-      
-      <button id="reset-btn" class="hidden">PLAY AGAIN</button>
+            <div class="cards-wrapper">
+                <button type="button" class="monte-card" id="card-0">?</button>
+                <button type="button" class="monte-card" id="card-1">?</button>
+                <button type="button" class="monte-card" id="card-2">?</button>
+            </div>
 
-      <br /><br />
-      <hr size="3" color="silver" />
+            <div id="status">CHOOSE YOUR FATE...</div>
 
-      <p style="font-size: 20px;">
-        <b>COFFEE BEANS: <span id="balance" style="color: lime;">0</span></b>
-      </p>
+            <button id="reset-btn" class="hidden">PLAY AGAIN</button>
 
-      <br />
-      <a style="color: #00ffff; font-size: 18px; font-weight: bold; text-decoration: underline;" href="../games.html">
-        << RUN AWAY (BACK TO GAMES)
-      </a>
-    </div>
+            <br /><br />
+            <hr size="3" color="silver" />
 
-    <script type="module" src="adivina.js"></script>
-    <script src="../cursor.js"></script>
-    <script src="../global_ui.js"></script>
-  </body>
+            <p style="font-size: 20px">
+                <b
+                    >COFFEE BEANS:
+                    <span id="balance" style="color: lime">0</span></b
+                >
+            </p>
+
+            <br />
+            <a
+                style="
+                    color: #00ffff;
+                    font-size: 18px;
+                    font-weight: bold;
+                    text-decoration: underline;
+                "
+                href="../games.html"
+            >
+                << RUN AWAY (BACK TO GAMES)
+            </a>
+        </div>
+
+        <script type="module" src="adivina.js"></script>
+        <script src="../cursor.js"></script>
+        <script src="../global_ui.js"></script>
+    </body>
 </html>

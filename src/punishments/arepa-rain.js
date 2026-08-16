@@ -1,18 +1,13 @@
-/*
- * Arepa rain: the page is buried under a pile of arepas and you have to pop
- * every one of them. Moved here from index.ts when the punishment wheel landed;
- * the physics is unchanged.
- */
+// I had to review my physics notes to fix this!!
 
-// Physics runs on a fixed timestep so the fall feels the same on any monitor.
 const PHYSICS_STEP = 1 / 240;
-const GRAVITY = 2600; // px/s²
+const GRAVITY = 2600;
 const PAIR_RESTITUTION = 0.18;
 const FLOOR_RESTITUTION = 0.18;
 const WALL_RESTITUTION = 0.3;
 const CONTACT_FRICTION = 0.4;
 const SOLVER_ITERATIONS = 4;
-// A little tolerated overlap is what lets an over-packed pile actually come to rest.
+
 const CORRECTION_PERCENT = 0.45;
 const CORRECTION_SLOP = 1;
 const RAIN_DURATION = 4_200;
@@ -24,10 +19,8 @@ const RAIN_DURATION = 4_200;
  * @property {number} y
  * @property {number} size
  * @property {number} radius
- * @property {number} invMass Inverse mass, proportional to 1/area — small
- *   arepas get shoved by big ones.
- * @property {number} rotation Set once at spawn and never changed — arepas
- *   slide and stack, they don't spin.
+ * @property {number} invMass Inverse mass, proportional to 1/area. Small Arepas get pushed by bigger ones.
+ * @property {number} rotation Set once at spawn and never changed, arepas slide and stack, they don't spin.
  * @property {number} releaseAt
  * @property {boolean} released
  * @property {number} velocityX
@@ -45,19 +38,17 @@ function randomBetween(min, max) {
 }
 
 /**
- * Mixed arepa sizes that together cover slightly more than the viewport, so the
- * pile reaches the top edge and spills past it. Sizes are drawn until the area
- * target is hit rather than counted up front, which keeps the coverage right
- * whatever the mix.
+ * Mixed arepa sizes that together cover slightly more than the viewport.
  *
  * @returns {number[]}
  */
 function getArepaSizes() {
-  // Floors matter: a tab that reports a 0×0 viewport (background/prerender) would
-  // otherwise produce an empty pile with nothing to click, trapping the page.
   const width = Math.max(320, window.innerWidth);
   const height = Math.max(240, window.innerHeight);
-  const base = Math.max(72, Math.min(180, Math.round(Math.min(width, height) * 0.16)));
+  const base = Math.max(
+    72,
+    Math.min(180, Math.round(Math.min(width, height) * 0.16)),
+  );
   const targetArea = width * height * 1.2;
   const sizes = [];
   let area = 0;
@@ -68,7 +59,6 @@ function getArepaSizes() {
     area += size * size;
   }
 
-  // Biggest first: they land at the bottom and the small ones trickle into the gaps.
   return sizes.sort((first, second) => second - first);
 }
 
@@ -78,33 +68,44 @@ function getArepaSizes() {
  * @param {number} y
  */
 function explodeArepa(stage, x, y) {
-  const colors = ['#f6d37a', '#d8943e', '#a9652b', '#fff0b5'];
+  const colors = ["#f6d37a", "#d8943e", "#a9652b", "#fff0b5"];
 
   for (let index = 0; index < 10; index += 1) {
-    const particle = document.createElement('span');
+    const particle = document.createElement("span");
     const angle = (index / 10) * Math.PI * 2;
     const distance = randomBetween(28, 92);
 
-    particle.className = 'page-pause-arepa-particle';
+    particle.className = "page-pause-arepa-particle";
     particle.style.left = `${x - 5}px`;
     particle.style.top = `${y - 5}px`;
-    particle.style.setProperty('--particle-x', `${Math.cos(angle) * distance}px`);
-    particle.style.setProperty('--particle-y', `${Math.sin(angle) * distance}px`);
-    particle.style.setProperty('--particle-color', colors[index % colors.length]);
-    particle.addEventListener('animationend', () => particle.remove(), { once: true });
+    particle.style.setProperty(
+      "--particle-x",
+      `${Math.cos(angle) * distance}px`,
+    );
+    particle.style.setProperty(
+      "--particle-y",
+      `${Math.sin(angle) * distance}px`,
+    );
+    particle.style.setProperty(
+      "--particle-color",
+      colors[index % colors.length],
+    );
+    particle.addEventListener("animationend", () => particle.remove(), {
+      once: true,
+    });
     stage.append(particle);
   }
 }
 
 /** @param {import('./registry.js').PunishmentContext} context */
 function mount(context) {
-  if (!document.body || document.querySelector('.page-pause-arepa-overlay')) {
+  if (!document.body || document.querySelector(".page-pause-arepa-overlay")) {
     return;
   }
 
-  const overlay = document.createElement('div');
-  const stage = document.createElement('div');
-  const status = document.createElement('span');
+  const overlay = document.createElement("div");
+  const stage = document.createElement("div");
+  const status = document.createElement("span");
   const sizes = getArepaSizes();
   const count = sizes.length;
   const largestSize = sizes[0];
@@ -115,19 +116,23 @@ function mount(context) {
   let running = true;
   /** @type {ArepaState[]} */
   const arepas = [];
-  const arepaImageUrl = context.getAssetUrl('images/arepa.png');
+  const arepaImageUrl = context.getAssetUrl("images/arepa.png");
   const startedAt = performance.now();
+
   // Spread the rain evenly with a little jitter so it pours instead of arriving in clumps.
   const spawnOffsets = Array.from({ length: count }, (_unused, index) => {
     const slot = (index / count) * RAIN_DURATION;
-    return Math.max(0, slot + randomBetween(-RAIN_DURATION / count, RAIN_DURATION / count));
+    return Math.max(
+      0,
+      slot + randomBetween(-RAIN_DURATION / count, RAIN_DURATION / count),
+    );
   }).sort((first, second) => first - second);
   spawnOffsets[0] = 0;
 
-  overlay.className = 'page-pause-arepa-overlay';
-  stage.className = 'page-pause-arepa-stage';
-  status.className = 'page-pause-arepa-status';
-  status.setAttribute('aria-live', 'polite');
+  overlay.className = "page-pause-arepa-overlay";
+  stage.className = "page-pause-arepa-stage";
+  status.className = "page-pause-arepa-status";
+  status.setAttribute("aria-live", "polite");
   status.textContent = `${remaining} arepas left · click to explode`;
   overlay.append(stage, status);
   document.body.append(overlay);
@@ -135,12 +140,13 @@ function mount(context) {
   const finish = async () => {
     running = false;
     window.cancelAnimationFrame(animationFrame);
-    status.textContent = 'All exploded · returning to your page…';
+    status.textContent = "All exploded · returning to your page…";
 
     try {
       await context.grantPass();
     } catch {
-      status.textContent = 'Almost there — could not save your pass. Try again.';
+      status.textContent =
+        "Almost there — could not save your pass. Try again.";
       running = true;
       animationFrame = window.requestAnimationFrame(animate);
     }
@@ -156,9 +162,10 @@ function mount(context) {
     arepa.element.remove();
     explodeArepa(stage, centerX, centerY);
     remaining -= 1;
-    status.textContent = remaining === 0
-      ? 'All exploded · returning to your page…'
-      : `${remaining} arepa${remaining === 1 ? '' : 's'} left · click to explode`;
+    status.textContent =
+      remaining === 0
+        ? "All exploded · returning to your page…"
+        : `${remaining} arepa${remaining === 1 ? "" : "s"} left · click to explode`;
 
     if (remaining === 0) {
       void finish();
@@ -166,7 +173,7 @@ function mount(context) {
   };
 
   for (let index = 0; index < count; index += 1) {
-    const arepa = document.createElement('button');
+    const arepa = document.createElement("button");
     const size = sizes[index];
     /** @type {ArepaState} */
     const state = {
@@ -184,16 +191,20 @@ function mount(context) {
       active: true,
     };
 
-    arepa.className = 'page-pause-arepa';
-    arepa.type = 'button';
-    arepa.setAttribute('aria-label', `Explode arepa ${index + 1}`);
-    arepa.style.setProperty('left', '0px', 'important');
-    arepa.style.setProperty('top', '0px', 'important');
-    arepa.style.setProperty('visibility', 'hidden', 'important');
-    arepa.style.setProperty('background-image', `url("${arepaImageUrl}")`, 'important');
-    arepa.style.setProperty('--arepa-size', `${size}px`);
-    arepa.style.setProperty('--arepa-rotation', `${state.rotation}deg`);
-    arepa.addEventListener('click', () => handleClick(state));
+    arepa.className = "page-pause-arepa";
+    arepa.type = "button";
+    arepa.setAttribute("aria-label", `Explode arepa ${index + 1}`);
+    arepa.style.setProperty("left", "0px", "important");
+    arepa.style.setProperty("top", "0px", "important");
+    arepa.style.setProperty("visibility", "hidden", "important");
+    arepa.style.setProperty(
+      "background-image",
+      `url("${arepaImageUrl}")`,
+      "important",
+    );
+    arepa.style.setProperty("--arepa-size", `${size}px`);
+    arepa.style.setProperty("--arepa-rotation", `${state.rotation}deg`);
+    arepa.addEventListener("click", () => handleClick(state));
     stage.append(arepa);
     arepas.push(state);
   }
@@ -205,18 +216,20 @@ function mount(context) {
 
     if (arepa.x < 0) {
       arepa.x = 0;
-      if (arepa.velocityX < 0) arepa.velocityX = -arepa.velocityX * WALL_RESTITUTION;
+      if (arepa.velocityX < 0)
+        arepa.velocityX = -arepa.velocityX * WALL_RESTITUTION;
     } else if (arepa.x > maxX) {
       arepa.x = maxX;
-      if (arepa.velocityX > 0) arepa.velocityX = -arepa.velocityX * WALL_RESTITUTION;
+      if (arepa.velocityX > 0)
+        arepa.velocityX = -arepa.velocityX * WALL_RESTITUTION;
     }
 
     if (arepa.y > floorY) {
       arepa.y = floorY;
 
       if (arepa.velocityY > 0) {
-        // Small impacts stop dead instead of buzzing forever against the floor.
-        arepa.velocityY = arepa.velocityY > 60 ? -arepa.velocityY * FLOOR_RESTITUTION : 0;
+        arepa.velocityY =
+          arepa.velocityY > 60 ? -arepa.velocityY * FLOOR_RESTITUTION : 0;
       }
 
       arepa.velocityX *= 1 - CONTACT_FRICTION;
@@ -229,7 +242,6 @@ function mount(context) {
    * @returns {Array<[ArepaState, ArepaState]>}
    */
   function collectPairs() {
-    // Cells sized to the biggest arepa, so no arepa can straddle more than one cell edge.
     const cellSize = largestSize;
     /** @type {Map<string, ArepaState[]>} */
     const grid = new Map();
@@ -252,7 +264,7 @@ function mount(context) {
     }
 
     for (const [key, bucket] of grid) {
-      const [cellX, cellY] = key.split(':').map(Number);
+      const [cellX, cellY] = key.split(":").map(Number);
 
       for (let index = 0; index < bucket.length; index += 1) {
         for (let other = index + 1; other < bucket.length; other += 1) {
@@ -260,8 +272,13 @@ function mount(context) {
         }
       }
 
-      // Half the neighbourhood, so each pair of cells is visited exactly once.
-      for (const [offsetX, offsetY] of [[1, 0], [-1, 1], [0, 1], [1, 1]]) {
+      // Half the neighbourhood so each pair of cells is visited exactly once.
+      for (const [offsetX, offsetY] of [
+        [1, 0],
+        [-1, 1],
+        [0, 1],
+        [1, 1],
+      ]) {
         const neighbour = grid.get(`${cellX + offsetX}:${cellY + offsetY}`);
         if (!neighbour) continue;
 
@@ -281,11 +298,12 @@ function mount(context) {
 
     for (let iteration = 0; iteration < SOLVER_ITERATIONS; iteration += 1) {
       for (const [first, second] of pairs) {
-        // Sizes differ, so this has to work off real centres, not top-left corners.
+        // Work off the real centers, not top-left corners.
         const differenceX = second.x + second.radius - (first.x + first.radius);
         const differenceY = second.y + second.radius - (first.y + first.radius);
         const minimumDistance = first.radius + second.radius;
-        const distanceSquared = differenceX * differenceX + differenceY * differenceY;
+        const distanceSquared =
+          differenceX * differenceX + differenceY * differenceY;
 
         if (distanceSquared >= minimumDistance * minimumDistance) continue;
 
@@ -297,7 +315,8 @@ function mount(context) {
         // Both push-out and impulses split by inverse mass: the lighter arepa moves more.
         const inverseMassSum = first.invMass + second.invMass;
         const correction =
-          (Math.max(penetration - CORRECTION_SLOP, 0) * CORRECTION_PERCENT) / inverseMassSum;
+          (Math.max(penetration - CORRECTION_SLOP, 0) * CORRECTION_PERCENT) /
+          inverseMassSum;
         first.x -= normalX * correction * first.invMass;
         first.y -= normalY * correction * first.invMass;
         second.x += normalX * correction * second.invMass;
@@ -305,7 +324,8 @@ function mount(context) {
 
         const relativeVelocityX = second.velocityX - first.velocityX;
         const relativeVelocityY = second.velocityY - first.velocityY;
-        const velocityAlongNormal = relativeVelocityX * normalX + relativeVelocityY * normalY;
+        const velocityAlongNormal =
+          relativeVelocityX * normalX + relativeVelocityY * normalY;
 
         if (velocityAlongNormal >= 0) continue;
 
@@ -354,14 +374,17 @@ function mount(context) {
     for (const arepa of arepas) {
       if (arepa.active && !arepa.released && timestamp >= arepa.releaseAt) {
         arepa.released = true;
-        arepa.element.style.setProperty('visibility', 'visible', 'important');
+        arepa.element.style.setProperty("visibility", "visible", "important");
       }
     }
 
     const frameDelta = (timestamp - lastFrame) / 1_000;
     lastFrame = timestamp;
     // Clamp so a backgrounded tab doesn't fire hundreds of catch-up steps at once.
-    accumulator = Math.min(accumulator + (frameDelta > 0 ? frameDelta : PHYSICS_STEP), 0.1);
+    accumulator = Math.min(
+      accumulator + (frameDelta > 0 ? frameDelta : PHYSICS_STEP),
+      0.1,
+    );
 
     while (accumulator >= PHYSICS_STEP) {
       step(PHYSICS_STEP);
@@ -372,16 +395,16 @@ function mount(context) {
       if (!arepa.active || !arepa.released) continue;
 
       arepa.element.style.setProperty(
-        'transform',
+        "transform",
         `translate3d(${arepa.x}px, ${arepa.y}px, 0) rotate(${arepa.rotation}deg)`,
-        'important',
+        "important",
       );
     }
 
     animationFrame = window.requestAnimationFrame(animate);
   }
 
-  window.addEventListener('resize', () => {
+  window.addEventListener("resize", () => {
     for (const arepa of arepas) {
       arepa.x = Math.min(arepa.x, Math.max(0, window.innerWidth - arepa.size));
       arepa.y = Math.min(arepa.y, window.innerHeight - arepa.size);
@@ -393,10 +416,10 @@ function mount(context) {
 
 /** @type {import('./registry.js').Punishment} */
 export const arepaRain = {
-  id: 'arepa-rain',
-  label: 'Arepa rain',
-  color: '#d8943e',
-  textColor: '#2f1d10',
-  taunt: 'The arepas are coming for your page…',
+  id: "arepa-rain",
+  label: "Arepa rain",
+  color: "#d8943e",
+  textColor: "#2f1d10",
+  taunt: "The arepas are coming for your page…",
   mount,
 };
