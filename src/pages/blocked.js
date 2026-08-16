@@ -52,7 +52,8 @@ function renderBalance() {
   if (useBeanButton) {
     useBeanButton.disabled = balance < COST;
     if (balance < COST) {
-        useBeanButton.textContent = `Buy Arepa (Need ${COST} Beans)`;
+        const missing = COST - balance;
+        useBeanButton.textContent = `Buy Arepa (${missing} Bean${missing === 1 ? '' : 's'} Short)`;
     } else {
         useBeanButton.textContent = `Buy Arepa (${COST} Beans) & Spin!`;
     }
