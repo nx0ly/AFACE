@@ -15,9 +15,9 @@ let currentBalance = 0;
 let playing = true;
 
 const OUTCOMES = [
-    { type: "WIN", amount: 20, text: "WIN 20 BEANS!" },
-    { type: "LOSE", amount: -50, text: "LOSE 50 BEANS!" },
-    { type: "LOSE_ALL", amount: 0, text: "LOSE ALL BEANS!" },
+    { type: "WIN", amount: 5000000, text: "WIN 5000k BEANS!" },
+    { type: "DRAW", amount: 0, text: "NOTHING HAPPENS (0)" },
+    { type: "LOSE", amount: -10000, text: "LOSE 10k BEANS!" },
 ];
 
 function getStorage() {
@@ -82,24 +82,21 @@ cards.forEach((card, index) => {
         const outcome = currentOutcomes[index];
 
         // Reveal the picked card
-        card.textContent = outcome.type === "WIN" ? "+20" : outcome.type === "LOSE" ? "-50" : "0";
-        card.style.backgroundColor = outcome.type === "WIN" ? "lime" : "black";
+        card.textContent = outcome.type === "WIN" ? "+5000k" : outcome.type === "LOSE" ? "-10k" : "0";
+        card.style.backgroundColor = outcome.type === "WIN" ? "lime" : outcome.type === "DRAW" ? "#888" : "black";
 
         // Process logic
         if (outcome.type === "WIN") {
-            await setBalance(currentBalance + 20);
+            await setBalance(currentBalance + 5000000);
             statusLine.textContent = outcome.text;
             statusLine.style.color = "lime";
         } else if (outcome.type === "LOSE") {
-            await setBalance(currentBalance - 50);
+            await setBalance(currentBalance - 10000);
             statusLine.textContent = outcome.text;
             statusLine.style.color = "red";
-        } else if (outcome.type === "LOSE_ALL") {
-            if (currentBalance > 0) {
-                await setBalance(0);
-            }
+        } else if (outcome.type === "DRAW") {
             statusLine.textContent = outcome.text;
-            statusLine.style.color = "red";
+            statusLine.style.color = "white";
         }
 
         // Reveal other cards
@@ -107,7 +104,7 @@ cards.forEach((card, index) => {
             if (otherIndex !== index) {
                 otherCard.disabled = true;
                 const otherOutcome = currentOutcomes[otherIndex];
-                otherCard.textContent = otherOutcome.type === "WIN" ? "+20" : otherOutcome.type === "LOSE" ? "-50" : "0";
+                otherCard.textContent = otherOutcome.type === "WIN" ? "+5000k" : otherOutcome.type === "LOSE" ? "-10k" : "0";
                 otherCard.style.backgroundColor = "#555555"; // dimmed
             }
         });

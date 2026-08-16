@@ -1,82 +1,90 @@
-// Global UI: Coffee Beans Corner & Global Music
+// Global UI: Global Music Only
 document.addEventListener("DOMContentLoaded", async () => {
-    // 1. Coffee Beans Corner UI
-    const container = document.createElement("div");
-    container.style.position = "fixed";
-    container.style.bottom = "20px";
-    container.style.right = "20px";
-    container.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
-    container.style.border = "3px outset #ffcc00";
-    container.style.padding = "5px 15px";
-    container.style.borderRadius = "5px";
-    container.style.zIndex = "999999";
-    container.style.display = "flex";
-    container.style.alignItems = "center";
-    container.style.gap = "10px";
-    container.style.fontFamily = "'Courier New', Courier, monospace";
-    container.style.color = "white";
-    container.style.fontSize = "24px";
-    container.style.fontWeight = "bold";
-    container.style.boxShadow = "4px 4px 0px #000";
+    const extApi = globalThis.browser ?? globalThis.chrome;
 
-    const img = document.createElement("img");
-    img.src = "/images/bean.png"; // User will add this image later
-    img.style.width = "40px";
-    img.style.height = "40px";
-    img.style.imageRendering = "pixelated";
-    img.alt = "Beans";
-    container.appendChild(img);
+    // Global Music (Resumes across tabs)
+    const audioUrl = extApi ? extApi.runtime.getURL("music.mp3") : "/music.mp3";
+    const audio = new Audio(audioUrl);
+    audio.loop = true;
+    audio.volume = 1.0;
 
-    const text = document.createElement("span");
-    text.innerText = "0";
-    container.appendChild(text);
+    // Visible music toggle button
+    const musicBtn = document.createElement("button");
+    musicBtn.innerText = "🔇";
+    musicBtn.style.position = "fixed";
+    musicBtn.style.bottom = "20px";
+    musicBtn.style.right = "20px";
+    musicBtn.style.background = "rgba(0,0,0,0.8)";
+    musicBtn.style.border = "3px outset silver";
+    musicBtn.style.borderRadius = "50%";
+    musicBtn.style.cursor = "pointer";
+    musicBtn.style.fontSize = "30px";
+    musicBtn.style.padding = "10px";
+    musicBtn.style.zIndex = "999999";
+    musicBtn.title = "Click for music";
+    document.body.appendChild(musicBtn);
 
-    document.body.appendChild(container);
+    let musicStarted = false;
 
-    // Update token count
-    const storage = globalThis.browser?.storage?.local ?? globalThis.chrome?.storage?.local;
-    if (storage) {
-        const updateBeans = async () => {
-            const saved = await storage.get("page-pause:tokens");
-            const val = saved["page-pause:tokens"];
-            text.innerText = typeof val === "number" ? Math.floor(val) : 0;
-        };
-        await updateBeans();
-        
-        // Listen for changes
-        const api = globalThis.browser ?? globalThis.chrome;
-        api?.storage?.onChanged?.addListener((changes, area) => {
-            if (area === "local" && changes["page-pause:tokens"]) {
-                updateBeans();
-            }
+    function startMusic() {
+        if (musicStarted) return;
+        const savedTime = sessionStorage.getItem("globalMusicTime");
+        if (savedTime) {
+            audio.currentTime = parseFloat(savedTime);
+        }
+        audio.play().then(() => {
+            musicStarted = true;
+            musicBtn.innerText = "🔊";
+        }).catch((err) => {
+            console.error("Manual play error:", err);
+            alert("Error playing music: " + err.message);
         });
     }
 
-    // 2. Global Music (Resumes across tabs)
-    const audio = new Audio("/music.mp3"); // User will add music.mp3 later
-    audio.loop = true;
-    audio.volume = 0.5;
-
-    const savedTime = sessionStorage.getItem("globalMusicTime");
-    if (savedTime) {
-        audio.currentTime = parseFloat(savedTime);
-    }
-
-    // Try to play (might be blocked until first interaction)
-    audio.play().catch(() => {
-        // If blocked, wait for any click
-        const playOnInteraction = () => {
-            audio.play();
-            document.removeEventListener("click", playOnInteraction);
-            document.removeEventListener("keydown", playOnInteraction);
-        };
-        document.addEventListener("click", playOnInteraction);
-        document.addEventListener("keydown", playOnInteraction);
+    musicBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (!musicStarted || audio.paused) {
+            audio.play().then(() => {
+                musicStarted = true;
+                musicBtn.innerText = "🔊";
+            }).catch((err) => {
+                console.error("Toggle play error:", err);
+                alert("Error toggling music: " + err.message);
+            });
+        } else {
+            audio.pause();
+            musicBtn.innerText = "🔇";
+        }
     });
 
+    audio.addEventListener('error', (e) => {
+        console.error("Audio element error:", audio.error);
+        alert("Audio element error: " + (audio.error ? audio.error.message : "Unknown"));
+    });
+
+    // Try autoplay, if blocked catch ANY interaction on the page
+    audio.play().then(() => {
+        musicStarted = true;
+        musicBtn.innerText = "🔊";
+    }).catch((err) => {
+        console.warn("Autoplay blocked or failed:", err);
+        // Use capture phase on window to catch clicks on canvas, buttons, etc.
+        const playOnInteraction = () => {
+            audio.play().then(() => {
+                musicStarted = true;
+                musicBtn.innerText = "🔊";
+            }).catch((err) => console.error("Interaction play error:", err));
+            window.removeEventListener("pointerdown", playOnInteraction, true);
+            window.removeEventListener("keydown", playOnInteraction, true);
+        };
+        window.addEventListener("pointerdown", playOnInteraction, true);
+        window.addEventListener("keydown", playOnInteraction, true);
+    });
+
+    // Save position so it resumes when navigating between extension pages
     setInterval(() => {
         if (!audio.paused) {
-            sessionStorage.setItem("globalMusicTime", audio.currentTime);
+            sessionStorage.setItem("globalMusicTime", String(audio.currentTime));
         }
-    }, 100);
+    }, 200);
 });

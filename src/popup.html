@@ -1,81 +1,118 @@
 <!doctype html>
-<html lang="en" class="scheme-light">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Page Pause</title>
-    <link rel="stylesheet" href="theme.css" />
+    <style>
+      body {
+        width: 300px;
+        background-color: #333333;
+        background-image: url('/images/diomedes.jpg');
+        background-size: cover;
+        background-attachment: fixed;
+        color: yellow;
+        font-family: "Comic Sans MS", "Times New Roman", serif;
+        margin: 0;
+        padding: 10px;
+        border: 10px ridge silver;
+      }
+      main {
+        background-color: rgba(0, 0, 0, 0.8);
+        padding: 15px;
+        border: 5px solid #ffcc00;
+      }
+      p {
+        margin: 0 0 10px 0;
+        font-size: 16px;
+        font-weight: bold;
+        color: #ff00ff;
+        text-shadow: 1px 1px 0 #fff;
+      }
+      .btn {
+        background-color: silver;
+        color: black;
+        border: 4px outset white;
+        padding: 8px 12px;
+        font-size: 14px;
+        font-weight: bold;
+        font-family: "Courier New", Courier, monospace;
+        cursor: pointer;
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      .btn:active {
+        border-style: inset;
+      }
+      hr {
+        border: 0;
+        border-top: 3px dashed #ff00ff;
+        margin: 15px 0;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+        color: lime;
+        font-weight: bold;
+      }
+      select {
+        width: 100%;
+        margin-bottom: 15px;
+        border: 3px inset #aaaaaa;
+        background-color: #ffffff;
+        color: #000000;
+        padding: 5px;
+        font-size: 14px;
+        font-weight: bold;
+        font-family: "Courier New", Courier, monospace;
+      }
+      h2 {
+        text-align: center;
+        color: #00ffff;
+        text-decoration: underline;
+        margin: 0 0 15px 0;
+        font-size: 20px;
+      }
+    </style>
   </head>
-  <body class="w-[260px] bg-cream font-sans text-brown">
-    <main class="p-[18px]">
-      <p id="status" class="mb-[14px] leading-[1.4]">
-        Clear every temporary site whitelist.
-      </p>
-      <button
-        id="clear-whitelist"
-        type="button"
-        class="btn rounded-[10px] px-[14px] py-[11px]"
-      >
-        Clear whitelist
+  <body>
+    <main>
+      <marquee scrollamount="5">
+        <h2>*** EXTENSION MENU ***</h2>
+      </marquee>
+
+      <p id="status">Clear every temporary site whitelist.</p>
+      <button id="clear-whitelist" type="button" class="btn">
+        CLEAR WHITELIST
       </button>
 
-      <hr class="my-[14px] border-0 border-t-2 border-brown/20" />
+      <hr />
 
-      <p id="punishment-status" class="mb-[14px] leading-[1.4]">
-        Cancel any punishment waiting on this site.
-      </p>
-      <button
-        id="clear-punishments"
-        type="button"
-        class="btn rounded-[10px] px-[14px] py-[11px]"
-      >
-        Clear punishments here
+      <p id="punishment-status">Cancel any punishment waiting on this site.</p>
+      <button id="clear-punishments" type="button" class="btn">
+        CLEAR PUNISHMENTS
       </button>
 
-      <hr class="my-[14px] border-0 border-t-2 border-brown/20" />
+      <hr />
 
-      <p id="rig-status" class="mb-[10px] leading-[1.4]">
-        Rig the Wheel of Doom on this site.
-      </p>
-      <label
-        for="rig-outcome"
-        class="mb-[4px] block font-sans text-[12px] font-bold text-brown/70"
-      >
-        Outcome
-      </label>
-      <select
-        id="rig-outcome"
-        aria-label="Wheel outcome"
-        class="mb-[10px] w-full rounded-[10px] border-2 border-brown/40 bg-white p-[9px] font-sans text-[13px] font-bold text-brown"
-      >
+      <p id="rig-status">Rig the Wheel of Doom on this site.</p>
+      
+      <label for="rig-outcome">Outcome</label>
+      <select id="rig-outcome" aria-label="Wheel outcome">
         <option value="random">Random (let it ride)</option>
         <option value="safe">Safe</option>
         <option value="doom">Doom</option>
       </select>
-      <label
-        for="rig-pick"
-        class="mb-[4px] block font-sans text-[12px] font-bold text-brown/70"
-      >
-        Punishment
-      </label>
-      <select
-        id="rig-pick"
-        aria-label="Punishment to run"
-        class="mb-[12px] w-full rounded-[10px] border-2 border-brown/40 bg-white p-[9px] font-sans text-[13px] font-bold text-brown"
-      ></select>
-      <button
-        id="rig-spin"
-        type="button"
-        class="btn mb-[8px] w-full rounded-[10px] px-[14px] py-[11px]"
-      >
-        Rig next spin
+      
+      <label for="rig-pick">Punishment</label>
+      <select id="rig-pick" aria-label="Punishment to run"></select>
+      
+      <button id="rig-spin" type="button" class="btn">
+        RIG NEXT SPIN
       </button>
-      <button
-        id="rig-run"
-        type="button"
-        class="btn w-full rounded-[10px] px-[14px] py-[11px]"
-      >
-        Run it here now
+      <button id="rig-run" type="button" class="btn" style="margin-bottom: 0;">
+        RUN IT HERE NOW
       </button>
     </main>
     <script type="module" src="popup.js"></script>

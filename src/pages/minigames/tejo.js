@@ -3,11 +3,13 @@ const ctx = canvas.getContext("2d");
 
 const retryBtn = document.getElementById("retry-btn");
 
+const extApi = globalThis.browser ?? globalThis.chrome;
+
 const mangoImg = new Image();
-mangoImg.src = "/images/mango.png";
+mangoImg.src = extApi ? extApi.runtime.getURL("images/mango.png") : "/images/mango.png";
 
 const nathanImg = new Image();
-nathanImg.src = "/images/nathan_tejo.png";
+nathanImg.src = extApi ? extApi.runtime.getURL("images/nathan_tejo.png") : "/images/nathan_tejo.png";
 
 const gravity = 900;
 const powerMultiplier = 4.5;
@@ -17,7 +19,6 @@ const targets = [
     { x: canvas.width / 2, y: 125, radius: 50, points: 19 },       // Center
     { x: canvas.width / 2 - 120, y: 125, radius: 25, points: 39 }, // Left (smaller, more points)
     { x: canvas.width / 2 + 120, y: 125, radius: 35, points: 20 }  // Right
-];
 ];
 
 let tejo = getInitialTejoState();
@@ -335,13 +336,13 @@ function land() {
     if (hitTarget) {
         tejo.hit = true;
         score += hitTarget.points;
-        message = `CARAMBOLA!!!! +${hitTarget.points}`;
+        message = `BULLSEYE!!!! +${hitTarget.points}`;
         isCarambola = true;
     } else if (tejo.x > targets[1].x - 60 && tejo.x < targets[2].x + 60 && tejo.y > targets[0].y - 60 && tejo.y < targets[0].y + 70) {
         tejo.hit = true;
-        message = "¡MANO! +1";
+        message = "CLOSE! +1";
     } else {
-        message = "FALLASTE";
+        message = "MISSED!";
     }
 
     if (tejo.hit) {

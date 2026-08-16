@@ -9,16 +9,16 @@
  * free; the flood drains with you.
  */
 
-const TARGET_CLOSES = 30;
+const TARGET_CLOSES = 20;
 // How many new popups each closed popup births. >1 means the flood grows even
 // as you fight it, so closing fast is the only way out. Kept small so the DOM
 // never explodes — see POPUP_CAP.
-const SPAWN_PER_CLOSE = 2;
+const SPAWN_PER_CLOSE = 0;
 // Hard ceiling on live popups. The spawn-on-close loop can run away; this caps
 // the worst case so a panicked page never paints ten thousand windows.
 const POPUP_CAP = 60;
 // Starting wave — enough to feel instantly overwhelming, not enough to lock up.
-const INITIAL_POPUPS = 8;
+const INITIAL_POPUPS = 20;
 const POPUP_MIN = 200;
 const POPUP_MAX = 300;
 const SPEED = 140; // px/s, uniform; bounce off walls and each other
@@ -162,35 +162,8 @@ function mount(context) {
       dragOffsetY: 0,
     };
 
-    // Drag the popup around by its title bar. While dragging it ignores the
-    // bounce animation and follows the pointer; on release it keeps its last
-    // velocity, so a flicked popup keeps sailing.
-    titleBar.addEventListener('pointerdown', (event) => {
+    popup.addEventListener('pointerdown', (event) => {
       if (!event.isTrusted) return;
-      state.dragging = true;
-      state.dragOffsetX = event.clientX - state.x;
-      state.dragOffsetY = event.clientY - state.y;
-      titleBar.setPointerCapture?.(event.pointerId);
-      // Lift the dragged one to the top so it isn't hidden under its neighbours.
-      overlay.append(popup);
-    });
-
-    titleBar.addEventListener('pointermove', (event) => {
-      if (!state.dragging) return;
-      state.x = event.clientX - state.dragOffsetX;
-      state.y = event.clientY - state.dragOffsetY;
-      popup.style.setProperty('--popup-x', `${state.x}px`, 'important');
-      popup.style.setProperty('--popup-y', `${state.y}px`, 'important');
-    });
-
-    const endDrag = () => {
-      state.dragging = false;
-    };
-
-    titleBar.addEventListener('pointerup', endDrag);
-    titleBar.addEventListener('pointercancel', endDrag);
-
-    close.addEventListener('click', (event) => {
       event.stopPropagation();
       handleClose(state);
     });
