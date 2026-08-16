@@ -1,4 +1,4 @@
-import { PUNISHMENTS } from '../punishments/registry.js';
+import { PUNISHMENTS, findPunishmentById } from '../punishments/registry.js';
 
 const TOKEN_BALANCE_KEY = 'page-pause:tokens';
 const WHITELIST_PREFIX = 'page-pause:whitelist:';
@@ -126,7 +126,7 @@ async function startRandomizer(storage, whitelistKey) {
     } else {
         // A rigged id wins if it names a real punishment; otherwise fair draw.
         const rigged = riggedPunishmentId
-            ? PUNISHMENTS.find((p) => p.id === riggedPunishmentId)
+            ? findPunishmentById(riggedPunishmentId)
             : undefined;
         const punishment = rigged ?? PUNISHMENTS[Math.floor(Math.random() * PUNISHMENTS.length)];
         randomizerText.textContent = `PUNISHMENT: ${punishment.label.toUpperCase()}`;
