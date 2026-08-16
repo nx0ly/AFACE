@@ -5,6 +5,8 @@
   "version": "1.0.0",
   "firefox:browser_specific_settings": {
     "gecko": {
+      "id": "{9ae9580c-517a-4f10-926d-17a8f38010b6}",
+      "strict_min_version": "130.0",
       "data_collection_permissions": {
         "required": ["none"]
       }
