@@ -1,8 +1,4 @@
-/*
- * Shared chrome for punishments that are a panel rather than a physics toy.
- * Styling lives in punishment.css, which the content script injects into the
- * host page, so every class here is namespaced `page-pause-*`.
- */
+// YESSS!!! TYPESCRIPT BEAUTY!
 
 /**
  * @param {object} options
@@ -12,30 +8,30 @@
  *   Undefined when an overlay is already mounted or the body isn't there yet.
  */
 export function createPunishmentPanel({ title, subtitle }) {
-  if (!document.body || document.querySelector('.page-pause-panel-overlay')) {
+  if (!document.body || document.querySelector(".page-pause-panel-overlay")) {
     return undefined;
   }
 
-  const overlay = document.createElement('div');
-  const panel = document.createElement('div');
-  const heading = document.createElement('h2');
-  const description = document.createElement('p');
-  const status = document.createElement('p');
+  const overlay = document.createElement("div");
+  const panel = document.createElement("div");
+  const heading = document.createElement("h2");
+  const description = document.createElement("p");
+  const status = document.createElement("p");
 
-  overlay.className = 'page-pause-panel-overlay';
-  panel.className = 'page-pause-panel';
-  heading.className = 'page-pause-panel-title';
-  description.className = 'page-pause-panel-subtitle';
-  status.className = 'page-pause-panel-status';
+  overlay.className = "page-pause-panel-overlay";
+  panel.className = "page-pause-panel";
+  heading.className = "page-pause-panel-title";
+  description.className = "page-pause-panel-subtitle";
+  status.className = "page-pause-panel-status";
   heading.textContent = title;
   description.textContent = subtitle;
-  status.setAttribute('aria-live', 'polite');
+  status.setAttribute("aria-live", "polite");
 
   panel.append(heading, description, status);
   overlay.append(panel);
-  overlay.setAttribute('role', 'dialog');
-  overlay.setAttribute('aria-modal', 'true');
-  overlay.setAttribute('aria-label', title);
+  overlay.setAttribute("role", "dialog");
+  overlay.setAttribute("aria-modal", "true");
+  overlay.setAttribute("aria-label", title);
   document.body.append(overlay);
 
   return {
@@ -51,10 +47,10 @@ export function createPunishmentPanel({ title, subtitle }) {
  * @returns {HTMLButtonElement}
  */
 export function createPunishmentButton(label) {
-  const button = document.createElement('button');
+  const button = document.createElement("button");
 
-  button.className = 'page-pause-panel-button';
-  button.type = 'button';
+  button.className = "page-pause-panel-button";
+  button.type = "button";
   button.textContent = label;
   return button;
 }

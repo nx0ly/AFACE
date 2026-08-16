@@ -6,9 +6,7 @@
   "firefox:browser_specific_settings": {
     "gecko": {
       "data_collection_permissions": {
-        "required": [
-          "none"
-        ]
+        "required": ["none"]
       }
     }
   },
@@ -48,30 +46,16 @@
     "type": "module"
   },
   "firefox:background": {
-    "scripts": [
-      "background.ts"
-    ]
+    "scripts": ["background.ts"]
   },
-  "chromium:permissions": [
-    "storage",
-    "activeTab"
-  ],
-  "firefox:permissions": [
-    "storage",
-    "activeTab"
-  ],
+  "chromium:permissions": ["storage", "activeTab"],
+  "firefox:permissions": ["storage", "activeTab"],
   "host_permissions": [],
   "content_scripts": [
     {
-      "matches": [
-        "<all_urls>"
-      ],
-      "css": [
-        "punishment.css"
-      ],
-      "js": [
-        "index.ts"
-      ],
+      "matches": ["<all_urls>"],
+      "css": ["punishment.css"],
+      "js": ["index.ts"],
       "run_at": "document_start"
     }
   ],
@@ -121,9 +105,7 @@
         "images/borders/bottom_left.webp",
         "images/borders/bottom_right_2.webp"
       ],
-      "matches": [
-        "<all_urls>"
-      ]
+      "matches": ["<all_urls>"]
     }
   ],
   "firefox:web_accessible_resources": [

@@ -1,5 +1,6 @@
 import { getPunishmentById } from './punishments/registry.js';
 
+// again its legit not worth it, just use consts...
 const WHITELIST_PREFIX = 'page-pause:whitelist:';
 const PUNISHMENT_PREFIX = 'page-pause:punishment:';
 
@@ -98,11 +99,6 @@ async function getPendingPunishment(hostname: string): Promise<PendingPunishment
   }
 }
 
-/**
- * Runs the punishment the wheel picked. Everything it needs to end the sentence
- * — the pass, the cleanup, the redirect — is handed over as `grantPass`, so a
- * punishment only has to decide *when* the user is done.
- */
 function servePunishment(pending: PendingPunishment, punishmentKey: string): void {
   const extensionApi = getExtensionApi();
   const storage = extensionApi?.storage?.local;

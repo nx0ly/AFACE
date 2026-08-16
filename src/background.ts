@@ -1,6 +1,8 @@
-export {};
+export { };
 
-const TOKEN_BALANCE_KEY = 'page-pause:tokens';
+// yay!! typescript beauty ahead!
+
+const TOKEN_BALANCE_KEY = "page-pause:tokens";
 
 type ToolbarAction = {
   setBadgeBackgroundColor(details: { color: string }): Promise<void> | void;
@@ -23,7 +25,7 @@ function getExtensionApi(): ExtensionApi | undefined {
 }
 
 function normalizeBalance(value: unknown): number {
-  return typeof value === 'number' && Number.isFinite(value)
+  return typeof value === "number" && Number.isFinite(value)
     ? Math.floor(value)
     : 0;
 }
@@ -38,26 +40,28 @@ async function updateBadge(): Promise<void> {
 
   const saved = await extensionApi.storage.local.get(TOKEN_BALANCE_KEY);
   const balance = normalizeBalance(saved[TOKEN_BALANCE_KEY]);
-  const text = balance === 0 ? '' : balance > 99 ? '99+' : String(balance);
+  const text = balance === 0 ? "" : balance > 99 ? "99+" : String(balance);
 
-  await toolbar.setBadgeBackgroundColor({ color: '#f2bf40' });
+  await toolbar.setBadgeBackgroundColor({ color: "#f2bf40" });
   await toolbar.setBadgeText({ text });
 
   if (toolbar.setBadgeTextColor) {
-    await toolbar.setBadgeTextColor({ color: '#684d3a' });
+    await toolbar.setBadgeTextColor({ color: "#684d3a" });
   }
 }
 
 const extensionApi = getExtensionApi();
 
-extensionApi?.storage.onChanged.addListener((
-  changes: Record<string, { newValue?: unknown; oldValue?: unknown }>,
-  areaName: string,
-) => {
-  if (areaName === 'local' && TOKEN_BALANCE_KEY in changes) {
-    void updateBadge();
-  }
-});
+extensionApi?.storage.onChanged.addListener(
+  (
+    changes: Record<string, { newValue?: unknown; oldValue?: unknown }>,
+    areaName: string,
+  ) => {
+    if (areaName === "local" && TOKEN_BALANCE_KEY in changes) {
+      void updateBadge();
+    }
+  },
+);
 
 extensionApi?.runtime.onInstalled.addListener(() => void updateBadge());
 extensionApi?.runtime.onStartup.addListener(() => void updateBadge());

@@ -1,703 +1,693 @@
-/* --- Panel punishments -------------------------------------------------
-   Shared chrome for punishments that are a dialog rather than a physics toy
-   (punishments/overlay.js). Every property is spelled out and !important:
-   this lands on arbitrary host pages with their own aggressive stylesheets. */
-
 .page-pause-panel-overlay {
-  align-items: center !important;
-  /* Opaque-proofing: the tint belongs to the backdrop only. A stray `opacity`
-     here would make every child translucent, panel included. */
-  opacity: 1 !important;
-  background: rgb(104 77 58 / 0.72) !important;
-  display: flex !important;
-  inset: 0 !important;
-  justify-content: center !important;
-  padding: 24px !important;
-  position: fixed !important;
-  z-index: 2147483647 !important;
+    align-items: center !important;
+    opacity: 1 !important;
+    background: rgb(104 77 58 / 0.72) !important;
+    display: flex !important;
+    inset: 0 !important;
+    justify-content: center !important;
+    padding: 24px !important;
+    position: fixed !important;
+    z-index: 2147483647 !important;
 }
 
 .page-pause-panel {
-  isolation: isolate !important;
-  opacity: 1 !important;
-  position: relative !important;
-  z-index: 1 !important;
-  background: #c0c0c0 !important;
-  border: 8px outset #ffffff !important;
-  box-shadow: 10px 10px 0 #000 !important;
-  box-sizing: border-box !important;
-  color: #000000 !important;
-  font-family: "Times New Roman", Times, serif !important;
-  max-width: 500px !important;
-  padding: 28px !important;
-  text-align: center !important;
-  width: 100% !important;
+    isolation: isolate !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 1 !important;
+    background: #c0c0c0 !important;
+    border: 8px outset #ffffff !important;
+    box-shadow: 10px 10px 0 #000 !important;
+    box-sizing: border-box !important;
+    color: #000000 !important;
+    font-family: "Times New Roman", Times, serif !important;
+    max-width: 500px !important;
+    padding: 28px !important;
+    text-align: center !important;
+    width: 100% !important;
 }
 
 .page-pause-panel-title {
-  color: #684d3a !important;
-  font-size: 30px !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.04em !important;
-  line-height: 1.05 !important;
-  margin: 0 !important;
+    color: #684d3a !important;
+    font-size: 30px !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.04em !important;
+    line-height: 1.05 !important;
+    margin: 0 !important;
 }
 
 .page-pause-panel-subtitle {
-  color: rgb(104 77 58 / 0.75) !important;
-  font-size: 15px !important;
-  line-height: 1.5 !important;
-  margin: 12px 0 0 !important;
+    color: rgb(104 77 58 / 0.75) !important;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+    margin: 12px 0 0 !important;
 }
 
 .page-pause-panel-status {
-  color: #684d3a !important;
-  font-size: 14px !important;
-  font-weight: 800 !important;
-  margin: 18px 0 0 !important;
-  min-height: 20px !important;
+    color: #684d3a !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    margin: 18px 0 0 !important;
+    min-height: 20px !important;
 }
 
 .page-pause-panel-phrase {
-  background: #eacfb3 !important;
-  border-radius: 12px !important;
-  color: #684d3a !important;
-  font-size: 17px !important;
-  font-weight: 800 !important;
-  margin: 18px 0 0 !important;
-  padding: 12px !important;
-  user-select: none !important;
+    background: #eacfb3 !important;
+    border-radius: 12px !important;
+    color: #684d3a !important;
+    font-size: 17px !important;
+    font-weight: 800 !important;
+    margin: 18px 0 0 !important;
+    padding: 12px !important;
+    user-select: none !important;
 }
 
 .page-pause-panel-input {
-  background: #fff !important;
-  border: 2px solid rgb(104 77 58 / 0.4) !important;
-  border-radius: 12px !important;
-  box-sizing: border-box !important;
-  color: #684d3a !important;
-  font-family: inherit !important;
-  font-size: 16px !important;
-  margin-top: 12px !important;
-  padding: 12px 14px !important;
-  width: 100% !important;
+    background: #fff !important;
+    border: 2px solid rgb(104 77 58 / 0.4) !important;
+    border-radius: 12px !important;
+    box-sizing: border-box !important;
+    color: #684d3a !important;
+    font-family: inherit !important;
+    font-size: 16px !important;
+    margin-top: 12px !important;
+    padding: 12px 14px !important;
+    width: 100% !important;
 }
 
 .page-pause-panel-button {
-  background: silver !important;
-  border: 5px outset white !important;
-  color: black !important;
-  cursor: pointer !important;
-  font-family: "Courier New", Courier, monospace !important;
-  font-size: 18px !important;
-  font-weight: bold !important;
-  margin-top: 16px !important;
-  padding: 15px 24px !important;
-  width: 100% !important;
+    background: silver !important;
+    border: 5px outset white !important;
+    color: black !important;
+    cursor: pointer !important;
+    font-family: "Courier New", Courier, monospace !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    margin-top: 16px !important;
+    padding: 15px 24px !important;
+    width: 100% !important;
 }
 
 .page-pause-panel-button:active {
-  border-style: inset !important;
+    border-style: inset !important;
 }
 
 .page-pause-panel-button:disabled {
-  cursor: not-allowed !important;
-  background: #888888 !important;
-  border-color: #555555 !important;
+    cursor: not-allowed !important;
+    background: #888888 !important;
+    border-color: #555555 !important;
 }
 
 .page-pause-panel-button:focus-visible,
 .page-pause-panel-input:focus-visible {
-  outline: 3px solid #f2bf40 !important;
-  outline-offset: 3px !important;
+    outline: 3px solid #f2bf40 !important;
+    outline-offset: 3px !important;
 }
 
 /* --- Arepa rain --------------------------------------------------------- */
 
 .page-pause-arepa-overlay {
-  background: transparent;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  position: fixed;
-  z-index: 2147483647;
+    background: transparent;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    position: fixed;
+    z-index: 2147483647;
 }
 
 .page-pause-arepa-stage {
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    position: absolute;
 }
 
 .page-pause-arepa-status {
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  position: absolute;
-  width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    position: absolute;
+    width: 1px;
 }
 
 .page-pause-arepa {
-  appearance: none;
-  background-color: transparent !important;
-  background-position: center !important;
-  background-repeat: no-repeat !important;
-  background-size: 260% auto !important;
-  border: 0 !important;
-  border-radius: 50% !important;
-  box-shadow: none !important;
-  cursor: pointer !important;
-  height: var(--arepa-size) !important;
-  outline: 0 !important;
-  padding: 0 !important;
-  pointer-events: auto !important;
-  position: absolute !important;
-  transition: none !important;
-  width: var(--arepa-size) !important;
-  will-change: transform;
+    appearance: none;
+    background-color: transparent !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: 260% auto !important;
+    border: 0 !important;
+    border-radius: 50% !important;
+    box-shadow: none !important;
+    cursor: pointer !important;
+    height: var(--arepa-size) !important;
+    outline: 0 !important;
+    padding: 0 !important;
+    pointer-events: auto !important;
+    position: absolute !important;
+    transition: none !important;
+    width: var(--arepa-size) !important;
+    will-change: transform;
 }
 
 .page-pause-arepa:hover,
 .page-pause-arepa:focus,
 .page-pause-arepa:focus-visible,
 .page-pause-arepa:active {
-  background-color: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-  filter: none !important;
-  opacity: 1 !important;
-  outline: 0 !important;
+    background-color: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+    outline: 0 !important;
 }
 
 .page-pause-arepa::before,
 .page-pause-arepa::after {
-  content: none !important;
-  display: none !important;
+    content: none !important;
+    display: none !important;
 }
 
 .page-pause-arepa-particle {
-  animation: page-pause-arepa-pop 520ms ease-out forwards;
-  background: var(--particle-color, #d69a3e);
-  border-radius: 50%;
-  height: 11px;
-  pointer-events: none;
-  position: absolute;
-  width: 11px;
-  z-index: 3;
+    animation: page-pause-arepa-pop 520ms ease-out forwards;
+    background: var(--particle-color, #d69a3e);
+    border-radius: 50%;
+    height: 11px;
+    pointer-events: none;
+    position: absolute;
+    width: 11px;
+    z-index: 3;
 }
 
 @keyframes page-pause-arepa-pop {
-  from {
-    opacity: 1;
-    transform: translate(0, 0) scale(1);
-  }
+    from {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+    }
 
-  to {
-    opacity: 0;
-    transform: translate(var(--particle-x), var(--particle-y)) scale(0.2);
-  }
+    to {
+        opacity: 0;
+        transform: translate(var(--particle-x), var(--particle-y)) scale(0.2);
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .page-pause-arepa-particle {
-    animation-duration: 100ms;
-  }
+    .page-pause-arepa-particle {
+        animation-duration: 100ms;
+    }
 }
 
 /* --- Mango harvest ------------------------------------------------------ */
 
 .page-pause-mango-orchard {
-  align-items: center !important;
-  display: flex !important;
-  justify-content: center !important;
-  margin: 18px 0 0 !important;
-  min-height: 190px !important;
-  position: relative !important;
+    align-items: center !important;
+    display: flex !important;
+    justify-content: center !important;
+    margin: 18px 0 0 !important;
+    min-height: 190px !important;
+    position: relative !important;
 }
 
 .page-pause-mango {
-  appearance: none !important;
-  background-color: transparent !important;
-  background-position: center !important;
-  background-repeat: no-repeat !important;
-  background-size: contain !important;
-  border: 0 !important;
-  box-shadow: none !important;
-  cursor: pointer !important;
-  height: 180px !important;
-  outline: 0 !important;
-  padding: 0 !important;
-  transition: transform 90ms ease !important;
-  width: 180px !important;
+    appearance: none !important;
+    background-color: transparent !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: contain !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    cursor: pointer !important;
+    height: 180px !important;
+    outline: 0 !important;
+    padding: 0 !important;
+    transition: transform 90ms ease !important;
+    width: 180px !important;
 }
 
 .page-pause-mango.is-squished {
-  transform: scale(0.9) rotate(2deg) !important;
+    transform: scale(0.9) rotate(2deg) !important;
 }
 
 .page-pause-mango-pop {
-  animation: page-pause-mango-float 800ms ease-out forwards !important;
-  color: #684d3a !important;
-  font-size: 22px !important;
-  font-weight: 900 !important;
-  pointer-events: none !important;
-  position: absolute !important;
-  z-index: 3 !important;
+    animation: page-pause-mango-float 800ms ease-out forwards !important;
+    color: #684d3a !important;
+    font-size: 22px !important;
+    font-weight: 900 !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    z-index: 3 !important;
 }
 
 @keyframes page-pause-mango-float {
-  from {
-    opacity: 1;
-    transform: translate(-50%, 0);
-  }
+    from {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
 
-  to {
-    opacity: 0;
-    transform: translate(-50%, -70px);
-  }
+    to {
+        opacity: 0;
+        transform: translate(-50%, -70px);
+    }
 }
 
 .page-pause-mango-meter {
-  background: #eacfb3 !important;
-  border: 2px solid #684d3a !important;
-  border-radius: 999px !important;
-  height: 14px !important;
-  margin: 14px 0 0 !important;
-  overflow: hidden !important;
+    background: #eacfb3 !important;
+    border: 2px solid #684d3a !important;
+    border-radius: 999px !important;
+    height: 14px !important;
+    margin: 14px 0 0 !important;
+    overflow: hidden !important;
 }
 
 .page-pause-mango-fill {
-  background: #f2bf40 !important;
-  height: 100% !important;
-  transition: width 200ms ease !important;
-  width: 0% !important;
+    background: #f2bf40 !important;
+    height: 100% !important;
+    transition: width 200ms ease !important;
+    width: 0% !important;
 }
 
 .page-pause-mango-shop {
-  display: grid !important;
-  gap: 8px !important;
-  margin: 16px 0 0 !important;
+    display: grid !important;
+    gap: 8px !important;
+    margin: 16px 0 0 !important;
 }
 
 .page-pause-mango-buy {
-  background: silver !important;
-  border: 4px outset white !important;
-  color: black !important;
-  cursor: pointer !important;
-  font-family: "Courier New", Courier, monospace !important;
-  font-size: 14px !important;
-  font-weight: bold !important;
-  padding: 10px 12px !important;
-  text-align: left !important;
+    background: silver !important;
+    border: 4px outset white !important;
+    color: black !important;
+    cursor: pointer !important;
+    font-family: "Courier New", Courier, monospace !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
+    padding: 10px 12px !important;
+    text-align: left !important;
 }
 
 .page-pause-mango-buy:active {
-  border-style: inset !important;
+    border-style: inset !important;
 }
 
 .page-pause-mango-freedom {
-  background: yellow !important;
-  border-color: #aaaaaa !important;
-  font-size: 16px !important;
-  padding: 13px 12px !important;
-  text-align: center !important;
+    background: yellow !important;
+    border-color: #aaaaaa !important;
+    font-size: 16px !important;
+    padding: 13px 12px !important;
+    text-align: center !important;
 }
 
 .page-pause-mango-buy:disabled {
-  cursor: not-allowed !important;
-  opacity: 0.45 !important;
+    cursor: not-allowed !important;
+    opacity: 0.45 !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .page-pause-mango,
-  .page-pause-mango-pop {
-    animation: none !important;
-    transition: none !important;
-  }
+    .page-pause-mango,
+    .page-pause-mango-pop {
+        animation: none !important;
+        transition: none !important;
+    }
 }
 
 /* --- Ad invasion -------------------------------------------------------- */
-/* A youareanidiot.cc-style flood of bouncing fake-ad popups
-   (punishments/ad-invasion.js). Every property is !important: this lands on
-   arbitrary host pages with their own aggressive stylesheets. */
-
-/* No dim, and every click falls straight through to the host page: these are
-   popups, not a modal. The page underneath goes on looking and behaving like a
-   normal page — the only thing wrong with it is the ads all over it, which is
-   exactly the joke. Only the popups themselves take clicks (pointer-events on
-   .page-pause-ad-popup); the overlay is just the box they bounce inside. */
 .page-pause-ad-overlay {
-  background: transparent !important;
-  inset: 0 !important;
-  overflow: hidden !important;
-  pointer-events: none !important;
-  position: fixed !important;
-  z-index: 2147483647 !important;
+    background: transparent !important;
+    inset: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+    position: fixed !important;
+    z-index: 2147483647 !important;
 }
 
-/* The whole window is the close button — clicking anywhere on it dismisses the
-   popup (punishments/ad-invasion.js), so the whole window shows the hand. */
 .page-pause-ad-popup {
-  background: #c0c0c0 !important;
-  border: 2px outset #ffffff !important;
-  cursor: pointer !important;
-  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.55) !important;
-  box-sizing: border-box !important;
-  height: var(--popup-h) !important;
-  left: 0 !important;
-  overflow: hidden !important;
-  pointer-events: auto !important;
-  position: absolute !important;
-  top: 0 !important;
-  transform: translate3d(var(--popup-x), var(--popup-y), 0) !important;
-  width: var(--popup-w) !important;
-  will-change: transform;
+    background: #c0c0c0 !important;
+    border: 2px outset #ffffff !important;
+    cursor: pointer !important;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.55) !important;
+    box-sizing: border-box !important;
+    height: var(--popup-h) !important;
+    left: 0 !important;
+    overflow: hidden !important;
+    pointer-events: auto !important;
+    position: absolute !important;
+    top: 0 !important;
+    transform: translate3d(var(--popup-x), var(--popup-y), 0) !important;
+    width: var(--popup-w) !important;
+    will-change: transform;
 }
 
 .page-pause-ad-titlebar {
-  cursor: pointer !important;
-  display: flex !important;
-  height: 26px !important;
-  user-select: none !important;
+    cursor: pointer !important;
+    display: flex !important;
+    height: 26px !important;
+    user-select: none !important;
 }
 
-/* 3D-ridge strip running the full width, faux-95 window chrome. */
 .page-pause-ad-fake {
-  align-items: center !important;
-  background: linear-gradient(#000080, #0000a0) !important;
-  color: #ffffff !important;
-  display: flex !important;
-  font-family: "Courier New", Courier, monospace !important;
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  gap: 6px !important;
-  justify-content: space-between !important;
-  padding: 0 6px !important;
-  width: 100% !important;
+    align-items: center !important;
+    background: linear-gradient(#000080, #0000a0) !important;
+    color: #ffffff !important;
+    display: flex !important;
+    font-family: "Courier New", Courier, monospace !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    gap: 6px !important;
+    justify-content: space-between !important;
+    padding: 0 6px !important;
+    width: 100% !important;
 }
 
 .page-pause-ad-title {
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
 }
 
 .page-pause-ad-close {
-  align-items: center !important;
-  appearance: none !important;
-  background: #c0c0c0 !important;
-  border: 1px outset #ffffff !important;
-  color: #000000 !important;
-  cursor: pointer !important;
-  display: flex !important;
-  flex-shrink: 0 !important;
-  font-family: "Courier New", Courier, monospace !important;
-  font-size: 14px !important;
-  font-weight: 700 !important;
-  height: 18px !important;
-  justify-content: center !important;
-  line-height: 1 !important;
-  padding: 0 !important;
-  width: 20px !important;
+    align-items: center !important;
+    appearance: none !important;
+    background: #c0c0c0 !important;
+    border: 1px outset #ffffff !important;
+    color: #000000 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    flex-shrink: 0 !important;
+    font-family: "Courier New", Courier, monospace !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    height: 18px !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+    padding: 0 !important;
+    width: 20px !important;
 }
 
 .page-pause-ad-close:hover {
-  background: #ff2d2d !important;
-  color: #ffffff !important;
+    background: #ff2d2d !important;
+    color: #ffffff !important;
 }
 
 .page-pause-ad-close:active {
-  border-style: inset !important;
+    border-style: inset !important;
 }
 
 .page-pause-ad-img {
-  display: block !important;
-  height: calc(100% - 26px) !important;
-  object-fit: cover !important;
-  pointer-events: none !important;
-  width: 100% !important;
+    display: block !important;
+    height: calc(100% - 26px) !important;
+    object-fit: cover !important;
+    pointer-events: none !important;
+    width: 100% !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .page-pause-ad-popup {
-    will-change: auto;
-  }
+    .page-pause-ad-popup {
+        will-change: auto;
+    }
 }
 
-/* --- Capybara tracks ---------------------------------------------------
-   A muddy capybara plods around the page a few steps at a time and stamps
-   prints everywhere; the prints are what has to be scrubbed off
-   (punishments/capybara-tracks.js). Same house rule as the rest of this file:
-   every property spelled out and !important, because this lands on arbitrary
-   host pages with their own aggressive stylesheets. */
-
+/* --- Capybara tracks --------------------------------------------------- */
 .page-pause-capy-overlay {
-  /* No dimming: the page is left looking completely normal, and the only sign
-     anything is wrong is that it does not answer you and there is a capybara
-     walking across it. The overlay is still here, still full-screen, and still
-     eats every click — it is just invisible. */
-  background: transparent !important;
-  cursor: default !important;
-  inset: 0 !important;
-  overflow: hidden !important;
-  position: fixed !important;
-  user-select: none !important;
-  -webkit-user-select: none !important;
-  z-index: 2147483647 !important;
+    background: transparent !important;
+    cursor: default !important;
+    inset: 0 !important;
+    overflow: hidden !important;
+    position: fixed !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    z-index: 2147483647 !important;
 }
 
-/* The cursor hides only once the sponge is in hand and standing in for it. */
 .page-pause-capy-overlay.page-pause-capy-holding {
-  cursor: none !important;
+    cursor: none !important;
 }
 
-/* Prints layer, under the animal, so it always walks over its own trail. */
 .page-pause-capy-floor {
-  inset: 0 !important;
-  pointer-events: none !important;
-  position: absolute !important;
-  z-index: 1 !important;
+    inset: 0 !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    z-index: 1 !important;
 }
 
-/* The whole animal. --x/--y are its feet in viewport pixels: it roams in two
-   dimensions now, so a single horizontal fraction is no longer enough. */
 .page-pause-capy {
-  height: var(--page-pause-capy-h, 300px) !important;
-  left: var(--page-pause-capy-x, -300px) !important;
-  position: absolute !important;
-  top: var(--page-pause-capy-y, 80%) !important;
-  transform: translate3d(-50%, -100%, 0) !important;
-  width: var(--page-pause-capy-w, 226px) !important;
-  will-change: left, top !important;
-  z-index: 2 !important;
+    height: var(--page-pause-capy-h, 300px) !important;
+    left: var(--page-pause-capy-x, -300px) !important;
+    position: absolute !important;
+    top: var(--page-pause-capy-y, 80%) !important;
+    transform: translate3d(-50%, -100%, 0) !important;
+    width: var(--page-pause-capy-w, 226px) !important;
+    will-change: left, top !important;
+    z-index: 2 !important;
 }
 
-/* The sprite is drawn facing right, so walking left means flipping the box. */
 .page-pause-capy.page-pause-capy-flipped {
-  transform: translate3d(-50%, -100%, 0) scaleX(-1) !important;
+    transform: translate3d(-50%, -100%, 0) scaleX(-1) !important;
 }
 
-/* Contact shadow. A sibling of the body, so it stays planted while the animal
-   wobbles above it. */
 .page-pause-capy-shadow {
-  background: radial-gradient(ellipse at center, rgb(20 12 4 / 0.32) 0%, rgb(20 12 4 / 0) 70%) !important;
-  border-radius: 50% !important;
-  bottom: -2px !important;
-  height: 16px !important;
-  left: 50% !important;
-  pointer-events: none !important;
-  position: absolute !important;
-  transform: translateX(-50%) !important;
-  width: 54% !important;
+    background: radial-gradient(
+        ellipse at center,
+        rgb(20 12 4 / 0.32) 0%,
+        rgb(20 12 4 / 0) 70%
+    ) !important;
+    border-radius: 50% !important;
+    bottom: -2px !important;
+    height: 16px !important;
+    left: 50% !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    transform: translateX(-50%) !important;
+    width: 54% !important;
 }
 
-/* The wobble lives on an inner wrapper so it composes with the walk translation. */
 .page-pause-capy-body {
-  inset: 0 !important;
-  /* Confines the mud's multiply blend to the sprite layers, so it stains the
-     capybara instead of blending with the host page behind it. */
-  isolation: isolate !important;
-  position: absolute !important;
-  transform-origin: 50% 100% !important;
+    inset: 0 !important;
+    isolation: isolate !important;
+    position: absolute !important;
+    transform-origin: 50% 100% !important;
 }
 
 .page-pause-capy-walking .page-pause-capy-body {
-  animation: page-pause-capy-wobble 520ms ease-in-out infinite !important;
+    animation: page-pause-capy-wobble 520ms ease-in-out infinite !important;
 }
 
 .page-pause-capy-smug .page-pause-capy-body {
-  animation: page-pause-capy-breathe 2.2s ease-in-out infinite !important;
+    animation: page-pause-capy-breathe 2.2s ease-in-out infinite !important;
 }
 
 @keyframes page-pause-capy-wobble {
-  /* One walk sprite only — the stumble does the work a second frame would do. */
-  0%   { transform: rotate(-7deg) translateY(0)    scaleY(1);    }
-  22%  { transform: rotate(-2deg) translateY(-8px) scaleY(1.02); }
-  50%  { transform: rotate(6deg)  translateY(0)    scaleY(0.97); }
-  72%  { transform: rotate(2deg)  translateY(-6px) scaleY(1.02); }
-  100% { transform: rotate(-7deg) translateY(0)    scaleY(1);    }
+    0% {
+        transform: rotate(-7deg) translateY(0) scaleY(1);
+    }
+    22% {
+        transform: rotate(-2deg) translateY(-8px) scaleY(1.02);
+    }
+    50% {
+        transform: rotate(6deg) translateY(0) scaleY(0.97);
+    }
+    72% {
+        transform: rotate(2deg) translateY(-6px) scaleY(1.02);
+    }
+    100% {
+        transform: rotate(-7deg) translateY(0) scaleY(1);
+    }
 }
 
 @keyframes page-pause-capy-breathe {
-  0%, 100% { transform: rotate(-1.5deg) scale(1);           }
-  50%      { transform: rotate(1.5deg)  scale(1.03, 0.985); }
+    0%,
+    100% {
+        transform: rotate(-1.5deg) scale(1);
+    }
+    50% {
+        transform: rotate(1.5deg) scale(1.03, 0.985);
+    }
 }
 
-/* Flipping is handled on the outer box (see .page-pause-capy-flipped) so the
-   shadow and mud flip with the sprite rather than sliding off it. */
 .page-pause-capy-sprite {
-  filter: drop-shadow(0 12px 18px rgb(0 0 0 / 0.45)) !important;
-  height: 100% !important;
-  inset: 0 !important;
-  object-fit: contain !important;
-  /* Without these the host page lets you pick the capybara up and drag it out
-     as an image, which ends the scrub mid-stroke. */
-  pointer-events: none !important;
-  position: absolute !important;
-  transition: opacity 180ms ease !important;
-  -webkit-user-drag: none !important;
-  user-drag: none !important;
-  width: 100% !important;
+    filter: drop-shadow(0 12px 18px rgb(0 0 0 / 0.45)) !important;
+    height: 100% !important;
+    inset: 0 !important;
+    object-fit: contain !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    transition: opacity 180ms ease !important;
+    -webkit-user-drag: none !important;
+    user-drag: none !important;
+    width: 100% !important;
 }
 
 .page-pause-capy-sprite.page-pause-capy-hidden {
-  opacity: 0 !important;
+    opacity: 0 !important;
 }
 
-/* Mud sits exactly over the sprite box and stays there for good — the animal
-   is the source of the mess, not the thing being cleaned. Multiply is what
-   makes it read as staining rather than as blobs stuck on top — the fur's own
-   colour still shows through the dirt. */
 .page-pause-capy-mud {
-  height: 100% !important;
-  inset: 0 !important;
-  mix-blend-mode: multiply !important;
-  pointer-events: none !important;
-  position: absolute !important;
-  transition: opacity 400ms ease !important;
-  width: 100% !important;
+    height: 100% !important;
+    inset: 0 !important;
+    mix-blend-mode: multiply !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    transition: opacity 400ms ease !important;
+    width: 100% !important;
 }
 
-/* The sponge is a physics object first and a cursor second: it falls in, lands
-   on the floor and waits there until picked up. Its transform is driven
-   entirely from JS, so nothing here may set one. */
 .page-pause-capy-sponge {
-  filter: drop-shadow(0 10px 14px rgb(0 0 0 / 0.45)) !important;
-  height: 120px !important;
-  left: 0 !important;
-  object-fit: contain !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-  position: absolute !important;
-  top: 0 !important;
-  -webkit-user-drag: none !important;
-  user-drag: none !important;
-  width: 120px !important;
-  z-index: 3 !important;
+    filter: drop-shadow(0 10px 14px rgb(0 0 0 / 0.45)) !important;
+    height: 120px !important;
+    left: 0 !important;
+    object-fit: contain !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    top: 0 !important;
+    -webkit-user-drag: none !important;
+    user-drag: none !important;
+    width: 120px !important;
+    z-index: 3 !important;
 }
 
 .page-pause-capy-sponge.page-pause-capy-visible {
-  opacity: 1 !important;
+    opacity: 1 !important;
 }
 
-/* Only a sponge that has come to rest is clickable. While it is still falling
-   it stays inert, otherwise the cursor flickers between grab and default every
-   time the sponge passes under the pointer on its way down. */
 .page-pause-capy-sponge.page-pause-capy-pickable {
-  /* Breathing halo, so a sponge lying on the floor reads as "pick me up". */
-  animation: page-pause-capy-beckon 1.6s ease-in-out infinite !important;
-  cursor: grab !important;
-  pointer-events: auto !important;
+    animation: page-pause-capy-beckon 1.6s ease-in-out infinite !important;
+    cursor: grab !important;
+    pointer-events: auto !important;
 }
 
 .page-pause-capy-sponge.page-pause-capy-pickable:active {
-  cursor: grabbing !important;
+    cursor: grabbing !important;
 }
 
 @keyframes page-pause-capy-beckon {
-  0%, 100% { filter: drop-shadow(0 10px 14px rgb(0 0 0 / 0.45)); }
-  50%      { filter: drop-shadow(0 10px 14px rgb(0 0 0 / 0.45)) drop-shadow(0 0 14px rgb(255 226 150 / 0.9)); }
+    0%,
+    100% {
+        filter: drop-shadow(0 10px 14px rgb(0 0 0 / 0.45));
+    }
+    50% {
+        filter: drop-shadow(0 10px 14px rgb(0 0 0 / 0.45))
+            drop-shadow(0 0 14px rgb(255 226 150 / 0.9));
+    }
 }
 
 .page-pause-capy-bubble {
-  animation: page-pause-capy-bubble-rise 900ms ease-out forwards !important;
-  background: radial-gradient(circle at 32% 30%, rgb(255 255 255 / 0.95), rgb(190 225 255 / 0.35) 60%, rgb(190 225 255 / 0) 72%) !important;
-  border: 1px solid rgb(255 255 255 / 0.6) !important;
-  border-radius: 50% !important;
-  pointer-events: none !important;
-  position: absolute !important;
-  z-index: 4 !important;
+    animation: page-pause-capy-bubble-rise 900ms ease-out forwards !important;
+    background: radial-gradient(
+        circle at 32% 30%,
+        rgb(255 255 255 / 0.95),
+        rgb(190 225 255 / 0.35) 60%,
+        rgb(190 225 255 / 0) 72%
+    ) !important;
+    border: 1px solid rgb(255 255 255 / 0.6) !important;
+    border-radius: 50% !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    z-index: 4 !important;
 }
 
 @keyframes page-pause-capy-bubble-rise {
-  0%   { transform: translate(-50%, -50%) scale(0.4); opacity: 0.9; }
-  100% { transform: translate(-50%, calc(-50% - 90px)) scale(1.1); opacity: 0; }
+    0% {
+        transform: translate(-50%, -50%) scale(0.4);
+        opacity: 0.9;
+    }
+    100% {
+        transform: translate(-50%, calc(-50% - 90px)) scale(1.1);
+        opacity: 0;
+    }
 }
 
-/* Muddy prints: a pad and three toes, sized off the animal at drop time and
-   rotated to the direction it was walking. They never dry on their own — the
-   only thing that removes one is the sponge, which is the entire chore. */
 .page-pause-capy-print {
-  animation: page-pause-capy-print-stamp 260ms ease-out !important;
-  background-image:
-    radial-gradient(ellipse 15% 17% at 20% 24%, rgb(48 29 12 / 0.92) 0 82%, rgb(48 29 12 / 0) 100%),
-    radial-gradient(ellipse 15% 17% at 50% 13%, rgb(48 29 12 / 0.92) 0 82%, rgb(48 29 12 / 0) 100%),
-    radial-gradient(ellipse 15% 17% at 80% 24%, rgb(48 29 12 / 0.92) 0 82%, rgb(48 29 12 / 0) 100%),
-    radial-gradient(ellipse 32% 30% at 50% 68%, rgb(42 25 10 / 0.94) 0 80%, rgb(42 25 10 / 0) 100%) !important;
-  background-repeat: no-repeat !important;
-  /* Softness comes from the gradient stops rather than a blur filter: a full
-     page of tracks is several hundred of these, and several hundred filtered
-     layers is a compositing bill the host page should not have to pay. */
-  pointer-events: none !important;
-  position: absolute !important;
-  transform:
-    translate(-50%, -50%)
-    rotate(var(--page-pause-print-r, 0deg))
-    scale(var(--page-pause-print-s, 1)) !important;
+    animation: page-pause-capy-print-stamp 260ms ease-out !important;
+    background-image:
+        radial-gradient(
+            ellipse 15% 17% at 20% 24%,
+            rgb(48 29 12 / 0.92) 0 82%,
+            rgb(48 29 12 / 0) 100%
+        ),
+        radial-gradient(
+            ellipse 15% 17% at 50% 13%,
+            rgb(48 29 12 / 0.92) 0 82%,
+            rgb(48 29 12 / 0) 100%
+        ),
+        radial-gradient(
+            ellipse 15% 17% at 80% 24%,
+            rgb(48 29 12 / 0.92) 0 82%,
+            rgb(48 29 12 / 0) 100%
+        ),
+        radial-gradient(
+            ellipse 32% 30% at 50% 68%,
+            rgb(42 25 10 / 0.94) 0 80%,
+            rgb(42 25 10 / 0) 100%
+        ) !important;
+    background-repeat: no-repeat !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    transform: translate(-50%, -50%) rotate(var(--page-pause-print-r, 0deg))
+        scale(var(--page-pause-print-s, 1)) !important;
 }
 
 @keyframes page-pause-capy-print-stamp {
-  /* Pressed into the page rather than faded in: it lands wet and stays. */
-  0%   { opacity: 0; }
-  100% { opacity: 1; }
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
-/* Counter and bar, pinned top-centre: the floor is the play area now, so the
-   bottom of the page is no place to park the HUD. */
 .page-pause-capy-hud {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  gap: 8px !important;
-  left: 50% !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-  position: absolute !important;
-  top: 26px !important;
-  transform: translateX(-50%) !important;
-  transition: opacity 250ms ease !important;
-  z-index: 5 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 8px !important;
+    left: 50% !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    top: 26px !important;
+    transform: translateX(-50%) !important;
+    transition: opacity 250ms ease !important;
+    z-index: 5 !important;
 }
 
 .page-pause-capy-hud.page-pause-capy-visible {
-  opacity: 1 !important;
+    opacity: 1 !important;
 }
 
-/* Carries its own dark pill: with the overlay transparent, this text can land
-   on a white page just as easily as a black one. */
 .page-pause-capy-count {
-  background: rgb(24 14 6 / 0.88) !important;
-  border-radius: 999px !important;
-  box-shadow: 0 6px 18px rgb(0 0 0 / 0.35) !important;
-  color: #ffe6c2 !important;
-  font: 600 15px/1.2 system-ui, -apple-system, "Segoe UI", sans-serif !important;
-  letter-spacing: 0.01em !important;
-  padding: 9px 18px !important;
-  white-space: nowrap !important;
+    background: rgb(24 14 6 / 0.88) !important;
+    border-radius: 999px !important;
+    box-shadow: 0 6px 18px rgb(0 0 0 / 0.35) !important;
+    color: #ffe6c2 !important;
+    font:
+        600 15px/1.2 system-ui,
+        -apple-system,
+        "Segoe UI",
+        sans-serif !important;
+    letter-spacing: 0.01em !important;
+    padding: 9px 18px !important;
+    white-space: nowrap !important;
 }
 
-/* Hidden until the capybara has finished and there is a total to count against
-   — while it is still walking, nobody knows how bad this is going to be. */
 .page-pause-capy-progress {
-  background: rgb(24 14 6 / 0.88) !important;
-  border: 2px solid rgb(24 14 6 / 0.88) !important;
-  border-radius: 999px !important;
-  box-shadow: 0 6px 18px rgb(0 0 0 / 0.35) !important;
-  height: 14px !important;
-  overflow: hidden !important;
-  position: relative !important;
-  transition: opacity 250ms ease !important;
-  width: min(420px, 60vw) !important;
+    background: rgb(24 14 6 / 0.88) !important;
+    border: 2px solid rgb(24 14 6 / 0.88) !important;
+    border-radius: 999px !important;
+    box-shadow: 0 6px 18px rgb(0 0 0 / 0.35) !important;
+    height: 14px !important;
+    overflow: hidden !important;
+    position: relative !important;
+    transition: opacity 250ms ease !important;
+    width: min(420px, 60vw) !important;
 }
 
 .page-pause-capy-progress.page-pause-capy-hidden {
-  opacity: 0 !important;
+    opacity: 0 !important;
 }
 
 .page-pause-capy-progress-fill {
-  background: linear-gradient(90deg, #7ec8ff, #d8f0ff) !important;
-  border-radius: 999px !important;
-  height: 100% !important;
-  transition: width 120ms linear !important;
-  width: 0% !important;
+    background: linear-gradient(90deg, #7ec8ff, #d8f0ff) !important;
+    border-radius: 999px !important;
+    height: 100% !important;
+    transition: width 120ms linear !important;
+    width: 0% !important;
 }

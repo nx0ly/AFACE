@@ -1,130 +1,195 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Page Pause Games</title>
-    <link rel="stylesheet" href="../theme.css" />
-    <style>
-      /* 2000s Retro Styles */
-      body {
-        background-color: var(--color-parchment);
-        background-image: url('/images/diomedes.jpg');
-        background-size: cover;
-        background-attachment: fixed;
-        color: var(--color-brown);
-        font-family: "Times New Roman", Times, serif;
-        margin: 0;
-        padding: 0;
-        overflow-x: hidden;
-      }
-      .retro-container {
-        width: 800px;
-        margin: 40px auto;
-        background-color: var(--color-cream);
-        border: 5px outset var(--color-brown);
-        padding: 20px;
-        text-align: center;
-        box-shadow: 10px 10px 0px #000;
-      }
-      h1 {
-        font-size: 32px;
-        color: #ff0000;
-        text-decoration: underline;
-      }
-      a {
-        color: #0000ee;
-        text-decoration: underline;
-        font-weight: bold;
-        font-size: 24px;
-        display: block;
-        margin: 20px 0;
-      }
-      a:hover {
-        background-color: yellow;
-      }
-      a:visited {
-        color: #551a8b;
-      }
-      hr {
-        border: 0;
-        border-bottom: 3px dashed var(--color-brown);
-        margin: 20px 0;
-      }
-      
-      /* Falling Arepas Animation */
-      .falling-arepa {
-        position: fixed;
-        top: -100px;
-        width: 64px;
-        height: 64px;
-        background-image: url('/images/arepa.png');
-        background-size: cover;
-        animation: fall linear infinite;
-        z-index: 1000;
-        pointer-events: none;
-        image-rendering: pixelated;
-      }
-      @keyframes fall {
-        0% { transform: translateY(-100px) rotate(0deg); }
-        100% { transform: translateY(110vh) rotate(360deg); }
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Falling Arepas -->
-    <div class="falling-arepa" style="left: 5%; animation-duration: 4s; animation-delay: 0s;"></div>
-    <div class="falling-arepa" style="left: 15%; animation-duration: 5s; animation-delay: 1s;"></div>
-    <div class="falling-arepa" style="left: 10%; animation-duration: 3.5s; animation-delay: 2.5s;"></div>
-    <div class="falling-arepa" style="right: 5%; animation-duration: 4.5s; animation-delay: 0.5s;"></div>
-    <div class="falling-arepa" style="right: 15%; animation-duration: 3.8s; animation-delay: 1.5s;"></div>
-    <div class="falling-arepa" style="right: 10%; animation-duration: 5.2s; animation-delay: 3s;"></div>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Page Pause Games</title>
+        <link rel="stylesheet" href="../theme.css" />
+        <style>
+            body {
+                background-color: var(--color-parchment);
+                background-image: url("/images/diomedes.jpg");
+                background-size: cover;
+                background-attachment: fixed;
+                color: var(--color-brown);
+                font-family: "Times New Roman", Times, serif;
+                margin: 0;
+                padding: 0;
+                overflow-x: hidden;
+            }
+            .retro-container {
+                width: 800px;
+                margin: 40px auto;
+                background-color: var(--color-cream);
+                border: 5px outset var(--color-brown);
+                padding: 20px;
+                text-align: center;
+                box-shadow: 10px 10px 0px #000;
+            }
+            h1 {
+                font-size: 32px;
+                color: #ff0000;
+                text-decoration: underline;
+            }
+            a {
+                color: #0000ee;
+                text-decoration: underline;
+                font-weight: bold;
+                font-size: 24px;
+                display: block;
+                margin: 20px 0;
+            }
+            a:hover {
+                background-color: yellow;
+            }
+            a:visited {
+                color: #551a8b;
+            }
+            hr {
+                border: 0;
+                border-bottom: 3px dashed var(--color-brown);
+                margin: 20px 0;
+            }
 
-    <!-- Falling Arepas -->
-    <div class="falling-arepa" style="left: 5%; animation-duration: 4s; animation-delay: 0s;"></div>
-    <div class="falling-arepa" style="left: 15%; animation-duration: 5s; animation-delay: 1s;"></div>
-    <div class="falling-arepa" style="left: 10%; animation-duration: 3.5s; animation-delay: 2.5s;"></div>
-    <div class="falling-arepa" style="right: 5%; animation-duration: 4.5s; animation-delay: 0.5s;"></div>
-    <div class="falling-arepa" style="right: 15%; animation-duration: 3.8s; animation-delay: 1.5s;"></div>
-    <div class="falling-arepa" style="right: 10%; animation-duration: 5.2s; animation-delay: 3s;"></div>
-    <div class="falling-arepa" style="left: 25%; animation-duration: 4.2s; animation-delay: 0.2s;"></div>
-    <div class="falling-arepa" style="left: 35%; animation-duration: 5.5s; animation-delay: 1.2s;"></div>
-    <div class="falling-arepa" style="left: 45%; animation-duration: 3.7s; animation-delay: 2.1s;"></div>
-    <div class="falling-arepa" style="right: 25%; animation-duration: 4.8s; animation-delay: 0.8s;"></div>
-    <div class="falling-arepa" style="right: 35%; animation-duration: 3.9s; animation-delay: 1.7s;"></div>
-    <div class="falling-arepa" style="right: 45%; animation-duration: 5.1s; animation-delay: 2.9s;"></div>
+            .falling-arepa {
+                position: fixed;
+                top: -100px;
+                width: 64px;
+                height: 64px;
+                background-image: url("/images/arepa.png");
+                background-size: cover;
+                animation: fall linear infinite;
+                z-index: 1000;
+                pointer-events: none;
+                image-rendering: pixelated;
+            }
+            @keyframes fall {
+                0% {
+                    transform: translateY(-100px) rotate(0deg);
+                }
+                100% {
+                    transform: translateY(110vh) rotate(360deg);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- WHY DID WE DO THIS -->
+        <!-- this is what happens when you code at 3am sleep deprived -->
+        <div
+            class="falling-arepa"
+            style="left: 5%; animation-duration: 4s; animation-delay: 0s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="left: 15%; animation-duration: 5s; animation-delay: 1s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="left: 10%; animation-duration: 3.5s; animation-delay: 2.5s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="right: 5%; animation-duration: 4.5s; animation-delay: 0.5s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="right: 15%; animation-duration: 3.8s; animation-delay: 1.5s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="right: 10%; animation-duration: 5.2s; animation-delay: 3s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="left: 5%; animation-duration: 4s; animation-delay: 0s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="left: 15%; animation-duration: 5s; animation-delay: 1s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="left: 10%; animation-duration: 3.5s; animation-delay: 2.5s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="right: 5%; animation-duration: 4.5s; animation-delay: 0.5s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="right: 15%; animation-duration: 3.8s; animation-delay: 1.5s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="right: 10%; animation-duration: 5.2s; animation-delay: 3s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="left: 25%; animation-duration: 4.2s; animation-delay: 0.2s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="left: 35%; animation-duration: 5.5s; animation-delay: 1.2s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="left: 45%; animation-duration: 3.7s; animation-delay: 2.1s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="right: 25%; animation-duration: 4.8s; animation-delay: 0.8s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="right: 35%; animation-duration: 3.9s; animation-delay: 1.7s"
+        ></div>
+        <div
+            class="falling-arepa"
+            style="right: 45%; animation-duration: 5.1s; animation-delay: 2.9s"
+        ></div>
 
-    <div class="retro-container">
-      <marquee scrollamount="10" behavior="alternate">
-        <h1>*** PLAY GAMES TO EARN COFFEE BEANS ***</h1>
-      </marquee>
-      
-      <hr />
-      
-      <!-- Fake Ad Button Outside Main Box -->
-      <div style="text-align: center; margin: 20px auto;">
-        <a href="#" style="display: inline-block;">
-          <img src="/images/hot_capy_ad.jpg" alt="HOT CAPY AD" style="max-width: 100%; border: 5px outset silver; cursor: pointer;" />
-        </a>
-      </div>
+        <div class="retro-container">
+            <marquee scrollamount="10" behavior="alternate">
+                <h1>*** PLAY GAMES TO EARN COFFEE BEANS ***</h1>
+            </marquee>
 
-      <hr />
-      
-      <h2>CHOOSE A GAME:</h2>
-      
-      <a href="minigames/tejo.html">1. TEJO (Earn 1 Bean per hit!)</a>
-      
-      <a href="minigames/roullete_wheel.html">2. COLOR ROULETTE (Gamble your beans!)</a>
-      
-      <a href="minigames/adivina.html">3. GRANDAMA GAME</a>
+            <hr />
 
-      <hr />
-      
-      <p style="font-size: 14px; color: #666;">Page Pause 2026</p>
-    </div>
-    
-    <script src="cursor.js"></script>
-    <script src="global_ui.js"></script>
-    <script src="hot_capy.js"></script>
-  </body>
+            <!-- HOT CAPYBARAS!!!! -->
+            <div style="text-align: center; margin: 20px auto">
+                <a href="#" style="display: inline-block">
+                    <img
+                        src="/images/hot_capy_ad.jpg"
+                        alt="HOT CAPY AD"
+                        style="
+                            max-width: 100%;
+                            border: 5px outset silver;
+                            cursor: pointer;
+                        "
+                    />
+                </a>
+            </div>
+
+            <hr />
+
+            <h2>CHOOSE A GAME:</h2>
+
+            <a href="minigames/tejo.html">1. TEJO (Earn 1 Bean per hit!)</a>
+
+            <a href="minigames/roullete_wheel.html"
+                >2. COLOR ROULETTE (Gamble your beans!)</a
+            >
+
+            <a href="minigames/adivina.html">3. GRANDAMA GAME</a>
+
+            <hr />
+
+            <p style="font-size: 14px; color: #666">Page Pause 2026</p>
+        </div>
+
+        <script src="cursor.js"></script>
+        <script src="global_ui.js"></script>
+        <script src="hot_capy.js"></script>
+    </body>
 </html>

@@ -1,15 +1,5 @@
 #!/usr/bin/env bun
-/**
- * Pull rendered assets out of the Macondo Figma file via the REST API.
- *
- * The REST API works on free Figma plans — no Dev seat needed. Create a token
- * at Figma → Settings → Security → Personal access tokens (scope: File content,
- * read-only), then export it in your shell. Never commit it.
- *
- *   export FIGMA_TOKEN=figd_...
- *   bun run assets:figma -- --list
- *   bun run assets:figma -- --node 12:345 --out src/images/mango.png
- */
+/* PREGENERATED FILE - DO NOT MODIFY */
 
 const DEFAULT_FILE = "gkAQUe0GyWZQ1dwZueaXzy"; // Macondo-Assets-Public
 
