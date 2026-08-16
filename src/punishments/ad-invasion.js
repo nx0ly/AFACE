@@ -19,9 +19,18 @@ const SPAWN_PER_CLOSE = 0;
 const POPUP_CAP = 60;
 // Starting wave — enough to feel instantly overwhelming, not enough to lock up.
 const INITIAL_POPUPS = 20;
-const POPUP_MIN = 200;
+// Put back this many when the pass fails to save, so there is always something
+// left to close instead of an empty page that never lets you out.
+const RETRY_POPUPS = 3;
+// Popups are sized to the viewport (see popupSideFor) so a full wave always
+// fits on screen with room to click each one. These are just the end stops.
+const POPUP_MIN = 120;
 const POPUP_MAX = 300;
 const SPEED = 140; // px/s, uniform; bounce off walls and each other
+// Fallback viewport used when the tab has no layout yet — a background tab
+// reports innerWidth 0, and without this every popup lands on the same pixel.
+const FALLBACK_VIEW_W = 1024;
+const FALLBACK_VIEW_H = 768;
 
 const TITLES = [
   '🔥 HOT CAPYBARAS IN YOUR AREA',
@@ -49,9 +58,80 @@ const TITLES = [
  * @property {number} dragOffsetY
  */
 
+/** @param {number} value @param {number} min @param {number} max @returns {number} */
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
 /** @param {number} min @param {number} max @returns {number} */
 function randomBetween(min, max) {
   return min + Math.random() * (max - min);
+}
+
+/**
+ * The viewport we lay popups out in. A tab that has never been painted (opened
+ * in the background, or still loading) reports innerWidth/innerHeight as 0, and
+ * every popup would then be clamped onto the same corner pixel — a 20-deep
+ * stack where only the top one can be clicked. `known` says whether these are
+ * real measurements, so the caller can re-scatter once the tab wakes up.
+ * @returns {{ w: number, h: number, known: boolean }}
+ */
+function getViewport() {
+  const w = window.innerWidth || document.documentElement?.clientWidth || 0;
+  const h = window.innerHeight || document.documentElement?.clientHeight || 0;
+
+  return w > 0 && h > 0
+    ? { w, h, known: true }
+    : { w: FALLBACK_VIEW_W, h: FALLBACK_VIEW_H, known: false };
+}
+
+/**
+ * Side length for one popup: small enough that a whole wave fits on screen
+ * without burying itself, clamped to the sizes that still read as a fake ad.
+ * @param {{ w: number, h: number }} view
+ * @param {number} count
+ * @returns {number}
+ */
+function popupSideFor(view, count) {
+  // Roughly `count` cells tiled over the viewport; a popup fills most of one.
+  const cell = Math.sqrt((view.w * view.h) / Math.max(1, count));
+  return Math.max(POPUP_MIN, Math.min(POPUP_MAX, Math.round(cell * 0.8)));
+}
+
+/**
+ * Jittered grid slots covering the viewport, shuffled so consecutive spawns
+ * don't march in reading order. Popups start apart instead of in a heap.
+ * @param {{ w: number, h: number }} view
+ * @param {number} count
+ * @param {number} side
+ * @returns {{ x: number, y: number }[]}
+ */
+function scatterSlots(view, count, side) {
+  const columns = Math.max(1, Math.ceil(Math.sqrt((count * view.w) / Math.max(1, view.h))));
+  const rows = Math.max(1, Math.ceil(count / columns));
+  const cellW = view.w / columns;
+  const cellH = view.h / rows;
+  /** @type {{ x: number, y: number }[]} */
+  const slots = [];
+
+  for (let index = 0; index < count; index += 1) {
+    const column = index % columns;
+    const row = Math.floor(index / columns) % rows;
+    const slackX = Math.max(0, cellW - side);
+    const slackY = Math.max(0, cellH - side);
+
+    slots.push({
+      x: Math.min(Math.max(0, view.w - side), column * cellW + randomBetween(0, slackX)),
+      y: Math.min(Math.max(0, view.h - side), row * cellH + randomBetween(0, slackY)),
+    });
+  }
+
+  for (let i = slots.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [slots[i], slots[j]] = [slots[j], slots[i]];
+  }
+
+  return slots;
 }
 
 /** @param {import('./registry.js').PunishmentContext} context */
@@ -72,28 +152,34 @@ function mount(context) {
   let animationFrame = 0;
   let running = true;
   let finished = false;
+  let view = getViewport();
+  let side = popupSideFor(view, INITIAL_POPUPS);
 
   overlay.className = 'page-pause-ad-overlay';
   document.body.append(overlay);
-
-  const status = document.createElement('div');
-  status.className = 'page-pause-ad-status';
-  status.textContent = `Close ${TARGET_CLOSES} popups to escape · ${closedCount}/${TARGET_CLOSES}`;
-  overlay.append(status);
 
   const finish = async () => {
     if (finished) return;
     finished = true;
     running = false;
     window.cancelAnimationFrame(animationFrame);
-    status.textContent = `All cleared · returning to your page…`;
 
     try {
       await context.grantPass();
     } catch {
+      // The pass did not save, so the sentence is not over. There is no counter
+      // left to explain that, and the flood has already drained — so put a small
+      // wave back on screen and let closing it retry. Without this you are left
+      // on a silent, empty page with nothing to click.
       finished = false;
       running = true;
-      status.textContent = `Could not save your pass — close another popup.`;
+      closedCount = TARGET_CLOSES - RETRY_POPUPS;
+      side = popupSideFor(view, RETRY_POPUPS);
+
+      const slots = scatterSlots(view, RETRY_POPUPS, side);
+
+      for (let i = 0; i < RETRY_POPUPS; i += 1) createPopup(i, slots[i].x, slots[i].y);
+      last = performance.now();
       animationFrame = window.requestAnimationFrame(animate);
     }
   };
@@ -112,10 +198,10 @@ function mount(context) {
     const close = document.createElement('button');
     const img = document.createElement('img');
 
-    const w = Math.round(randomBetween(POPUP_MIN, POPUP_MAX));
-    const h = Math.round(randomBetween(POPUP_MIN, POPUP_MAX));
-    const x = spawnX ?? randomBetween(8, Math.max(8, window.innerWidth - w - 8));
-    const y = spawnY ?? randomBetween(8, Math.max(8, window.innerHeight - h - 8));
+    const w = Math.round(side * randomBetween(0.85, 1));
+    const h = Math.round(side * randomBetween(0.85, 1));
+    const x = clamp(spawnX ?? randomBetween(0, Math.max(0, view.w - w)), 0, Math.max(0, view.w - w));
+    const y = clamp(spawnY ?? randomBetween(0, Math.max(0, view.h - h)), 0, Math.max(0, view.h - h));
 
     // Pick a random direction; never pure horizontal/vertical so they don't
     // bounce forever along one axis.
@@ -162,6 +248,7 @@ function mount(context) {
       dragOffsetY: 0,
     };
 
+    // Anywhere on the window closes it — title bar, ad image, the × button.
     popup.addEventListener('pointerdown', (event) => {
       if (!event.isTrusted) return;
       event.stopPropagation();
@@ -190,10 +277,6 @@ function mount(context) {
     removePopup(state);
 
     closedCount += 1;
-    status.textContent =
-      closedCount >= TARGET_CLOSES
-        ? `All cleared · returning to your page…`
-        : `Close ${TARGET_CLOSES} popups to escape · ${closedCount}/${TARGET_CLOSES}`;
 
     if (closedCount >= TARGET_CLOSES) {
       // Drain the flood: everything left leaves at once, then we are done.
@@ -206,14 +289,8 @@ function mount(context) {
       for (let i = 0; i < SPAWN_PER_CLOSE; i += 1) {
         createPopup(
           popups.length + i,
-          randomBetween(
-            Math.max(0, centerX - 120),
-            Math.min(window.innerWidth - POPUP_MIN, centerX + 120),
-          ),
-          randomBetween(
-            Math.max(0, centerY - 120),
-            Math.min(window.innerHeight - POPUP_MIN, centerY + 120),
-          ),
+          randomBetween(centerX - side, centerX + side),
+          randomBetween(centerY - side, centerY + side),
         );
       }
     }
@@ -221,8 +298,8 @@ function mount(context) {
 
   /** @param {Popup} state */
   function bounceWalls(state) {
-    const maxX = Math.max(0, window.innerWidth - state.w);
-    const maxY = Math.max(0, window.innerHeight - state.h);
+    const maxX = Math.max(0, view.w - state.w);
+    const maxY = Math.max(0, view.h - state.h);
 
     if (state.x < 0) {
       state.x = 0;
@@ -241,6 +318,82 @@ function mount(context) {
     }
   }
 
+  /**
+   * Push overlapping popups apart and swap the velocities along the axis they
+   * met on. Without this they drift straight through each other and settle into
+   * stacks, where every popup but the top one is unclickable.
+   */
+  function bouncePopups() {
+    for (let i = 0; i < popups.length; i += 1) {
+      for (let j = i + 1; j < popups.length; j += 1) {
+        const a = popups[i];
+        const b = popups[j];
+        const overlapX = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x);
+        const overlapY = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
+
+        if (overlapX <= 0 || overlapY <= 0) continue;
+
+        // Separate along whichever axis they are least buried in — that is the
+        // side they came in through.
+        if (overlapX < overlapY) {
+          const push = (overlapX / 2) * (a.x < b.x ? -1 : 1);
+          a.x += push;
+          b.x -= push;
+          [a.vx, b.vx] = [b.vx, a.vx];
+        } else {
+          const push = (overlapY / 2) * (a.y < b.y ? -1 : 1);
+          a.y += push;
+          b.y -= push;
+          [a.vy, b.vy] = [b.vy, a.vy];
+        }
+
+        bounceWalls(a);
+        bounceWalls(b);
+      }
+    }
+  }
+
+  /**
+   * Re-lay the whole flood over `view`. Used when the tab finally reports a real
+   * viewport, so a wave that spawned blind doesn't stay heaped in the corner.
+   */
+  function rescatter() {
+    side = popupSideFor(view, Math.max(1, popups.length));
+
+    const slots = scatterSlots(view, popups.length, side);
+
+    popups.forEach((state, index) => {
+      state.w = Math.round(side * randomBetween(0.85, 1));
+      state.h = Math.round(side * randomBetween(0.85, 1));
+      state.x = clamp(slots[index].x, 0, Math.max(0, view.w - state.w));
+      state.y = clamp(slots[index].y, 0, Math.max(0, view.h - state.h));
+      state.element.style.setProperty('--popup-w', `${state.w}px`, 'important');
+      state.element.style.setProperty('--popup-h', `${state.h}px`, 'important');
+      state.element.style.setProperty('--popup-x', `${state.x}px`, 'important');
+      state.element.style.setProperty('--popup-y', `${state.y}px`, 'important');
+    });
+  }
+
+  /**
+   * Swap a guessed viewport for a measured one the moment the tab can tell us,
+   * re-laying the flood over the real screen. A tab that mounted hidden gets no
+   * animation frames at all, so this also runs off visibilitychange/resize —
+   * otherwise the fallback layout would survive, with its bottom row parked
+   * below the fold where it can never be clicked.
+   * @returns {boolean} Whether the layout was rebuilt.
+   */
+  function refreshViewport() {
+    if (view.known) return false;
+
+    const measured = getViewport();
+
+    if (!measured.known) return false;
+
+    view = measured;
+    rescatter();
+    return true;
+  }
+
   let last = performance.now();
 
   /** @param {number} now */
@@ -250,13 +403,19 @@ function mount(context) {
     const delta = Math.min(0.05, (now - last) / 1_000);
     last = now;
 
+    refreshViewport();
+
     for (const state of popups) {
       if (state.dragging) continue;
 
       state.x += state.vx * delta;
       state.y += state.vy * delta;
       bounceWalls(state);
+    }
 
+    bouncePopups();
+
+    for (const state of popups) {
       state.element.style.setProperty('--popup-x', `${state.x}px`, 'important');
       state.element.style.setProperty('--popup-y', `${state.y}px`, 'important');
     }
@@ -264,14 +423,31 @@ function mount(context) {
     animationFrame = window.requestAnimationFrame(animate);
   }
 
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) refreshViewport();
+  });
+
   window.addEventListener('resize', () => {
+    if (refreshViewport()) return;
+
+    const measured = getViewport();
+
+    if (!measured.known) return;
+
+    view = measured;
     for (const state of popups) {
-      state.x = Math.min(state.x, Math.max(0, window.innerWidth - state.w));
-      state.y = Math.min(state.y, Math.max(0, window.innerHeight - state.h));
+      state.x = clamp(state.x, 0, Math.max(0, view.w - state.w));
+      state.y = clamp(state.y, 0, Math.max(0, view.h - state.h));
+      state.element.style.setProperty('--popup-x', `${state.x}px`, 'important');
+      state.element.style.setProperty('--popup-y', `${state.y}px`, 'important');
     }
   });
 
-  for (let i = 0; i < INITIAL_POPUPS; i += 1) createPopup(i);
+  const initialSlots = scatterSlots(view, INITIAL_POPUPS, side);
+
+  for (let i = 0; i < INITIAL_POPUPS; i += 1) {
+    createPopup(i, initialSlots[i].x, initialSlots[i].y);
+  }
   animationFrame = window.requestAnimationFrame(animate);
 }
 

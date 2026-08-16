@@ -321,8 +321,13 @@
    (punishments/ad-invasion.js). Every property is !important: this lands on
    arbitrary host pages with their own aggressive stylesheets. */
 
+/* No dim, and every click falls straight through to the host page: these are
+   popups, not a modal. The page underneath goes on looking and behaving like a
+   normal page — the only thing wrong with it is the ads all over it, which is
+   exactly the joke. Only the popups themselves take clicks (pointer-events on
+   .page-pause-ad-popup); the overlay is just the box they bounce inside. */
 .page-pause-ad-overlay {
-  background: rgba(0, 0, 0, 0.55) !important;
+  background: transparent !important;
   inset: 0 !important;
   overflow: hidden !important;
   pointer-events: none !important;
@@ -330,28 +335,12 @@
   z-index: 2147483647 !important;
 }
 
-/* Fixed-position status counter pinned to the top centre, above every popup.
-   pointer-events:none keeps it from intercepting close-button clicks. */
-.page-pause-ad-status {
-  background: rgba(0, 0, 0, 0.78) !important;
-  border-radius: 0 0 12px 12px !important;
-  color: #ffffff !important;
-  font-family: "Courier New", Courier, monospace !important;
-  font-size: 14px !important;
-  font-weight: 700 !important;
-  left: 50% !important;
-  padding: 8px 18px !important;
-  pointer-events: none !important;
-  position: fixed !important;
-  top: 0 !important;
-  transform: translateX(-50%) !important;
-  white-space: nowrap !important;
-  z-index: 2147483646 !important;
-}
-
+/* The whole window is the close button — clicking anywhere on it dismisses the
+   popup (punishments/ad-invasion.js), so the whole window shows the hand. */
 .page-pause-ad-popup {
   background: #c0c0c0 !important;
   border: 2px outset #ffffff !important;
+  cursor: pointer !important;
   box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.55) !important;
   box-sizing: border-box !important;
   height: var(--popup-h) !important;
@@ -366,14 +355,10 @@
 }
 
 .page-pause-ad-titlebar {
-  cursor: grab !important;
+  cursor: pointer !important;
   display: flex !important;
   height: 26px !important;
   user-select: none !important;
-}
-
-.page-pause-ad-titlebar:active {
-  cursor: grabbing !important;
 }
 
 /* 3D-ridge strip running the full width, faux-95 window chrome. */
