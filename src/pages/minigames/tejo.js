@@ -52,14 +52,43 @@ let score = 0;
 let message = "";
 let messageTimer = 0;
 
-async function awardToken() {
-    const storage = globalThis.browser?.storage?.local ?? globalThis.chrome?.storage?.local;
+const TOKEN_BALANCE_KEY = "page-pause:tokens";
+
+function getStorage() {
+    return globalThis.browser?.storage?.local ?? globalThis.chrome?.storage?.local;
+}
+
+// Pull the real bean balance so the on-screen counter starts from the
+// truth (the banked total from past sessions / other games), not zero.
+async function loadScore() {
+    const storage = getStorage();
     if (!storage) return;
 
-    const key = "page-pause:tokens";
-    const saved = await storage.get(key);
-    const current = typeof saved[key] === "number" ? Math.floor(saved[key]) : 0;
-    await storage.set({ [key]: current + 1 });
+    const saved = await storage.get(TOKEN_BALANCE_KEY);
+    const value = saved[TOKEN_BALANCE_KEY];
+    score = typeof value === "number" && Number.isFinite(value)
+        ? Math.floor(value)
+        : 0;
+}
+
+// Award the actual hit amount (1/3/6), not a flat +1 — otherwise the "¡MECHA!
+// +3" message lies about what was banked. Read-modify-write keeps us in sync
+// with beans spent elsewhere (blocked page, adivina) instead of clobbering.
+async function awardToken(amount) {
+    const storage = getStorage();
+    if (!storage) return;
+
+    const saved = await storage.get(TOKEN_BALANCE_KEY);
+    const current = typeof saved[TOKEN_BALANCE_KEY] === "number"
+        ? Math.floor(saved[TOKEN_BALANCE_KEY])
+        : 0;
+    const next = current + amount;
+
+    await storage.set({ [TOKEN_BALANCE_KEY]: next });
+
+    // Mirror storage back into the on-screen counter so it always matches the
+    // banked total, never drifts above/below it.
+    score = next;
 }
 
 function randomSpawn() {
@@ -419,13 +448,15 @@ function land() {
         }
     });
 
+    let amount = 0;
+
     if (mechaHit) {
         tejo.hit = true;
-        score += 3;
+        amount = 3;
         message = "¡MECHA! +3";
     } else if (targetDistance < target.bocinRadius) {
         tejo.hit = true;
-        score += 6;
+        amount = 6;
         message = "¡EMBOCINADA! +6";
     } else if (
         tejo.x > target.x - 100 &&
@@ -434,14 +465,16 @@ function land() {
         tejo.y < target.y + 70
     ) {
         tejo.hit = true;
-        score += 1;
+        amount = 1;
         message = "¡MANO! +1";
     } else {
         message = "¡FALLASTE!";
     }
 
+    score += amount;
+
     if (tejo.hit) {
-        void awardToken();
+        void awardToken(amount);
     }
 
     // Keep the result on screen and offer a retry instead of leaving a
@@ -529,4 +562,5 @@ function loop(time) {
 }
 
 reset();
+void loadScore();
 requestAnimationFrame(loop);
