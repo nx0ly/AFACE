@@ -18,6 +18,7 @@ import { arepaRain } from './arepa-rain.js';
 import { bankQueue } from './bank-queue.js';
 import { mangoHarvest } from './mango-harvest.js';
 import { penanceTyping } from './penance-typing.js';
+import { adInvasion } from './ad-invasion.js';
 
 /**
  * What a punishment gets handed when it runs. It runs inside the content
@@ -47,7 +48,7 @@ import { penanceTyping } from './penance-typing.js';
  */
 
 /** @type {Punishment[]} */
-export const PUNISHMENTS = [arepaRain, mangoHarvest, bankQueue, penanceTyping];
+export const PUNISHMENTS = [arepaRain, mangoHarvest, bankQueue, penanceTyping, adInvasion];
 
 /**
  * @param {unknown} id
