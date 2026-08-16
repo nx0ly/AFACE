@@ -35,19 +35,47 @@
       <hr class="my-[14px] border-0 border-t-2 border-brown/20" />
 
       <p id="rig-status" class="mb-[10px] leading-[1.4]">
-        Rig the next punishment on this site.
+        Rig the Wheel of Doom on this site.
       </p>
+      <label
+        for="rig-outcome"
+        class="mb-[4px] block font-sans text-[12px] font-bold text-brown/70"
+      >
+        Outcome
+      </label>
+      <select
+        id="rig-outcome"
+        aria-label="Wheel outcome"
+        class="mb-[10px] w-full rounded-[10px] border-2 border-brown/40 bg-white p-[9px] font-sans text-[13px] font-bold text-brown"
+      >
+        <option value="random">Random (let it ride)</option>
+        <option value="safe">Safe</option>
+        <option value="doom">Doom</option>
+      </select>
+      <label
+        for="rig-pick"
+        class="mb-[4px] block font-sans text-[12px] font-bold text-brown/70"
+      >
+        Punishment
+      </label>
       <select
         id="rig-pick"
         aria-label="Punishment to run"
-        class="mb-[10px] w-full rounded-[10px] border-2 border-brown/40 bg-white p-[9px] font-sans text-[13px] font-bold text-brown"
+        class="mb-[12px] w-full rounded-[10px] border-2 border-brown/40 bg-white p-[9px] font-sans text-[13px] font-bold text-brown"
       ></select>
+      <button
+        id="rig-spin"
+        type="button"
+        class="btn mb-[8px] w-full rounded-[10px] px-[14px] py-[11px]"
+      >
+        Rig next spin
+      </button>
       <button
         id="rig-run"
         type="button"
-        class="btn rounded-[10px] px-[14px] py-[11px]"
+        class="btn w-full rounded-[10px] px-[14px] py-[11px]"
       >
-        Run it here
+        Run it here now
       </button>
     </main>
     <script type="module" src="popup.js"></script>
