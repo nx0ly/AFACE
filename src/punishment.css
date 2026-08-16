@@ -439,15 +439,19 @@
   }
 }
 
-/* --- Capybara wash -----------------------------------------------------
-   A muddy capybara stumbles in, stares at you, and has to be scrubbed clean
-   (punishments/capybara-wash.js). Same house rule as the rest of this file:
+/* --- Capybara tracks ---------------------------------------------------
+   A muddy capybara plods around the page a few steps at a time and stamps
+   prints everywhere; the prints are what has to be scrubbed off
+   (punishments/capybara-tracks.js). Same house rule as the rest of this file:
    every property spelled out and !important, because this lands on arbitrary
    host pages with their own aggressive stylesheets. */
 
 .page-pause-capy-overlay {
-  /* Dimmed, but the page stays readable behind so it reads as an invasion. */
-  background: rgb(24 14 6 / 0.42) !important;
+  /* No dimming: the page is left looking completely normal, and the only sign
+     anything is wrong is that it does not answer you and there is a capybara
+     walking across it. The overlay is still here, still full-screen, and still
+     eats every click — it is just invisible. */
+  background: transparent !important;
   cursor: default !important;
   inset: 0 !important;
   overflow: hidden !important;
@@ -462,16 +466,30 @@
   cursor: none !important;
 }
 
-/* The whole animal. --page-pause-capy-t is its centre as a fraction of viewport
-   width, so 0 is the left edge and 1 the right — no pixel maths, resize-proof. */
-.page-pause-capy {
-  bottom: 6vh !important;
-  height: var(--page-pause-capy-h, 300px) !important;
-  left: calc(var(--page-pause-capy-t, -0.2) * 100%) !important;
+/* Prints layer, under the animal, so it always walks over its own trail. */
+.page-pause-capy-floor {
+  inset: 0 !important;
+  pointer-events: none !important;
   position: absolute !important;
-  transform: translate3d(-50%, 0, 0) !important;
+  z-index: 1 !important;
+}
+
+/* The whole animal. --x/--y are its feet in viewport pixels: it roams in two
+   dimensions now, so a single horizontal fraction is no longer enough. */
+.page-pause-capy {
+  height: var(--page-pause-capy-h, 300px) !important;
+  left: var(--page-pause-capy-x, -300px) !important;
+  position: absolute !important;
+  top: var(--page-pause-capy-y, 80%) !important;
+  transform: translate3d(-50%, -100%, 0) !important;
   width: var(--page-pause-capy-w, 226px) !important;
-  will-change: left !important;
+  will-change: left, top !important;
+  z-index: 2 !important;
+}
+
+/* The sprite is drawn facing right, so walking left means flipping the box. */
+.page-pause-capy.page-pause-capy-flipped {
+  transform: translate3d(-50%, -100%, 0) scaleX(-1) !important;
 }
 
 /* Contact shadow. A sibling of the body, so it stays planted while the animal
@@ -520,8 +538,8 @@
   50%      { transform: rotate(1.5deg)  scale(1.03, 0.985); }
 }
 
-/* The walk sprite is drawn facing right, which is the way it always travels,
-   so it is never flipped. */
+/* Flipping is handled on the outer box (see .page-pause-capy-flipped) so the
+   shadow and mud flip with the sprite rather than sliding off it. */
 .page-pause-capy-sprite {
   filter: drop-shadow(0 12px 18px rgb(0 0 0 / 0.45)) !important;
   height: 100% !important;
@@ -541,7 +559,8 @@
   opacity: 0 !important;
 }
 
-/* Mud sits exactly over the sprite box and is scrubbed away. Multiply is what
+/* Mud sits exactly over the sprite box and stays there for good — the animal
+   is the source of the mess, not the thing being cleaned. Multiply is what
    makes it read as staining rather than as blobs stuck on top — the fur's own
    colour still shows through the dirt. */
 .page-pause-capy-mud {
@@ -610,39 +629,84 @@
   100% { transform: translate(-50%, calc(-50% - 90px)) scale(1.1); opacity: 0; }
 }
 
-/* Muddy prints: squashed circles, sized off the animal at drop time. */
+/* Muddy prints: a pad and three toes, sized off the animal at drop time and
+   rotated to the direction it was walking. They never dry on their own — the
+   only thing that removes one is the sponge, which is the entire chore. */
 .page-pause-capy-print {
-  animation: page-pause-capy-print-fade 6s ease-out forwards !important;
-  background: rgb(52 32 14 / 0.72) !important;
-  border-radius: 50% !important;
+  animation: page-pause-capy-print-stamp 260ms ease-out !important;
+  background-image:
+    radial-gradient(ellipse 15% 17% at 20% 24%, rgb(48 29 12 / 0.92) 0 82%, rgb(48 29 12 / 0) 100%),
+    radial-gradient(ellipse 15% 17% at 50% 13%, rgb(48 29 12 / 0.92) 0 82%, rgb(48 29 12 / 0) 100%),
+    radial-gradient(ellipse 15% 17% at 80% 24%, rgb(48 29 12 / 0.92) 0 82%, rgb(48 29 12 / 0) 100%),
+    radial-gradient(ellipse 32% 30% at 50% 68%, rgb(42 25 10 / 0.94) 0 80%, rgb(42 25 10 / 0) 100%) !important;
+  background-repeat: no-repeat !important;
+  /* Softness comes from the gradient stops rather than a blur filter: a full
+     page of tracks is several hundred of these, and several hundred filtered
+     layers is a compositing bill the host page should not have to pay. */
   pointer-events: none !important;
   position: absolute !important;
-  transform: translate(-50%, -50%) !important;
+  transform:
+    translate(-50%, -50%)
+    rotate(var(--page-pause-print-r, 0deg))
+    scale(var(--page-pause-print-s, 1)) !important;
 }
 
-@keyframes page-pause-capy-print-fade {
-  /* Stamped wet and dark, then dries out and disappears. */
-  0%   { opacity: 0;    }
-  6%   { opacity: 0.85; }
-  100% { opacity: 0;    }
+@keyframes page-pause-capy-print-stamp {
+  /* Pressed into the page rather than faded in: it lands wet and stays. */
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
 }
 
-.page-pause-capy-progress {
-  background: rgb(255 255 255 / 0.18) !important;
-  border-radius: 999px !important;
-  bottom: 34px !important;
-  height: 14px !important;
+/* Counter and bar, pinned top-centre: the floor is the play area now, so the
+   bottom of the page is no place to park the HUD. */
+.page-pause-capy-hud {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 8px !important;
   left: 50% !important;
   opacity: 0 !important;
-  overflow: hidden !important;
+  pointer-events: none !important;
   position: absolute !important;
+  top: 26px !important;
   transform: translateX(-50%) !important;
+  transition: opacity 250ms ease !important;
+  z-index: 5 !important;
+}
+
+.page-pause-capy-hud.page-pause-capy-visible {
+  opacity: 1 !important;
+}
+
+/* Carries its own dark pill: with the overlay transparent, this text can land
+   on a white page just as easily as a black one. */
+.page-pause-capy-count {
+  background: rgb(24 14 6 / 0.88) !important;
+  border-radius: 999px !important;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.35) !important;
+  color: #ffe6c2 !important;
+  font: 600 15px/1.2 system-ui, -apple-system, "Segoe UI", sans-serif !important;
+  letter-spacing: 0.01em !important;
+  padding: 9px 18px !important;
+  white-space: nowrap !important;
+}
+
+/* Hidden until the capybara has finished and there is a total to count against
+   — while it is still walking, nobody knows how bad this is going to be. */
+.page-pause-capy-progress {
+  background: rgb(24 14 6 / 0.88) !important;
+  border: 2px solid rgb(24 14 6 / 0.88) !important;
+  border-radius: 999px !important;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.35) !important;
+  height: 14px !important;
+  overflow: hidden !important;
+  position: relative !important;
   transition: opacity 250ms ease !important;
   width: min(420px, 60vw) !important;
 }
 
-.page-pause-capy-progress.page-pause-capy-visible {
-  opacity: 1 !important;
+.page-pause-capy-progress.page-pause-capy-hidden {
+  opacity: 0 !important;
 }
 
 .page-pause-capy-progress-fill {

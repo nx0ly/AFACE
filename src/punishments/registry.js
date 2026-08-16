@@ -18,7 +18,7 @@ import { arepaRain } from './arepa-rain.js';
 import { bankQueue } from './bank-queue.js';
 import { mangoHarvest } from './mango-harvest.js';
 import { adInvasion } from './ad-invasion.js';
-import { capybaraWash } from './capybara-wash.js';
+import { capybaraTracks } from './capybara-tracks.js';
 
 /**
  * What a punishment gets handed when it runs. It runs inside the content
@@ -48,12 +48,37 @@ import { capybaraWash } from './capybara-wash.js';
  */
 
 /** @type {Punishment[]} */
-export const PUNISHMENTS = [arepaRain, mangoHarvest, bankQueue, adInvasion, capybaraWash];
+export const PUNISHMENTS = [arepaRain, mangoHarvest, bankQueue, adInvasion, capybaraTracks];
+
+/**
+ * Ids that were stored under an older name. A rig staged before a rename — or
+ * a punishment already pending when the extension reloaded — otherwise falls
+ * through to PUNISHMENTS[0] and serves the wrong wedge entirely.
+ *
+ * @type {Record<string, string>}
+ */
+const RENAMED_IDS = {
+  'capybara-wash': 'capybara-tracks',
+};
+
+/**
+ * Look up an id, old names included. Returns undefined for ids that name no
+ * punishment at all — callers that want a fair draw instead of a wrong wedge
+ * (the rig, in blocked.js and popup.js) need to tell those two cases apart.
+ *
+ * @param {unknown} id
+ * @returns {Punishment | undefined}
+ */
+export function findPunishmentById(id) {
+  const wanted = typeof id === 'string' ? (RENAMED_IDS[id] ?? id) : id;
+
+  return PUNISHMENTS.find((punishment) => punishment.id === wanted);
+}
 
 /**
  * @param {unknown} id
  * @returns {Punishment}
  */
 export function getPunishmentById(id) {
-  return PUNISHMENTS.find((punishment) => punishment.id === id) ?? PUNISHMENTS[0];
+  return findPunishmentById(id) ?? PUNISHMENTS[0];
 }

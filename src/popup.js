@@ -1,4 +1,4 @@
-import { PUNISHMENTS } from './punishments/registry.js';
+import { PUNISHMENTS, findPunishmentById } from './punishments/registry.js';
 
 const WHITELIST_PREFIX = 'page-pause:whitelist:';
 // Matches blocked.js, so a rigged punishment grants the same pass as a real one.
@@ -294,7 +294,7 @@ rigRunButton?.addEventListener('click', async () => {
       // Doom: the chosen punishment, or a fair draw if none was picked. Falls
       // back to any real punishment id, never an empty string.
       const rigged = config.punishment
-        ? PUNISHMENTS.find((p) => p.id === config.punishment)
+        ? findPunishmentById(config.punishment)
         : undefined;
       const punishment = rigged ?? PUNISHMENTS[Math.floor(Math.random() * PUNISHMENTS.length)];
 
