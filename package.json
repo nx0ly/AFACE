@@ -20,14 +20,14 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "assets:figma": "bun scripts/figma-export.mjs",
-    "dev": "bun run css && extension dev",
-    "start": "bun run css && extension start",
-    "build": "bun run css && extension build",
-    "preview": "bun run css && extension preview",
-    "build:chrome": "bun run css && extension build --browser chrome",
-    "build:firefox": "bun run css && extension build --browser firefox",
-    "build:edge": "bun run css && extension build --browser edge",
+    "assets:figma": "node scripts/figma-export.mjs",
+    "dev": "npm run css && extension dev",
+    "start": "npm run css && extension start",
+    "build": "npm run css && extension build",
+    "preview": "npm run css && extension preview",
+    "build:chrome": "npm run css && extension build --browser chrome",
+    "build:firefox": "npm run css && extension build --browser firefox",
+    "build:edge": "npm run css && extension build --browser edge",
     "css": "tailwindcss -i ./tailwind.css -o ./src/theme.css",
     "css:watch": "tailwindcss -i ./tailwind.css -o ./src/theme.css --watch"
   }

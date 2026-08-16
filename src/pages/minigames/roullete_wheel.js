@@ -1,4 +1,4 @@
-const SLOT_COUNT = 36;
+const SLOT_COUNT = 18; // Reduced from 36 to make franjas bigger
 
 const YELLOW = "#FCD116"; // Colombian Flag Yellow
 const BLUE = "#003893";   // Colombian Flag Blue
@@ -18,9 +18,9 @@ let currentBalance = 0;
 
 const TOKEN_BALANCE_KEY = "page-pause:tokens";
 
-// 2 Red slots, 17 Yellow slots, 17 Blue slots
+// 1 Red slot, 8 Yellow slots, 9 Blue slots (or roughly)
 const redSlots = new Set();
-while (redSlots.size < 2) {
+while (redSlots.size < 1) {
     const randomSlot = Math.floor(Math.random() * SLOT_COUNT);
     redSlots.add(randomSlot);
 }
@@ -146,3 +146,39 @@ spinButton.addEventListener("click", async () => {
 });
 
 loadBalance();
+
+// DVD Bouncing Ads State & Logic
+const ads = [
+    { el: document.getElementById("ad-roul-1"), x: 100, y: 100, vx: 150, vy: 150, width: 250, height: 100 },
+    { el: document.getElementById("ad-roul-2"), x: 300, y: 200, vx: -200, vy: 120, width: 150, height: 100 },
+    { el: document.getElementById("ad-roul-3"), x: 500, y: 50, vx: 100, vy: -180, width: 100, height: 100 }
+];
+
+let lastTime = performance.now();
+function animateAds(time) {
+    const dt = Math.min((time - lastTime) / 1000, 0.033);
+    lastTime = time;
+
+    ads.forEach(ad => {
+        ad.x += ad.vx * dt;
+        ad.y += ad.vy * dt;
+
+        if (ad.x <= 0 || ad.x + ad.width >= window.innerWidth) {
+            ad.vx *= -1;
+            ad.x = Math.max(0, Math.min(ad.x, window.innerWidth - ad.width));
+        }
+        if (ad.y <= 0 || ad.y + ad.height >= window.innerHeight) {
+            ad.vy *= -1;
+            ad.y = Math.max(0, Math.min(ad.y, window.innerHeight - ad.height));
+        }
+
+        if (ad.el) {
+            ad.el.style.left = `${ad.x}px`;
+            ad.el.style.top = `${ad.y}px`;
+        }
+    });
+
+    requestAnimationFrame(animateAds);
+}
+
+requestAnimationFrame(animateAds);

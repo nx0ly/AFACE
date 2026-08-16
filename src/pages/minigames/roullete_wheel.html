@@ -8,9 +8,12 @@
         <style>
             /* 2000s Retro Styles */
             body {
-                background-color: var(--color-brown, #684d3a);
-                color: #ffffff;
-                font-family: "Courier New", Courier, monospace;
+                background-color: var(--color-parchment);
+                background-image: url('/images/diomedes.jpg');
+                background-size: cover;
+                background-attachment: fixed;
+                color: var(--color-brown);
+                font-family: "Times New Roman", Times, serif;
                 margin: 0;
                 padding: 20px;
                 text-align: center;
@@ -25,16 +28,16 @@
                 border: 5px solid #aaaaaa;
                 background-color: #222222;
                 padding: 20px;
-                width: 500px;
+                width: 700px;
                 margin: 0 auto;
                 position: relative;
                 z-index: 20;
             }
             .wheel-container {
                 margin: 20px auto;
-                width: 300px;
-                height: 300px;
-                border: 10px solid #888888;
+                width: 500px;
+                height: 500px;
+                border: 15px ridge #bbbbbb;
                 border-radius: 50%;
                 position: relative;
                 overflow: hidden;
@@ -46,13 +49,14 @@
             }
             .pointer {
                 position: absolute;
-                top: -15px;
-                left: 140px;
+                top: -20px;
+                left: 230px;
                 width: 0;
                 height: 0;
-                border-left: 10px solid transparent;
-                border-right: 10px solid transparent;
-                border-top: 20px solid white;
+                border-left: 20px solid transparent;
+                border-right: 20px solid transparent;
+                border-top: 50px solid silver;
+                filter: drop-shadow(0px 5px 5px rgba(0,0,0,0.8));
                 z-index: 10;
             }
             .btn-retro {
@@ -145,6 +149,11 @@
         <div class="falling-arepa" style="right: 15%; animation-duration: 3.8s; animation-delay: 1.5s;"></div>
         <div class="falling-arepa" style="right: 10%; animation-duration: 5.2s; animation-delay: 3s;"></div>
 
+        <!-- DVD Bouncing Ads -->
+        <img id="ad-roul-1" src="/images/hot_capy_ad.jpg" alt="Ad" style="position: absolute; width: 250px; z-index: 100;" />
+        <img id="ad-roul-2" src="/images/ad_tejo.png" alt="Ad" style="position: absolute; width: 150px; z-index: 100;" />
+        <img id="ad-roul-3" src="/images/arepa.png" alt="Ad" style="position: absolute; width: 100px; z-index: 100;" />
+
         <div class="retro-box">
             <marquee scrollamount="5">
                 <h1>*** COLOR ROULETTE ***</h1>
@@ -183,5 +192,7 @@
         </div>
 
         <script src="roullete_wheel.js"></script>
+        <script src="../cursor.js"></script>
+        <script src="../global_ui.js"></script>
     </body>
 </html>
