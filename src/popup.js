@@ -19,27 +19,79 @@ function getTabs() {
   return globalThis.browser?.tabs ?? globalThis.chrome?.tabs;
 }
 
+function getRuntime() {
+  return globalThis.browser?.runtime ?? globalThis.chrome?.runtime;
+}
+
+function toSiteUrl(value) {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'http:' || url.protocol === 'https:' ? url : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 /**
- * Hostname of the tab the popup was opened over, or undefined for pages the
- * blocker never touches (new tab, extension pages, files).
+ * The site a tab stands for. The blocked page replaced the real site and keeps
+ * it in `?url=`, so resolve through it — otherwise every control here reads
+ * "no site" exactly when the user is staring at the block screen.
+ *
+ * @returns {URL | undefined} undefined for pages the blocker never touches
+ * (new tab, files, other extension pages).
  */
-async function getActiveHostname() {
+function getTabSite(tabUrl) {
+  if (!tabUrl) {
+    return undefined;
+  }
+
+  const site = toSiteUrl(tabUrl);
+
+  if (site) {
+    return site;
+  }
+
+  let url;
+
+  try {
+    url = new URL(tabUrl);
+  } catch {
+    return undefined;
+  }
+
+  const blockedPage = getRuntime()?.getURL('pages/blocked.html');
+
+  if (!blockedPage || `${url.origin}${url.pathname}` !== blockedPage) {
+    return undefined;
+  }
+
+  return toSiteUrl(url.searchParams.get('url') ?? '');
+}
+
+/**
+ * The tab the popup was opened over, paired with the site it stands for.
+ * `site` is undefined when there is nothing here to block.
+ */
+async function getActiveTabSite() {
   const tabs = getTabs();
 
   if (!tabs) {
-    return undefined;
+    return {};
   }
 
   try {
     const [tab] = await tabs.query({ active: true, currentWindow: true });
-    const url = tab?.url ? new URL(tab.url) : undefined;
 
-    return url && (url.protocol === 'http:' || url.protocol === 'https:')
-      ? url.hostname
-      : undefined;
+    return { tab, site: getTabSite(tab?.url) };
   } catch {
-    return undefined;
+    return {};
   }
+}
+
+async function getActiveHostname() {
+  const { site } = await getActiveTabSite();
+
+  return site?.hostname;
 }
 
 clearButton?.addEventListener('click', async () => {
@@ -205,13 +257,15 @@ rigRunButton?.addEventListener('click', async () => {
   }
 
   rigRunButton.disabled = true;
-  const hostname = await getActiveHostname();
+  const { tab, site } = await getActiveTabSite();
 
-  if (!hostname) {
+  if (!tab || !site) {
     rigStatus.textContent = 'No site here to punish.';
     rigRunButton.disabled = false;
     return;
   }
+
+  const hostname = site.hostname;
 
   const config = readRigConfig();
 
@@ -223,8 +277,6 @@ rigRunButton?.addEventListener('click', async () => {
       : config.outcome;
 
   try {
-    const [tab] = await tabs.query({ active: true, currentWindow: true });
-
     // Carry nothing over: a rigged run wipes a pending punishment, a pending
     // rig, and any live whitelist so it can take effect cleanly.
     await storage.remove([
@@ -246,10 +298,12 @@ rigRunButton?.addEventListener('click', async () => {
         : undefined;
       const punishment = rigged ?? PUNISHMENTS[Math.floor(Math.random() * PUNISHMENTS.length)];
 
-      // Same payload shape the Doom wheel writes — see pages/blocked.js.
+      // Same payload shape the Doom wheel writes — see pages/blocked.js. The
+      // site URL, never the tab's: on the blocked page those differ, and the
+      // content script drops a punishment whose url doesn't match the host.
       await storage.set({
         [`${PUNISHMENT_PREFIX}${hostname}`]: {
-          url: tab.url,
+          url: site.toString(),
           duration: WHITELIST_DURATION,
           punishment: punishment.id,
         },
@@ -258,8 +312,9 @@ rigRunButton?.addEventListener('click', async () => {
     }
 
     // The punishment is served by the content script at document_start, so the
-    // tab has to load again for it to pick this up.
-    await tabs.reload(tab.id);
+    // tab has to load the site again for it to pick this up. Navigating rather
+    // than reloading also gets us off the blocked page when we're on it.
+    await tabs.update(tab.id, { url: site.toString() });
     window.close();
   } catch {
     rigStatus.textContent = 'Could not start it. Try again.';
