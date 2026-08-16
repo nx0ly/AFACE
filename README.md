@@ -2,6 +2,8 @@
 ## Annoying As Fuck Colombian Extension
 Chrome extension that makes going to sites as annoying as possible
 
+![image showing the extension](https://cdn.hackclub.com/01a00b66-2f6c-7e05-a040-c54f56d4e50f/image.png)
+
 ## Features
 - Locking pages
 - Minigames
